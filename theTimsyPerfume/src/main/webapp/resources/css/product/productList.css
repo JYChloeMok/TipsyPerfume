@@ -1,6 +1,6 @@
-#productListWrap div{border: solid 1px black;}
-#pdtListOuterLeft div{border: solid 1px green;}
-#pdtListOuterRight div {border: solid 1px blue;}
+#productListWrap div{border: solid 1px #dddddd;}
+#pdtListOuterLeft div{border: solid 1px #dddddd;}
+#pdtListOuterRight div {border: solid 1px #dddddd;}
 
 
 /************** 전체 랩 + 왼(사이드바) 오(콘텐트) 위치&크기 설정 **************/
@@ -10,7 +10,7 @@
     text-align: center;
     margin: 0 auto;
     margin-top: 80px;
-    border: solid 1px black;
+    /* border: solid 1px black; */
 }
 #pdtListOuterLeft{
     width: 230px;
@@ -39,7 +39,7 @@
     flex-direction: column;
     justify-content: center;
     margin-bottom: 30px;
-    border: solid 1px black;
+    border: solid 1px #dddddd;
     position: relative;
 }
 
@@ -80,8 +80,8 @@
 #pdtListContentArea .pdt-list-icon-area{
 	width:12.5%;
 	font-size: 22px;
-	color: red;
-	background-color: rgb(223, 190, 106);
+	color: rgb(255, 255, 255);
+	background-color: rgb(89, 89, 89);
 	border-radius: 100%;
 	padding:0px;
 	margin: 0 auto;

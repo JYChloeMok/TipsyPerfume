@@ -112,7 +112,6 @@ public class ProductServicePRImpl implements ProductServicePR {
 		HashMap<String, Object> pMap = new HashMap();
 		pMap.put("pdtNo", pdtNo);
 		pMap.put("pdtCteg", "A");
-		System.out.println("다녀오나");
 		return productDao.alcoholPdtDetail(sqlSession, pMap);
 	}
 

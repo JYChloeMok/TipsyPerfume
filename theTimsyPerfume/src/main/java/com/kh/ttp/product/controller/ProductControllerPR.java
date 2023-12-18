@@ -32,16 +32,36 @@ public class ProductControllerPR {
 	 * 각 정렬 기준 별 조회 결과를 각각 ArrayList(ProductSelectVO리터럴)에 담은 후<br>
 	 * 만들어진 3개의 ArrayList를 HashMap<String, Object>에 담고,<br>
 	 * 이 HashMap을 ModelAndView에 pMap이라는 키값으로 담는다
-	 */
+	 *//*
 	@GetMapping("productMain.pr") // productMain.pr?pdtCteg=A
 	public ModelAndView productMainList(@RequestParam(value="sort", defaultValue="New") String sort, String pdtCteg, ModelAndView mv) {
+		
 		if("A".equals(pdtCteg) || "F".equals(pdtCteg)) {
 			int listCount = productService.selectProductCount(pdtCteg);
 			PageInfo pi = Pagination.getPageInfo(listCount, 1, 6, 10);
 
 			mv.addObject("pMap", productService.productMainList(pdtCteg, pi))
-			  .addObject("pdtCteg", pdtCteg) // 주류 / 향수 식별자
+			  .addObject("pdtCteg", pdtCteg) 														// 주류 / 향수 식별자
 			  .addObject("sort", sort)
+			  .setViewName("product/productMain");
+		} else {
+			mv.addObject("errorMsg", "상품 메인화면 이동 실패...")
+			  .setViewName("common/errorPage");
+		}
+		return mv;
+	}
+	*/
+	
+	@GetMapping("productMain.pr")
+	public ModelAndView productMainList(String pdtCteg,
+										ModelAndView mv,
+										@RequestParam(value="sort", defaultValue="New") String sort) {
+		if("A".equals(pdtCteg) || "F".equals(pdtCteg)) {
+			int listCount = productService.selectProductCount(pdtCteg);
+			PageInfo pi = Pagination.getPageInfo(listCount, 1, 6, 10);
+			mv.addObject("sort", sort)
+			  .addObject("pdtCteg", pdtCteg) 													               	// 주류 / 향수 식별자
+			  .addObject("pMap", productService.productMainList(pdtCteg, pi))
 			  .setViewName("product/productMain");
 		} else {
 			mv.addObject("errorMsg", "상품 메인화면 이동 실패...")

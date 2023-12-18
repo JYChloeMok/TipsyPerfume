@@ -172,6 +172,7 @@
 			},
 			success : result => {
 				hideCartQuickAddModal();
+				console.log('e다녀는오나');
 				if(result === '1') {
 					// 쇼핑 계속하기버튼 or 장바구니 가기버튼 팝업
 					if(pdtListConfirmRemaining()) {
