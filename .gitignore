@@ -124,8 +124,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,java,eclipse
-
 theTimsyPerfume/target/m2e-wtp/web-resources/META-INF/MANIFEST.MF
 .classpath
 .project
@@ -136,3 +134,5 @@ theTimsyPerfume/target/m2e-wtp/web-resources/META-INF/maven/com.kh/ttp/pom.prope
 theTimsyPerfume/target/m2e-wtp/web-resources/META-INF/MANIFEST.MF
 theTimsyPerfume/target/m2e-wtp/web-resources/META-INF/maven/com.kh/ttp/pom.properties
 *.xml
+
+# End of https://www.toptal.com/developers/gitignore/api/windows,java,eclipse
