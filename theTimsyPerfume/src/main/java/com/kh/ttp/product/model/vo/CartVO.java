@@ -15,9 +15,9 @@ public class CartVO extends ProductVO {
 	PDT_NO	NUMBER
 	CART_QUANTIRY	NUMBER
 	*/
+	// private int pdtNo;
 	private int cartNo;
 	private int userNo;
-	private int pdtNo;
 	private int cartQuantity;
 	private int pdtOptionNo;
 	private int cartAddingQuantity;

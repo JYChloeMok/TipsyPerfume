@@ -119,7 +119,7 @@ public class AjaxProductControllerPR {
 	}
 	*/
 	
-	@PostMapping(value="ajaxCheckStockAddCart.ca", produces="text/html; charset=UTF-8")
+	@PostMapping("ajaxCheckStockAddCart.ca")
 	public ResponseEntity<String> ajaxCheckStockAddCart(CartVO cart,
 									  					@RequestParam String pdtCteg,
 									  					HttpSession session) {
