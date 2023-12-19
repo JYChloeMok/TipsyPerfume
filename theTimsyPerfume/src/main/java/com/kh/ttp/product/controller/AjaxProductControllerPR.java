@@ -101,31 +101,10 @@ public class AjaxProductControllerPR {
 	 * @param pdtCteg : 상품 카테고리, "F"(향수) / "A"(주류)
 	 * @return : INSERT 혹은 UPDATE 성공 시 1, 실패 시 0, 재고가 없을 시 -1 반환
 	 */
-	/*
-	@PostMapping(value="ajaxCheckStockAddCart.ca", produces="text/html; charset=UTF-8")
-	public ResponseEntity<String> ajaxCheckStockAddCart(CartVO cart,
-									  					@RequestParam String pdtCteg,
-									  					HttpSession session) { // 로그인 인터셉터 거침
-		User loginUser = getLoginUser(session);
-		ResponseEntity<String> reponseEntity = makeAjaxErrorResult();
-		
-		if(isPdtCtegValid(pdtCteg) && (!(pdtCteg.equals("A")) || loginUser.getAdultStatus().equals("Y"))) {
-			cart.setUserNo(loginUser.getUserNo());
-			reponseEntity = new ResponseEntity<String>(String.valueOf(productService.checkStockAddCart(cart)),
-													   makeHeader("text", "html", "UTF-8"),
-													   HttpStatus.OK);
-		}
-		return reponseEntity;
-	}
-	*/
-	
 	@PostMapping("ajaxCheckStockAddCart.ca")
 	public ResponseEntity<String> ajaxCheckStockAddCart(CartVO cart,
 									  					@RequestParam String pdtCteg,
 									  					HttpSession session) {
-		
-		
-/*		... 생략 ...																														*/
 		User loginUser = getLoginUser(session);
 		ResponseEntity<String> reponseEntity = makeAjaxErrorResult();
 		
