@@ -105,9 +105,11 @@ public class AjaxProductControllerPR {
 	public ResponseEntity<String> ajaxCheckStockAddCart(CartVO cart,
 									  					@RequestParam String pdtCteg,
 									  					HttpSession session) {
-		User loginUser = getLoginUser(session);
 		
-		if(isPdtCtegValid(pdtCteg) && (!(pdtCteg.equals("A")) || loginUser.getAdultStatus().equals("Y"))) {
+/*		... 생략 ...																												*/		
+		User loginUser = getLoginUser(session);
+	
+		if(isPdtCtegValid(pdtCteg) && (!("A".equals(pdtCteg)) || "Y".equals(loginUser.getAdultStatus()))) {
 			cart.setUserNo(loginUser.getUserNo());
 			return new ResponseEntity<String>(String.valueOf(productService.checkStockAddCart(cart)),
 													 makeHeader("text", "html", "UTF-8"),
@@ -116,7 +118,7 @@ public class AjaxProductControllerPR {
 		return makeAjaxErrorResult();
 	}
 	
-	
+
 	
 	/**
 	 * 상품 번호로 상품이 가진 옵션을 조회하는 메소드
