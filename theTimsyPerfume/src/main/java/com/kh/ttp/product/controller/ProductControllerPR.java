@@ -22,37 +22,18 @@ public class ProductControllerPR {
 	private final ProductServicePR productService;
 	
 	
-	// AF / 6개 12개 // New / BestSeller / Popular // 다 넘기고 전부 mybatis에서 검증
+	// A or F & 6개 or 12개
+	// New / BestSeller / Popular 다 넘기고 전부 DB단 조건식에서 검증됨
+	// (BestSeller / Popular아닐 시 기본 최신순으로 조회됨)
 	/**
-	 * @param pdtCteg : 주류 향수 구분, 주류 = A, 향수 = F
-	 * @return
-	 * ModelAndView의 pdtCteg : 주류/향수 구분 식별자<br>
-	 * ModelAndView의 pMap :<br>
-	 * 식별자(pdtCteg)에 따라 주류/향수를 각각 최신순, 베스트셀러순, 위시리스트순으로 조회한다<br>
-	 * 각 정렬 기준 별 조회 결과를 각각 ArrayList(ProductSelectVO리터럴)에 담은 후<br>
-	 * 만들어진 3개의 ArrayList를 HashMap<String, Object>에 담고,<br>
-	 * 이 HashMap을 ModelAndView에 pMap이라는 키값으로 담는다
-	 *//*
+	 * 상품 메인 조회_카테고리와 정렬 기준 별 상품 6개의 리스트를 조회하는 기능<br/>
+	 * 식별자에 따라 주류 / 향수 제품을 각 최신순, 베스트셀러순, 위시리스트 등록 순으로 조회<br/>
+	 * 정렬 기준 별 조회결과를 ArrayList에 담은 후 이 ArrayList들을 HashMap에 담아 반환함
+	 * @param pdtCteg : 상품 카테고리 구분용 식별자(A=주류 / F=향수)
+	 * @param sort    : 정렬 기준
+	 * @param mv : srot, pdtCteg, pMap(조회결과 HashMap)을 담은 ModelAndView객체
+	 */
 	@GetMapping("productMain.pr") // productMain.pr?pdtCteg=A
-	public ModelAndView productMainList(@RequestParam(value="sort", defaultValue="New") String sort, String pdtCteg, ModelAndView mv) {
-		
-		if("A".equals(pdtCteg) || "F".equals(pdtCteg)) {
-			int listCount = productService.selectProductCount(pdtCteg);
-			PageInfo pi = Pagination.getPageInfo(listCount, 1, 6, 10);
-
-			mv.addObject("pMap", productService.productMainList(pdtCteg, pi))
-			  .addObject("pdtCteg", pdtCteg) 														// 주류 / 향수 식별자
-			  .addObject("sort", sort)
-			  .setViewName("product/productMain");
-		} else {
-			mv.addObject("errorMsg", "상품 메인화면 이동 실패...")
-			  .setViewName("common/errorPage");
-		}
-		return mv;
-	}
-	*/
-	
-	@GetMapping("productMain.pr")
 	public ModelAndView productMainList(String pdtCteg,
 										ModelAndView mv,
 										@RequestParam(value="sort", defaultValue="New") String sort) {
@@ -60,7 +41,7 @@ public class ProductControllerPR {
 			int listCount = productService.selectProductCount(pdtCteg);
 			PageInfo pi = Pagination.getPageInfo(listCount, 1, 6, 10);
 			mv.addObject("sort", sort)
-			  .addObject("pdtCteg", pdtCteg) 													               	// 주류 / 향수 식별자
+			  .addObject("pdtCteg", pdtCteg) // 주류 / 향수 식별자
 			  .addObject("pMap", productService.productMainList(pdtCteg, pi))
 			  .setViewName("product/productMain");
 		} else {
