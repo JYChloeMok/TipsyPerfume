@@ -110,28 +110,11 @@ public class AjaxProductControllerPR {
 		if(isPdtCtegValid(pdtCteg) && (!(pdtCteg.equals("A")) || loginUser.getAdultStatus().equals("Y"))) {
 			cart.setUserNo(loginUser.getUserNo());
 			return new ResponseEntity<String>(String.valueOf(productService.checkStockAddCart(cart)),
-													   makeHeader("text", "html", "UTF-8"),
-													   HttpStatus.OK);
+													 makeHeader("text", "html", "UTF-8"),
+													 HttpStatus.OK);
 		}
 		return makeAjaxErrorResult();
 	}
-	
-	
-	@PostMapping("ca.ca")
-	public ResponseEntity<String> returningVersion(CartVO cart,
-									  					@RequestParam String pdtCteg,
-									  					HttpSession session) {
-		User loginUser = getLoginUser(session);
-		if(!isPdtCtegValid(pdtCteg) || ("A".equals(pdtCteg) && !"Y".equals(loginUser.getAdultStatus()))) {
-			return makeAjaxErrorResult();
-		}
-		cart.setUserNo(loginUser.getUserNo());
-		return new ResponseEntity<String>(String.valueOf(productService.checkStockAddCart(cart)),
-												   makeHeader("text", "html", "UTF-8"),
-												   HttpStatus.OK);
-	}
-	
-	
 	
 	
 	
