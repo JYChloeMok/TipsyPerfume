@@ -164,6 +164,7 @@ function getCookie(cookieName) {
 			<div class="center-wrapper" align="center">
 				<div class="login-wrapper" >
 					<form action="login.me" method="post"  id="login-form">
+						<input type="hidden" name="referer" value="${referer}">
 						<input type="text" id="userEmail" name="userEmail" placeholder="이메일을 입력해주세요." >
 						<input type="password" id="userPwd" name="userPwd" placeholder="비밀번호를 입력해주세요." >
 						<input type="checkbox" id="idSaveCheck" style="font-size:small; height:10px;">

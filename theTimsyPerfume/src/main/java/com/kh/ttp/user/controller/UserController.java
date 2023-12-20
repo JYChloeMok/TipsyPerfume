@@ -15,11 +15,10 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.ttp.orderKinds.model.vo.Receiver;
@@ -41,27 +40,33 @@ public class UserController {
 	
 	
 	@RequestMapping("loginForm.me")
-	public String loginUser() {
+	public String loginUser(Model model, HttpServletRequest request) {
+		
+		String referer = request.getHeader("Referer");
+		referer = (referer == null) ? "/" : referer.substring(referer.lastIndexOf("/"));
+		model.addAttribute("referer", referer);
 		return "member/LoginForm";
 	}
 	
 	
-		//로그인 + 중복이메일체크
-		@RequestMapping("login.me")
-		public ModelAndView loginUser(User u,
-									HttpSession session,
-									ModelAndView mv) {
-				
-			User loginUser = userService.loginUser(u);
-			if(loginUser != null && bcrypt.matches(u.getUserPwd(), loginUser.getUserPwd())) {
-				session.setAttribute("loginUser", loginUser);
-				mv.setViewName("redirect:/");
-			} else {
-				mv.addObject("alertMsg", "로그인에 실패했습니다.");
-				mv.setViewName("member/LoginForm");
-			}
-				return mv;
-			}
+	//로그인 + 중복이메일체크
+	@RequestMapping("login.me")
+	public ModelAndView loginUser(User u,
+								  HttpSession session,
+								  ModelAndView mv,
+								  @RequestParam(value="referer", defaultValue="/") String referer) {
+		
+		System.out.println(referer);
+		User loginUser = userService.loginUser(u);
+		if(loginUser != null && bcrypt.matches(u.getUserPwd(), loginUser.getUserPwd())) {
+			session.setAttribute("loginUser", loginUser);
+			mv.setViewName("redirect:" + referer);
+		} else {
+			mv.addObject("alertMsg", "로그인에 실패했습니다.");
+			mv.setViewName("member/LoginForm");
+		}
+			return mv;
+	}
 
 	
 		//로그아웃
