@@ -9,12 +9,12 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,20 +26,20 @@ import com.kh.ttp.user.model.service.UserService;
 import com.kh.ttp.user.model.vo.AuthVO;
 import com.kh.ttp.user.model.vo.User;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class UserController {
 	
-	@Autowired
-	private UserService userService;
+	private final UserService userService;
 	
-	@Autowired
-	private BCryptPasswordEncoder bcrypt;
+	private final BCryptPasswordEncoder bcrypt;
  
-	@Autowired
-	private JavaMailSender sender;
+	private final JavaMailSender sender;
 	
 	
-	@RequestMapping("loginForm.me")
+	@GetMapping("loginForm.me")
 	public String loginUser(Model model, HttpServletRequest request) {
 		
 		String referer = request.getHeader("Referer");
@@ -56,7 +56,6 @@ public class UserController {
 								  ModelAndView mv,
 								  @RequestParam(value="referer", defaultValue="/") String referer) {
 		
-		System.out.println(referer);
 		User loginUser = userService.loginUser(u);
 		if(loginUser != null && bcrypt.matches(u.getUserPwd(), loginUser.getUserPwd())) {
 			session.setAttribute("loginUser", loginUser);
