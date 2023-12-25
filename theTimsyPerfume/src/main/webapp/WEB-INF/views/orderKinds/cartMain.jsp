@@ -52,68 +52,73 @@
 			<div class="col-2">배송</div>
 			<div class="col-2">상품 합계</div>
 		</div>
-		
-		<div class="row cart-content-block">
-			<div class="cart-box-area">
-				<label class="check-box-label">
-					<!-- 상품번호 -->
-					<input value="21" class="cart-check-box-one" type="checkbox">
-				</label>
-			</div>
-			<!-- 상품이름 (요청에 첫번째 것만 필요) -->
-			<div id="cartItemName_0" class="col-4 ps-5">향긋향수 50ML</div>
-			<div class="col">
-				<!-- 상품수량 -->
-				<input id="cartQuantity_0" type="number" min="1" class="cartQuantity pdt-dt-input form-control" name="#">
-			</div>
-			<div class="col-2">100,000원</div>
-			<div class="col-2 p-0 cart-extra-info-area">배송비 3,000</div>	
-			<div class="col-2">98,000원</div>
-		</div>
-		
-		<div class="row cart-content-block">
-			<div class="cart-box-area">
-				<label class="check-box-label">${cartNo} <!-- cartNo이 value에 -->
-					<!-- 상품번호 -->
-					<input value=22 class="cart-check-box-one" type="checkbox">
-				</label>
-			</div>
-			<div id="cartItemName_1" class="col-4 ps-5">${pdtName}&nbsp;${pdtOptionFirst}</div>
-			<div class="col">
-				<!-- 상품수량 -->
-				<input id="cartQuantity_1" type="number" min="1" class="cartQuantity pdt-dt-input form-control" name="#" placeholder="1">
-			</div>
-			<div class="col-2">${pdtOptionPrice}원</div>
-			<div class="col-2 p-0 cart-extra-info-area">${pdtShipping}</div>
-			<div class="col-2">300,000(토탈가격)</div>
-		</div>
-		
-		
-		
-
-		
-	
-		<br/>
-		<br/>	
-		<br/>	
-		
-		<div id="cartSummary" class="row">
-			<div class="col">
-				<div class="row ps-5">전체금액</div>
-				<div id="123" class="row">
-					<input id="cartAmountBefore" value="400000" type="hidden"><!-- value .toLocaleString() 가공해서 띄움 -->
-					<div class="col summary-col">400,000</div>
-					<div class="col-1 summary-col"> | </div>
-					<input id="cartPdtShipping" value="0" type="hidden">
-					<div class="col summary-col">무료배송</div><!-- value 0이면 무료배송 -->
+		<c:choose>
+			<c:when test="${not empty cartList }">
+				<c:forEach var="cart" items="${cartList}">
+					<div class="row cart-content-block">
+						<div class="cart-box-area">
+							<label class="check-box-label">
+								<!-- 상품 옵션 번호 -->
+								<input value=${cart.pdtOptionNo } class="cart-check-box-one" type="checkbox">
+							</label>
+						</div>
+						<div id="cartItemName_1" class="col-4 ps-5">${cart.pdtName}&nbsp;${cart.pdtOptionFirst}</div>
+						<div class="col">
+							<!-- 상품수량 -->
+							<input id="cartQuantity_1" value="${cart.cartQuantity }" type="number" min="1" class="cartQuantity pdt-dt-input form-control" name="#" placeholder="1">
+						</div>
+						<div class="col-2">${cart.pdtOptionPrice}원</div>
+						<div class="col-2 p-0 cart-extra-info-area">배송비 ${cart.pdtShipping}</div>
+						<div class="col-2">${cart.totalPrice }(토탈가격)</div>
+					</div>
+				</c:forEach>
+				
+				<div class="row cart-content-block">
+					<div class="cart-box-area">
+						<label class="check-box-label">
+							<!-- 상품번호 -->
+							<input value="${cartList.pdtNo }" class="cart-check-box-one" type="checkbox">
+						</label>
+					</div>
+					<!-- 상품이름 (요청에 첫번째 것만 필요) -->
+					<div id="cartItemName_0" class="col-4 ps-5">향긋향수 50ML</div>
+					<div class="col">
+						<!-- 상품수량 -->
+						<input id="cartQuantity_0" type="number" min="1" class="cartQuantity pdt-dt-input form-control" name="#">
+					</div>
+					<div class="col-2">100,000원</div>
+					<div class="col-2 p-0 cart-extra-info-area">배송비 3,000</div>	
+					<div class="col-2">98,000원</div>
 				</div>
-				<input id="cartTotalAmount" value="392000" type="hidden">
-				<div class="row ps-5">= 392,000원</div><!-- cartTotalAmount영역에 value .toLocaleString() 가공해서 띄움 -->
-			</div>
-			<div class="col-4">
-				<button id="cartMainOrderBtn" class="btn btn-primary">주문하기</button>
-			</div>
-		</div>
+				
+
+			
+				<br/>
+				<br/>	
+				<br/>	
+				
+				<div id="cartSummary" class="row">
+					<div class="col">
+						<div class="row ps-5">전체금액</div>
+						<div id="123" class="row">
+							<input id="cartAmountBefore" value="400000" type="hidden"><!-- value .toLocaleString() 가공해서 띄움 -->
+							<div class="col summary-col">400,000</div>
+							<div class="col-1 summary-col"> | </div>
+							<input id="cartPdtShipping" value="0" type="hidden">
+							<div class="col summary-col">무료배송</div><!-- value 0이면 무료배송 -->
+						</div>
+						<input id="cartTotalAmount" value="392000" type="hidden">
+						<div class="row ps-5">= 392,000원</div><!-- cartTotalAmount영역에 value .toLocaleString() 가공해서 띄움 -->
+					</div>
+					<div class="col-4">
+						<button id="cartMainOrderBtn" class="btn btn-primary">주문하기</button>
+					</div>
+				</div>
+			</c:when>
+			<c:otherwise>
+				<div>장바구니에 추가된 내역이 없습니다</div>
+			</c:otherwise>
+		</c:choose>
 	</div>
 	
 		<!--

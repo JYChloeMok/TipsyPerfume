@@ -21,5 +21,4 @@ public class CartVO extends ProductVO {
 	private int cartQuantity;
 	private int pdtOptionNo;
 	private int cartAddingQuantity;
-	
 }

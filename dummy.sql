@@ -302,7 +302,7 @@ INSERT INTO TB_PRODUCT(
     '목 넘김이 좋은 밀 향 맥주',
     '홍길동님이 만드신 깊고 찐한 밀 향 맥주 알코올 도수는 4.5도입니다',
     '밀,알코올..',
-    '배송일은 펀딩 확정 이후 5일뒤 배송 예정입니다',
+    5,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -337,7 +337,7 @@ INSERT INTO TB_PRODUCT(
     '깔끔하고 상큼한 사케',
     '10년 장인 이길동님이 만드신 깔끔한 맛 사케입니다.',
     '물,쌀,누룩',
-    '배송일은 펀딩 확정 이후 3일뒤 배송 예정입니다',
+    3,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -372,7 +372,7 @@ INSERT INTO TB_PRODUCT(
     '깔끔하고 삼겹살과 매우 잘 어울리는 소주 향',
     '알코올 도수는 23도이며 모든 음식과 잘 어울리지만 특히 삼겹살과 잘 어울리는 소주입니다.',
     '물,알코올,보리',
-    '배송일은 펀딩 확정 이후 3일뒤 배송 예정입니다',
+    3,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -407,7 +407,7 @@ INSERT INTO TB_PRODUCT(
     '구로 전통 맥주',
     '알코올 도수는 5도입니다',
     '맥아, 물 ',
-    '배송일은 펀딩 확정 이후 8일뒤 배송 예정입니다',
+    8,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -442,7 +442,7 @@ INSERT INTO TB_PRODUCT(
     '레드 와인',
     '이탈리아에서 유명한 JAMES씨가 만든 수제 맥주입니다.알코올 도수는 9도이며 치즈와 잘 어울립니다.',
     '포도',
-    '배송일은 펀딩 확정 이후 15일뒤 배송 예정입니다',
+    15,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -477,7 +477,7 @@ INSERT INTO TB_PRODUCT(
     '목이 타들어가는듯한 짜릿함 ',
     '고길동님이 만드신 깊고 찐한 소주! 알코올 도수는 25도입니다',
     '물,알코올',
-    '배송일은 펀딩 확정 이후 5일뒤 배송 예정입니다',
+    5,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -512,7 +512,7 @@ INSERT INTO TB_PRODUCT(
     '찐하고 맛있는 맥주!',
     '알코올 도수는 5도입니다. 엄청 시원합니다.',
     '맥아',
-    '배송일은 펀딩 확정 이후 5일뒤 배송 예정입니다',
+    5,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -547,7 +547,7 @@ INSERT INTO TB_PRODUCT(
     '외국인이 만든 한국 전통 막걸리',
     'JIMI씨가 한국에와서 막걸리를 먹고 감명받아 만든 JIMI씨만의 특별한 막걸리',
     '쌀,알코올,물',
-    '배송일은 펀딩 확정 이후 10일뒤 배송 예정입니다',
+    10,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -582,7 +582,7 @@ INSERT INTO TB_PRODUCT(
     '뒷맛이 묵직한 사케',
     '알코올 도수는 11도이며 조금 무겁지만 깊은맛에 사케입니다.',
     '누룩,물,알코올',
-    '배송일은 펀딩 확정 이후 5일뒤 배송 예정입니다',
+    5,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -617,7 +617,7 @@ INSERT INTO TB_PRODUCT(
     '찐하고 상큼한 복분자주',
     '가족끼리 마시기 좋아요.복분자는 복순씨가 직접 재배한 복분자입니다.',
     '복분자,알코올..',
-    '배송일은 펀딩 확정 이후 10일뒤 배송 예정입니다',
+    10,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -652,7 +652,7 @@ INSERT INTO TB_PRODUCT(
     '오드 뚜왈렛',
     '향이 오래가고 상큼한 향의 향수',
     '코코넛 오일,증류수,천연 색소',
-    '배송일은 펀딩 확정 이후 15일뒤 배송 예정입니다',
+    15,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -687,7 +687,7 @@ INSERT INTO TB_PRODUCT(
     '오드 퍼퓸',
     '향이 찐하며 우드 향 향수입니다.',
     '호호바 오일',
-    '배송일은 펀딩 확정 이후 12일뒤 배송 예정입니다',
+    12,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -722,7 +722,7 @@ INSERT INTO TB_PRODUCT(
     '오드 빠르펭',
     '지속시간 대략 4시간이며 오렌지향 향수입니다. 상큼한 옷에 잘 어울리는 무거운 향입니다.',
     '감귤 오일',
-    '배송일은 펀딩 확정 이후 7일뒤 배송 예정입니다',
+    7,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -757,7 +757,7 @@ INSERT INTO TB_PRODUCT(
     '오드코롱',
     '향이 무거우며 지속시간은 대략 2시간 정도입니다.정장이나 어두운 색의 코디와 잘 어울립니다.',
     '천연 색소,호호바 오일',
-    '배송일은 펀딩 확정 이후 12일뒤 배송 예정입니다',
+    12,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -792,7 +792,7 @@ INSERT INTO TB_PRODUCT(
     '샤워 코롱 ',
     '매우 가벼운 향이며 지속시간은 10시간입니다.',
     '코코넛 오일, 알코올',
-    '배송일은 펀딩 확정 이후 10일뒤 배송 예정입니다',
+    10,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -827,7 +827,7 @@ INSERT INTO TB_PRODUCT(
     '오드 뚜왈렛',
     '좋은 향기가 남',
     '호호바 오일',
-    '배송일은 펀딩 확정 이후 12일뒤 배송 예정입니다',
+    12,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -862,7 +862,7 @@ INSERT INTO TB_PRODUCT(
     '오드코롱',
     '상큼한 복숭아향 데일리 향수로 좋습니다.',
     '복숭아 향,코코넛 오일',
-    '배송일은 펀딩 확정 이후 6일뒤 배송 예정입니다',
+    6,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -897,7 +897,7 @@ INSERT INTO TB_PRODUCT(
     '샤워 코롱',
     '코튼 향 상긋하며 지속시간이 깁니다.',
     '호호바 오일,코튼향',
-    '배송일은 펀딩 확정 이후 8일뒤 배송 예정입니다',
+    8,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -932,7 +932,7 @@ INSERT INTO TB_PRODUCT(
     '오드 뚜왈렛',
     '한국인들이라면 모두가 좋아할 향 . 우드 향.',
     '코코넛 오일, 증류수',
-    '배송일은 펀딩 확정 이후 12일뒤 배송 예정입니다',
+    12,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -967,7 +967,7 @@ INSERT INTO TB_PRODUCT(
     '오드 퍼퓸',
     '남성에게 잘 어울리는 무겁고 찐한 향',
     '호호바 오일,증류수',
-    '배송일은 펀딩 확정 이후 10일뒤 배송 예정입니다',
+    10,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1003,7 +1003,7 @@ INSERT INTO TB_PRODUCT(
     '목 넘김이 좋은 밀 향 맥주',
     '홍길동님이 만드신 깊고 찐한 밀 향 맥주 알코올 도수는 4.5도입니다',
     '밀,알코올..',
-    '2,500원',
+    2500,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1038,7 +1038,7 @@ INSERT INTO TB_PRODUCT(
     '깔끔하고 상큼한 사케',
     '10년 장인 이길동님이 만드신 깔끔한 맛 사케입니다.',
     '물,쌀,누룩',
-    '2,500원',
+    2500,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1073,7 +1073,7 @@ INSERT INTO TB_PRODUCT(
     '깔끔하고 삼겹살과 매우 잘 어울리는 소주 향',
     '알코올 도수는 23도이며 모든 음식과 잘 어울리지만 특히 삼겹살과 잘 어울리는 소주입니다.',
     '물,알코올,보리',
-    '2,500원',
+    2500,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1108,7 +1108,7 @@ INSERT INTO TB_PRODUCT(
     '구로 전통 맥주',
     '알코올 도수는 5도입니다',
     '맥아, 물 ',
-    '2,500원',
+    2500,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1143,7 +1143,7 @@ INSERT INTO TB_PRODUCT(
     '레드 와인',
     '이탈리아에서 유명한 JAMES씨가 만든 수제 맥주입니다.알코올 도수는 9도이며 치즈와 잘 어울립니다.',
     '포도',
-    '무료배송',
+    0,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1178,7 +1178,7 @@ INSERT INTO TB_PRODUCT(
     '목이 타들어가는듯한 짜릿함 ',
     '고길동님이 만드신 깊고 찐한 소주! 알코올 도수는 25도입니다',
     '물,알코올',
-    '2,500원',
+    2500,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1213,7 +1213,7 @@ INSERT INTO TB_PRODUCT(
     '찐하고 맛있는 맥주!',
     '알코올 도수는 5도입니다. 엄청 시원합니다.',
     '맥아',
-    '2,500원',
+    2500,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1248,7 +1248,7 @@ INSERT INTO TB_PRODUCT(
     '외국인이 만든 한국 전통 막걸리',
     'JIMI씨가 한국에와서 막걸리를 먹고 감명받아 만든 JIMI씨만의 특별한 막걸리',
     '쌀,알코올,물',
-    '2,500원',
+    2500,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1283,7 +1283,7 @@ INSERT INTO TB_PRODUCT(
     '뒷맛이 묵직한 사케',
     '알코올 도수는 11도이며 조금 무겁지만 깊은맛에 사케입니다.',
     '누룩,물,알코올',
-    '2,500원',
+    2500,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1318,7 +1318,7 @@ INSERT INTO TB_PRODUCT(
     '찐하고 상큼한 복분자주',
     '가족끼리 마시기 좋아요.복분자는 복순씨가 직접 재배한 복분자입니다.',
     '복분자,알코올..',
-    '2,500원',
+    2500,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1353,7 +1353,7 @@ INSERT INTO TB_PRODUCT(
     '오드 뚜왈렛',
     '향이 오래가고 상큼한 향의 향수',
     '코코넛 오일,증류수,천연 색소',
-    '무료배송',
+    0,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1388,7 +1388,7 @@ INSERT INTO TB_PRODUCT(
     '오드 퍼퓸',
     '향이 찐하며 우드 향 향수입니다.',
     '호호바 오일',
-    '무료배송',
+    0,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1423,7 +1423,7 @@ INSERT INTO TB_PRODUCT(
     '오드 빠르펭',
     '지속시간 대략 4시간이며 오렌지향 향수입니다. 상큼한 옷에 잘 어울리는 무거운 향입니다.',
     '감귤 오일',
-    '3,000원',
+    3000,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1458,7 +1458,7 @@ INSERT INTO TB_PRODUCT(
     '오드코롱',
     '향이 무거우며 지속시간은 대략 2시간 정도입니다.정장이나 어두운 색의 코디와 잘 어울립니다.',
     '천연 색소,호호바 오일',
-    '무료배송',
+    0,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1493,7 +1493,7 @@ INSERT INTO TB_PRODUCT(
     '샤워 코롱 ',
     '매우 가벼운 향이며 지속시간은 10시간입니다.',
     '코코넛 오일, 알코올',
-    '무료배송',
+    0,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1528,7 +1528,7 @@ INSERT INTO TB_PRODUCT(
     '오드 뚜왈렛',
     '여튼 엄청 좋은 향수입니다',
     '호호바 오일',
-    '3,000원',
+    3000,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1563,7 +1563,7 @@ INSERT INTO TB_PRODUCT(
     '오드코롱',
     '상큼한 복숭아향 데일리 향수로 좋습니다.',
     '복숭아 향,코코넛 오일',
-    '무료배송',
+    0,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1598,7 +1598,7 @@ INSERT INTO TB_PRODUCT(
     '샤워 코롱',
     '코튼 향 상긋하며 지속시간이 깁니다.',
     '호호바 오일,코튼향',
-    '무료배송',
+    0,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1633,7 +1633,7 @@ INSERT INTO TB_PRODUCT(
     '오드 뚜왈렛 향수입니다',
     '한국인들이라면 모두가 좋아할 향 . 우드 향.',
     '코코넛 오일, 증류수',
-    '무료배송',
+    0,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -1668,7 +1668,7 @@ INSERT INTO TB_PRODUCT(
     '지속력이 좋은 오드 퍼퓸입니다.',
     '남성에게 잘 어울리는 무겁고 찐한 향',
     '호호바 오일,증류수',
-    '2,500원',
+    2500,
     'Y'
 );
 INSERT INTO TB_PRODUCT_FILE(
@@ -3384,7 +3384,7 @@ INSERT INTO TB_PRODUCT(
         '시원하고 깔끔한 치킨과 잘 어울리는 밀 맥주',
         '세상에서 제일 시원한 목넘김 부드럽가 깔끔합니당',
         '밀,알코올',
-        '배송비 무료',
+        0,
        'Y'
     );
 INSERT INTO TB_PRODUCT(
@@ -3403,7 +3403,7 @@ INSERT INTO TB_PRODUCT(
         '맛있는 사케',
         '일본식 전통 막걸리, 찐하고 맛있습니다.',
         '누룩,알코올',
-        '배송비 무료',
+        0,
        'Y'        
     );
 INSERT INTO TB_PRODUCT(
@@ -3422,7 +3422,7 @@ INSERT INTO TB_PRODUCT(
         '한국 전통 막걸리',
         '아는 맛이 가장 무섭다.전이랑 매우 잘떡궁합',
         '물,알코올,쌀',
-        '배송비 무료',
+        0,
        'Y'
     );
 INSERT INTO TB_PRODUCT(
@@ -3441,7 +3441,7 @@ INSERT INTO TB_PRODUCT(
         '포도주',
         '무겁고 둔탁한 맛의 와인 맛있습니다.',
         '포도,알코올,물',
-        '배송비 무료',
+        0,
        'Y'
     );
 INSERT INTO TB_PRODUCT(
@@ -3460,7 +3460,7 @@ INSERT INTO TB_PRODUCT(
         '세상에서 가장 시원하고 깔끔한 소주',
         '세상에서 제일 시원한 목넘김 부드럽가 깔끔합니당',
         '증류수,물',
-        '배송비 무료',
+        0,
        'Y'
     );
 INSERT INTO TB_PRODUCT(
@@ -3479,7 +3479,7 @@ INSERT INTO TB_PRODUCT(
         '맥주의 정석',
         '부드럽고 깔끔한 맥주 .',
         '벼,알코올',
-        '배송비 무료',
+        0,
        'Y'
     );
 INSERT INTO TB_PRODUCT(
@@ -3498,7 +3498,7 @@ INSERT INTO TB_PRODUCT(
         '고급 술 , 좋은 사람 좋은 곳에서!',
         '고급진 사케.그 무엇과도 비교할수 없을만큼 맛있다!!',
         '쌀,알코올',
-        '배송비 무료',
+        0,
        'Y'
     );
 INSERT INTO TB_PRODUCT(
@@ -3517,7 +3517,7 @@ INSERT INTO TB_PRODUCT(
         '좋은 사람 좋은 곳에서 먹기 좋은 와인',
         '스파클링 화이트 와인 톡 쏘는맛이 맛있습니다.',
         '탄산,알코올',
-        '배송비 무료',
+        0,
        'Y'
     );
 INSERT INTO TB_PRODUCT(
@@ -3536,7 +3536,7 @@ INSERT INTO TB_PRODUCT(
         '정석적인 와인',
         '가볍고 간단하게 먹기 좋은 포도주',
         '포도,알코올',
-        '배송비 무료',
+        0,
        'Y'
     );
 INSERT INTO TB_PRODUCT(
@@ -3555,7 +3555,7 @@ INSERT INTO TB_PRODUCT(
         '먹다보면 아침인 미친 소주',
         '이렇게 맛있는 소주는 본적이 없다. 둘이 먹다 다음날 아침이 되는 소주',
         '증류수,알코올',
-        '배송비 무료',
+        0,
        'Y'
     );
 INSERT INTO TB_PRODUCT(
@@ -3574,7 +3574,7 @@ INSERT INTO TB_PRODUCT(
         '막걸리 치고 높은 도수',
         '목이 타는듯한 느낌을 받을 수 있는 고량 막걸리',
         '누룩,알코올',
-        '배송비 무료',
+        0,
        'Y'
     );
 INSERT INTO TB_PRODUCT(
@@ -3593,7 +3593,7 @@ INSERT INTO TB_PRODUCT(
         '맛있는 사케',
         '맛있는 사케',
         '쌀,알코올',
-        '배송비 무료',
+        0,
        'Y'
     );
 INSERT INTO TB_PRODUCT(
@@ -3612,7 +3612,7 @@ INSERT INTO TB_PRODUCT(
         '연인과 먹기 좋은 화이트 와인',
         '부드럽고 깔끔한 와인',
         '밀,알코올',
-        '배송비 무료',
+        0,
        'Y'
     );
 --------- INSERT INTO TB_PRODUCT 2 (커스텀) 끝
@@ -4102,10 +4102,13 @@ INSERT
     );
 --------- INSERT INTO TB_REVIEW 끝
 
-
-
-
-
-
+--------- INSERT INTO TB_CART 시작
+INSERT INTO TB_CART(CART_NO, USER_NO, PDT_NO, PDT_OPTION_NO, CART_QUANTITY) VALUES(SEQ_CART.NEXTVAL, 1, 21, 22, 5);
+INSERT INTO TB_CART(CART_NO, USER_NO, PDT_NO, PDT_OPTION_NO, CART_QUANTITY) VALUES(SEQ_CART.NEXTVAL, 1, 25, 30, 3);
+INSERT INTO TB_CART(CART_NO, USER_NO, PDT_NO, PDT_OPTION_NO, CART_QUANTITY) VALUES(SEQ_CART.NEXTVAL, 1, 41, 68, 1);
+INSERT INTO TB_CART(CART_NO, USER_NO, PDT_NO, PDT_OPTION_NO, CART_QUANTITY) VALUES(SEQ_CART.NEXTVAL, 1, 37, 60, 7);
+INSERT INTO TB_CART(CART_NO, USER_NO, PDT_NO, PDT_OPTION_NO, CART_QUANTITY) VALUES(SEQ_CART.NEXTVAL, 1, 27, 35, 8);
+INSERT INTO TB_CART(CART_NO, USER_NO, PDT_NO, PDT_OPTION_NO, CART_QUANTITY) VALUES(SEQ_CART.NEXTVAL, 1, 27, 37, 2);
+--------- INSERT INTO TB_CART 끝
 
 COMMIT;

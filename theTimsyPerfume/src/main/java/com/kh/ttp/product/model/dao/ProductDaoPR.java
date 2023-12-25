@@ -69,17 +69,6 @@ public class ProductDaoPR {
 	 * String pdtIntro(상품 간략 설명), String pdtDescription(상품 상세 설명),<br>
 	 * String pdtImgSrc(제품 썸네일 이미지의 경로), float reviewAvg(제품 리뷰의 평균 별점)
 	 */
-	/*
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	
-	public ArrayList<ProductSelectVO> productMainList(Map<String, Object> pMap,
-													  RowBounds rowBounds,
-													  SqlSessionTemplate sqlSession) {
-		
-		return (ArrayList)sqlSession.selectList("productMapperPR.productSelectList", pMap, rowBounds);
-	}
-	*/
-	
 	public ArrayList<ProductSelectVO> productMainList(SqlSessionTemplate sqlSession,
 													  Map<String, Object> pMap,
 													  RowBounds rowBounds) {

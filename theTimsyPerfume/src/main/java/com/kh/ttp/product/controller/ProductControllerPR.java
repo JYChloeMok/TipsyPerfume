@@ -1,5 +1,7 @@
 package com.kh.ttp.product.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
@@ -11,7 +13,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kh.ttp.common.model.vo.PageInfo;
 import com.kh.ttp.common.template.Pagination;
 import com.kh.ttp.product.model.service.ProductServicePR;
-import com.kh.ttp.product.model.vo.ProductSelectVO;
+import com.kh.ttp.product.model.vo.CartVO;
+import com.kh.ttp.user.model.vo.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -116,15 +119,11 @@ public class ProductControllerPR {
 	
 	// 카트 메인 가기
 	@GetMapping("cartMain.ca")
-	public String cartMain(ModelAndView mv, HttpSession session) {
-//		if(null != session.getAttribute("loginUser")) {
-//			mv.addObject("cartList", productService.cartMain(((User)session.getAttribute("loginUser")).getUserNo()))
-//			  .setViewName("orderKinds/cartMain");
-//		} else {
-//			mv.addObject("errorMsg", "장바구니 조회 실패").setViewName("common/errorPage");
-//		}
-//		return mv;
-		return "orderKinds/cartMain";
+	public void /* ModelAndView */ cartMain(ModelAndView mv, HttpSession session) { // 로그인 인터셉터
+		//mv.addObject("cartList", productService.cartMain(((User)session.getAttribute("loginUser")).getUserNo()))
+		 // .setViewName("orderKinds/cartMain");
+		//return mv;
+		System.out.println(productService.cartMain(((User)session.getAttribute("loginUser")).getUserNo()));
 	}
 	
 	
