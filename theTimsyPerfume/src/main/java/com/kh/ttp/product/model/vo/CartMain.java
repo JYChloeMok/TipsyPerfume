@@ -13,6 +13,8 @@ import lombok.ToString;
 public class CartMain {
 
 	private int totalPrice;
+	private String pdtName;
+	private String pdtShipping;
 	private CartVO cart;
 	private ProductOption productOption;
 	

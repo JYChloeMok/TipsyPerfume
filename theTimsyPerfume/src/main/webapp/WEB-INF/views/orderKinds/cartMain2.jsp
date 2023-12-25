@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,74 +56,45 @@
 
 		<c:choose>
 			<c:when test="${not empty cartList }">
-				<c:set var="cartPrevAmount" value="0" />
 				<c:forEach var="cMain" items="${cartList}">
-					<c:set var="cartPrevAmount" value="${cartPrevAmount + cMain.totalPrice}" />
 					<div class="row cart-content-block">
 						<div class="cart-box-area">
 							<label class="check-box-label">
 								<!-- 상품 옵션 번호 -->
-								<input value=${cMain.productOption.pdtOptionNo } class="cart-check-box-one" type="checkbox">
+								<input value=${cMain.cart.pdtOptionNo } class="cart-check-box-one" type="checkbox">
 							</label>
 						</div>
-						<div id="cartItemName_1" class="col-4 ps-5">${cMain.pdtName}&nbsp;${cart.productOption.pdtOptionFirst}</div>
+						<div id="cartItemName_1" class="col-4 ps-5">${cMain.cart.pdtName}&nbsp;${cart.pdtOptionFirst}</div>
 						<div class="col">
 							<!-- 상품수량 -->
-							<input id="cartQuantity_1" value="${cMain.cart.cartQuantity }" type="number" min="1" class="cartQuantity pdt-dt-input form-control" name="#" placeholder="1">
+							<input id="cartQuantity_1" value="${cart.cartQuantity }" type="number" min="1" class="cartQuantity pdt-dt-input form-control" name="#" placeholder="1">
 						</div>
-						<div class="col-2">
-							<fmt:formatNumber value="${cMain.productOption.pdtOptionPrice}" pattern="#,###" />원
-						</div>
-						<div class="col-2 p-0 cart-extra-info-area">
-							<input type="hidden" class="last-shipping" value="${cMain.pdtShipping}">
-							<c:choose>
-								<c:when test="${cMain.pdtShipping eq 0}">
-									무료배송
-								</c:when>
-								<c:otherwise>
-									<fmt:formatNumber value="${cMain.pdtShipping}" pattern="#,###" />원
-								</c:otherwise>
-							</c:choose>
-						</div>
-						<div class="col-2">
-							<fmt:formatNumber value="${cMain.totalPrice }" pattern="#,###" />원
-						</div>
+						<div class="col-2">${cart.pdtOptionPrice}원</div>
+						<div class="col-2 p-0 cart-extra-info-area">배송비 ${cart.pdtShipping}</div>
+						<div class="col-2">${cart.totalPrice }(토탈가격)</div>
 					</div>
 				</c:forEach>
-				<script>
-					$(() => {
-						let $shippingArr = $('.last-shipping');
-						
-						let $prevAmount = $('#cartPrevAmount');
-						let lastShipping = 0;
-						let lastAmount = 0;
-						
-						let sArr = [];
-						$.each($shippingArr, (index, element) => {
-							sArr.push(element.value);
-						});
-						
-						lastShipping = Math.min(...sArr);
-						
-						// 인풋요소들
-						$('#cartLastShipping').val(lastShipping);
-						$('#cartLastAmount').val();
-						console.log(typeof $prevAmount);
-						
-						// 상품 합계 div
-						$prevAmount = (Number)($prevAmount.val());
-						$('#cartAmountDiv1').html($prevAmount.toLocaleString() + '원');
-						// 최종 배송비 div
-						const $lastShippingDiv = $('#cartAmountDiv2');
-						if(lastShipping == 0) {
-							$lastShippingDiv.html('무료배송');
-						} else {
-							$lastShippingDiv.html(lastShipping.toLocaleString() + '원');
-						}
-						// 최종 합계 div
-						$('#cartAmountDiv3').html('= 총 ' + ($prevAmount - lastShipping).toLocaleString() + '원');
-					});
-				</script>
+				
+				<div class="row cart-content-block">
+					<div class="cart-box-area">
+						<label class="check-box-label">
+							<!-- 상품번호 -->
+							<input value="${cartList.pdtNo }" class="cart-check-box-one" type="checkbox">
+						</label>
+					</div>
+					<!-- 상품이름 (요청에 첫번째 것만 필요) -->
+					<div id="cartItemName_0" class="col-4 ps-5">향긋향수 50ML</div>
+					<div class="col">
+						<!-- 상품수량 -->
+						<input id="cartQuantity_0" type="number" min="1" class="cartQuantity pdt-dt-input form-control" name="#">
+					</div>
+					<div class="col-2">100,000원</div>
+					<div class="col-2 p-0 cart-extra-info-area">배송비 3,000</div>	
+					<div class="col-2">98,000원</div>
+				</div>
+				
+
+			
 				<br/>
 				<br/>	
 				<br/>	
@@ -133,22 +103,14 @@
 					<div class="col">
 						<div class="row ps-5">전체금액</div>
 						<div id="123" class="row">
-							<input id="cartPrevAmount" value="${cartPrevAmount }" type="hidden"><!-- value .toLocaleString() 가공해서 띄움 -->
-							<input id="cartLastShipping" value="" type="hidden">
-							<input id="cartLastAmount" value="" type="hidden">
-							<c:remove var="cartPrevAmount" />
-
-							<div id="cartAmountDiv1" class="col summary-col">
-								<!-- 상품 총 합계 뜨는곳 -->
-							</div>
+							<input id="cartAmountBefore" value="400000" type="hidden"><!-- value .toLocaleString() 가공해서 띄움 -->
+							<div class="col summary-col">400,000</div>
 							<div class="col-1 summary-col"> | </div>
-							<div id="cartAmountDiv2" class="col summary-col">
-								<!-- 배송비 뜨는곳 -->
-							</div>
+							<input id="cartPdtShipping" value="0" type="hidden">
+							<div class="col summary-col">무료배송</div><!-- value 0이면 무료배송 -->
 						</div>
-						<div id="cartAmountDiv3" class="row ps-5">
-							<!-- 최종 금액 뜨는곳 -->
-						</div><!-- cartTotalAmount영역에 value .toLocaleString() 가공해서 띄움 -->
+						<input id="cartTotalAmount" value="392000" type="hidden">
+						<div class="row ps-5">= 392,000원</div><!-- cartTotalAmount영역에 value .toLocaleString() 가공해서 띄움 -->
 					</div>
 					<div class="col-4">
 						<button id="cartMainOrderBtn" class="btn btn-primary">주문하기</button>

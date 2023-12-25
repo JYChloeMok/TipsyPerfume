@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.kh.ttp.common.model.vo.PageInfo;
 import com.kh.ttp.community.review.model.vo.ReviewVO;
+import com.kh.ttp.product.model.vo.CartMain;
 import com.kh.ttp.product.model.vo.CartVO;
 import com.kh.ttp.product.model.vo.ProductSelectVO;
 import com.kh.ttp.product.model.vo.WishlistVO;
@@ -73,7 +74,7 @@ public interface ProductServicePR {
 	 * @param userNo(유저번호PK)
 	 * @return : 장바구니 정보가 담긴 ArrayList
 	 */
-	ArrayList<CartVO> cartMain(int userNo);
+	ArrayList<CartMain> cartMain(int userNo);
 	
 	
 	/**

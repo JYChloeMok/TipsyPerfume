@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.kh.ttp.common.model.vo.PageInfo;
 import com.kh.ttp.community.review.model.vo.ReviewVO;
 import com.kh.ttp.product.model.dao.ProductDaoPR;
+import com.kh.ttp.product.model.vo.CartMain;
 import com.kh.ttp.product.model.vo.CartVO;
 import com.kh.ttp.product.model.vo.ProductSelectVO;
 import com.kh.ttp.product.model.vo.WishlistVO;
@@ -118,7 +119,7 @@ public class ProductServicePRImpl implements ProductServicePR {
 
 
 	@Override
-	public ArrayList<CartVO> cartMain(int userNo) {
+	public ArrayList<CartMain> cartMain(int userNo) {
 		return productDao.cartMain(sqlSession, userNo);
 	}
 

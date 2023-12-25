@@ -119,11 +119,11 @@ public class ProductControllerPR {
 	
 	// 카트 메인 가기
 	@GetMapping("cartMain.ca")
-	public void /* ModelAndView */ cartMain(ModelAndView mv, HttpSession session) { // 로그인 인터셉터
-		//mv.addObject("cartList", productService.cartMain(((User)session.getAttribute("loginUser")).getUserNo()))
-		 // .setViewName("orderKinds/cartMain");
-		//return mv;
-		System.out.println(productService.cartMain(((User)session.getAttribute("loginUser")).getUserNo()));
+	public ModelAndView cartMain(ModelAndView mv, HttpSession session) { // 로그인 인터셉터
+		mv.addObject("cartList", productService.cartMain(((User)session.getAttribute("loginUser")).getUserNo()))
+		  .setViewName("orderKinds/cartMain");
+		return mv;
+		//System.out.println(productService.cartMain(((User)session.getAttribute("loginUser")).getUserNo()));
 	}
 	
 	

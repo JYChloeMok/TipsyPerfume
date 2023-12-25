@@ -10,6 +10,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.ttp.community.review.model.vo.ReviewVO;
+import com.kh.ttp.product.model.vo.CartMain;
 import com.kh.ttp.product.model.vo.CartVO;
 import com.kh.ttp.product.model.vo.ProductSelectVO;
 import com.kh.ttp.product.model.vo.WishlistVO;
@@ -100,7 +101,7 @@ public class ProductDaoPR {
 	/**
 	 * 장바구니 전체조회
 	 */
-	public ArrayList<CartVO> cartMain(SqlSessionTemplate sqlSession, int userNo) {
+	public ArrayList<CartMain> cartMain(SqlSessionTemplate sqlSession, int userNo) {
 		return (ArrayList)sqlSession.selectList("productMapperPR.cartMain", userNo);
 	}
 	
