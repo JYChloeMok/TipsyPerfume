@@ -1,1 +1,2 @@
-# Tipsy_Perfume
+- Typsy Perfume
+- 주류 향수 판매 웹사이트 프로젝트
