@@ -24,14 +24,21 @@ import lombok.RequiredArgsConstructor;
 public class ProductServicePRImpl implements ProductServicePR {
 	
 	
+	/**
+	 * DAO 클래스
+	 */
 	private final ProductDaoPR productDao;
+	
+	/**
+	 * sqlSessionTemplate 객체
+	 */
 	private final SqlSessionTemplate sqlSession;
 	
 	
 	
 	@Override
-	public int selectProductCount(String pdtCteg) {
-		return productDao.selectProductCount(sqlSession, pdtCteg);
+	public int productCount(String pdtCteg) {
+		return productDao.productCount(sqlSession, pdtCteg);
 	}
 
 	

@@ -24,8 +24,8 @@ public class ProductDaoPR {
 	 * 전체상품 COUNT / 브랜드 주류 or 향수(판매중 상태Y)의 전체 개수
 	 * @param pdtCteg : 상품카테고리(알콜 'A', 향수'F')
 	 */
-	public int selectProductCount(SqlSessionTemplate sqlSession, String pdtCteg) {
-		return sqlSession.selectOne("productMapperPR.selectProductCount", pdtCteg);
+	public int productCount(SqlSessionTemplate sqlSession, String pdtCteg) {
+		return sqlSession.selectOne("productMapperPR.productCount", pdtCteg);
 	}
 
 	/**

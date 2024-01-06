@@ -15,11 +15,11 @@ import com.kh.ttp.productOption.model.vo.ProductOption;
 public interface ProductServicePR {
 
 	/**
-	 * 전체상품 COUNT / 브랜드 주류 or 향수(판매중 상태Y)의 전체 개수 
-	 * @param pdtCteg
-	 * @return
+	 * 판매중 상태의 주류 혹은 향수 상품의 전체 개수를 조회
+	 * @param pdtCteg : 상품 카테고리 구분용 식별자 ("A" 주류 / "F" 향수)
+	 * @return : 전체 상품의 개수 조회(COUNT) 개수를 반환
 	 */
-	int selectProductCount(String pdtCteg);
+	int productCount(String pdtCteg);
 	
 	
 	/**
