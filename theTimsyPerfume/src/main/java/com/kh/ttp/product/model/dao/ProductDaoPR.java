@@ -71,9 +71,8 @@ public class ProductDaoPR {
 	 * String pdtImgSrc(제품 썸네일 이미지의 경로), float reviewAvg(제품 리뷰의 평균 별점)
 	 */
 	public ArrayList<ProductSelectVO> productMainList(SqlSessionTemplate sqlSession,
-													  Map<String, Object> pMap,
-													  RowBounds rowBounds) {
-		return (ArrayList)sqlSession.selectList("productMapperPR.productSelectList", pMap, rowBounds);
+													  Map<String, Object> pMap) {
+		return (ArrayList)sqlSession.selectList("productMapperPR.productSelectList", pMap);
 	}
 	
 	//향수 전체조회

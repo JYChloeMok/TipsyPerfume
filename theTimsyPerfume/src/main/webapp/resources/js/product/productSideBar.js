@@ -16,6 +16,6 @@ $('.pdt-side-bar-sort').on('click', e => {
 		location.href='selectAlcoholPdtList.pr?sort=' + $pdtSidebarSort + '&currentPage=' + $pdtCurrentPage;
 
 	} else {
-		location.href='selectPerfumePdtList.pr?sort=' + $pdtSidebarSort + '&currrentPage=' + $pdtCurrentPage;
+		location.href='perfumePdtList.pr?sort=' + $pdtSidebarSort + '&currrentPage=' + $pdtCurrentPage;
 	}
 });

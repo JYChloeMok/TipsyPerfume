@@ -1,19 +1,17 @@
 package com.kh.ttp.product.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.ttp.common.model.vo.PageInfo;
 import com.kh.ttp.common.template.Pagination;
 import com.kh.ttp.product.model.service.ProductServicePR;
-import com.kh.ttp.product.model.vo.CartVO;
 import com.kh.ttp.user.model.vo.User;
 
 import lombok.RequiredArgsConstructor;
@@ -24,38 +22,48 @@ public class ProductControllerPR {
 
 	private final ProductServicePR productService;
 	
-	
-	// A or F & 6개 or 12개
-	// New / BestSeller / Popular 다 넘기고 전부 DB단 조건식에서 검증됨
-	// (BestSeller / Popular아닐 시 기본 최신순으로 조회됨)
 	/**
-	 * 상품 메인 조회_카테고리와 정렬 기준 별 상품 6개의 리스트를 조회하는 기능<br/>
-	 * 식별자에 따라 주류 / 향수 제품을 각 최신순, 베스트셀러순, 위시리스트 등록 순으로 조회<br/>
-	 * 정렬 기준 별 조회결과를 ArrayList에 담은 후 이 ArrayList들을 HashMap에 담아 반환함
-	 * @param pdtCteg : 상품 카테고리 구분용 식별자(A=주류 / F=향수)
-	 * @param sort    : 정렬 기준
-	 * @param mv : srot, pdtCteg, pMap(조회결과 HashMap)을 담은 ModelAndView객체
+	 * @param mv	   : ModelAndView객체 (에러 메세지와 에러페이지의 정보)
+	 * @param errorMsg : 에러 시 출력할 메세지
+	 * @return : 에러 메세지, 에러 페이지 정보를 담은 ModelAndView객체를 반환
 	 */
-	@GetMapping("productMain.pr") // productMain.pr?pdtCteg=A
-	public ModelAndView productMainList(String pdtCteg,
-										ModelAndView mv,
-										@RequestParam(value="sort", defaultValue="New") String sort) {
-		if("A".equals(pdtCteg) || "F".equals(pdtCteg)) {
-			int listCount = productService.selectProductCount(pdtCteg);
-			PageInfo pi = Pagination.getPageInfo(listCount, 1, 6, 10);
-			mv.addObject("sort", sort)
-			  .addObject("pdtCteg", pdtCteg) // 주류 / 향수 식별자
-			  .addObject("pMap", productService.productMainList(pdtCteg, pi))
-			  .setViewName("product/productMain");
-		} else {
-			mv.addObject("errorMsg", "상품 메인화면 이동 실패...")
-			  .setViewName("common/errorPage");
-		}
+	private ModelAndView makeErrorMsg(ModelAndView mv, String errorMsg) {
+		mv.addObject("errorMsg", errorMsg)
+		  .setViewName("common/errorPage");
 		return mv;
 	}
 	
 	
-	// 향수 전체조회
+	/**
+	 * 상품 메인 조회 기능   : 상품 분류, 정렬 식별자에 따라 상품을 조회한 후</br>
+	 * 정렬 기준 별 조회결과ArrayList들을 HashMap에 담아 반환
+	 * @param pdtCteg : 상품 카테고리 구분용 식별자 ("A" 주류 / "F" 향수)
+	 * @param sort    : 정렬 기준 ("New" 최신순 / "BestSeller" 베스트셀러순 / "Popular" 위시리스트순
+	 * @return : ModelAndView객체 = sort, pdtCteg, pMap(조회결과 HashMap)
+	 */
+	@GetMapping("productMain.pr")
+	public ModelAndView productMainList(String pdtCteg,
+										ModelAndView mv,
+										@RequestParam(value="sort", defaultValue="New") String sort) {
+		
+		if("A".equals(pdtCteg) || "F".equals(pdtCteg)) {
+			mv.addObject("sort", sort)
+			  .addObject("pdtCteg", pdtCteg)
+			  .addObject("pMap", productService.productMainList(pdtCteg))
+			  .setViewName("product/productMain");
+		} else {
+			makeErrorMsg(mv, "상품 메인화면 이동 실패...");
+		}
+		return mv;
+	}
+	
+
+	/**
+	 * @param currentPage
+	 * @param sort
+	 * @param m
+	 * @return
+	 */
 	@GetMapping("selectPerfumePdtList.pr")
 	public String selectPerfumePdtList(@RequestParam(value="currentPage", defaultValue="1") int currentPage,
 									   @RequestParam(value="sort", defaultValue="New") String sort,

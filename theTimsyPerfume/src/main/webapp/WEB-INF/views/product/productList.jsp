@@ -77,7 +77,7 @@
 					</div>
 					
 			        <div id="pdtListPaginationArea" class="row">
-		       		<c:set var="hrefPage" value="${pdtCteg eq 'A' ? 'selectAlcoholPdtList.pr' : 'selectPerfumePdtList.pr'}" />
+		       		<c:set var="hrefPage" value="${pdtCteg eq 'A' ? 'selectAlcoholPdtList.pr' : 'perfumePdtList.pr'}" />
 			        	<ul class="pagination">
 		   				    <li class="page-item">
 			        			<c:choose>
