@@ -22,12 +22,14 @@ public class ProductControllerPR {
 
 	private final ProductServicePR productService;
 	
+	
 	/**
 	 * @param mv	   : ModelAndView객체 (에러 메세지와 에러페이지의 정보)
 	 * @param errorMsg : 에러 시 출력할 메세지
 	 * @return : 에러 메세지, 에러 페이지 정보를 담은 ModelAndView객체를 반환
 	 */
 	private ModelAndView makeErrorMsg(ModelAndView mv, String errorMsg) {
+		
 		mv.addObject("errorMsg", errorMsg)
 		  .setViewName("common/errorPage");
 		return mv;
@@ -42,14 +44,14 @@ public class ProductControllerPR {
 	 * @return : ModelAndView객체 = sort, pdtCteg, pMap(조회결과 HashMap)
 	 */
 	@GetMapping("productMain.pr")
-	public ModelAndView productMainList(String pdtCteg,
-										ModelAndView mv,
-										@RequestParam(value="sort", defaultValue="New") String sort) {
+	public ModelAndView productMain(String pdtCteg,
+									ModelAndView mv,
+									@RequestParam(value="sort", defaultValue="New") String sort) {
 		
 		if("A".equals(pdtCteg) || "F".equals(pdtCteg)) {
 			mv.addObject("sort", sort)
 			  .addObject("pdtCteg", pdtCteg)
-			  .addObject("pMap", productService.productMainList(pdtCteg))
+			  .addObject("pMap", productService.productMain(pdtCteg))
 			  .setViewName("product/productMain");
 		} else {
 			makeErrorMsg(mv, "상품 메인화면 이동 실패...");
@@ -58,24 +60,18 @@ public class ProductControllerPR {
 	}
 	
 
-	/**
-	 * @param currentPage
-	 * @param sort
-	 * @param m
-	 * @return
-	 */
-	@GetMapping("selectPerfumePdtList.pr")
-	public String selectPerfumePdtList(@RequestParam(value="currentPage", defaultValue="1") int currentPage,
-									   @RequestParam(value="sort", defaultValue="New") String sort,
-									   Model m) {
+	@GetMapping("perfumePdtList.pr")
+	public String perfumePdtList(Model m,
+								 @RequestParam(value="sort", defaultValue="New") String sort,
+								 @RequestParam(value="currentPage", defaultValue="1") int currentPage) {
 		
 		int listCount = productService.selectProductCount("F");
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 12, 10);
 		
-		m.addAttribute("pdtCteg", "F") // 향수도 식별자 넘겨야함(사이드바 정렬보기 요청 시 필요)
+		m.addAttribute("pi", pi)
 		 .addAttribute("sort", sort)
-		 .addAttribute("pdtList", productService.selectPerfumePdtList(sort, pi))
-		 .addAttribute("pi", pi);
+		 .addAttribute("pdtList", productService.perfumePdtList(sort, pi))
+		 .addAttribute("pdtCteg", "F"); // 향수 식별자(사이드바 정렬보기 요청 시 필요)
 		return "product/productList";
 	}
 	
@@ -94,17 +90,17 @@ public class ProductControllerPR {
 		return mv;
 	}
 	
-	// 주류전체조회
-	@GetMapping("selectAlcoholPdtList.pr") // 성인 인터셉터 거침(세션에 N)
-	public String selectAlcoholPdtList(@RequestParam(value="sort", defaultValue="New") String sort,
-									   @RequestParam(value="currentPage", defaultValue="1") int currentPage,
-									   Model m) {
+	
+	// Model객체 반환 & 쿼리스트링으로 들어오는 값에 모두 defaultValue설정, 예상하지 못한 값은 최신순(New)기준 1페이지 출력
+	@GetMapping("alcoholPdtList.pr") // 성인 인터셉터 거침(세션에 N)
+	public String alcoholPdtList(Model m,
+								 @RequestParam(value="sort", defaultValue="New") String sort,
+								 @RequestParam(value="currentPage", defaultValue="1") int currentPage) {
 		int listCount = productService.selectProductCount("A");
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 12, 10);
-		
 		m.addAttribute("pdtCteg", "A")
 		 .addAttribute("sort", sort)
-		 .addAttribute("pdtList", productService.selectAlcoholPdtList(sort, pi))
+		 .addAttribute("pdtList", productService.alcoholPdtList(sort, pi))
 		 .addAttribute("pi", pi);
 		
 		return "product/productList";

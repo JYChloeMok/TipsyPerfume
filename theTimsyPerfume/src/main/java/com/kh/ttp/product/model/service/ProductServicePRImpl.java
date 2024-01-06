@@ -52,48 +52,26 @@ public class ProductServicePRImpl implements ProductServicePR {
 	
 	
 	@Override
-	public HashMap<String, Object> productMainList(String pdtCteg) {
+	public HashMap<String, Object> productMain(String pdtCteg) {
 		
 		HashMap<String, Object> pMap = new HashMap();
 		
 		pMap.put("pdtCteg", pdtCteg); // 식별자
 		
-		pMap.put("pMainListNew", productDao.productMainList(sqlSession, pMap)); // 최신순
+		pMap.put("pMainListNew", productDao.productMain(sqlSession, pMap)); // 최신순
 				
 		pMap.put("sort", "BestSeller");
-		pMap.put("pMainListBestSeller", productDao.productMainList(sqlSession, pMap)); // 판매량순
+		pMap.put("pMainListBestSeller", productDao.productMain(sqlSession, pMap)); // 판매량순
 		
 		pMap.put("sort", "Popular");
-		pMap.put("pMainListPopular", productDao.productMainList(sqlSession, pMap)); // 위시리스트순
+		pMap.put("pMainListPopular", productDao.productMain(sqlSession, pMap)); // 위시리스트순
 
 		return pMap;
 	}
 	
-	/*
-	@Override
-	public HashMap<String, Object> productMainList(String pdtCteg, PageInfo pi) {
-		
-		RowBounds rowBounds = new RowBounds(0, pi.getBoardLimit());
-		
-		HashMap<String, Object> pMap = new HashMap();
-		
-		pMap.put("pdtCteg", pdtCteg); // 식별자
-		
-		pMap.put("pMainListNew", productDao.productMainList(sqlSession, pMap, rowBounds)); // 최신순
-				
-		pMap.put("sort", "BestSeller");
-		pMap.put("pMainListBestSeller", productDao.productMainList(sqlSession, pMap, rowBounds)); // 판매량순
-		
-		pMap.put("sort", "Popular");
-		pMap.put("pMainListPopular", productDao.productMainList(sqlSession, pMap, rowBounds)); // 위시리스트순
-
-		return pMap;
-	}
-	*/
-
 	
 	@Override
-	public ArrayList<ProductSelectVO> selectPerfumePdtList(String sort, PageInfo pi) {
+	public ArrayList<ProductSelectVO> perfumePdtList(String sort, PageInfo pi) {
 		
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
@@ -101,7 +79,7 @@ public class ProductServicePRImpl implements ProductServicePR {
 		HashMap<String, Object> pMap = new HashMap();
 		pMap.put("pdtCteg", "F");
 		pMap.put("sort", sort);
-		return productDao.selectPerfumePdtList(sqlSession, pMap, rowBounds);
+		return productDao.perfumePdtList(sqlSession, pMap, rowBounds);
 	}
 
 	
@@ -115,7 +93,7 @@ public class ProductServicePRImpl implements ProductServicePR {
 
 	
 	@Override
-	public ArrayList<ProductSelectVO> selectAlcoholPdtList(String sort, PageInfo pi) {
+	public ArrayList<ProductSelectVO> alcoholPdtList(String sort, PageInfo pi) {
 		
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
@@ -123,7 +101,7 @@ public class ProductServicePRImpl implements ProductServicePR {
 		HashMap<String, Object> pMap = new HashMap();
 		pMap.put("pdtCteg", "A");
 		pMap.put("sort", sort);
-		return productDao.selectAlcoholPdtList(sqlSession, pMap, rowBounds);
+		return productDao.alcoholPdtList(sqlSession, pMap, rowBounds);
 	}
 
 	

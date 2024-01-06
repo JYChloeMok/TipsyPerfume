@@ -12,8 +12,8 @@ $('.pdt-side-bar-sort').on('click', e => {
 	let $pdtCteg = $('#sidebarPdtCteg').val();
 	let $pdtCurrentPage = $('#sidebarCurrentPage').val();
 	if($pdtCteg == 'A') {
-		//location.href="selectAlcoholPdtList.pr?sort=" + $pdtSidebarSort + "&currentPage=" + $pdtCurrentPage;
-		location.href='selectAlcoholPdtList.pr?sort=' + $pdtSidebarSort + '&currentPage=' + $pdtCurrentPage;
+		//location.href="alcoholPdtList.pr?sort=" + $pdtSidebarSort + "&currentPage=" + $pdtCurrentPage;
+		location.href='alcoholPdtList.pr?sort=' + $pdtSidebarSort + '&currentPage=' + $pdtCurrentPage;
 
 	} else {
 		location.href='perfumePdtList.pr?sort=' + $pdtSidebarSort + '&currrentPage=' + $pdtCurrentPage;

@@ -54,17 +54,16 @@ public interface ProductServicePR {
 	 * 판매량순ArrayList    : pMainListBestSeller<br>
 	 * 위시리스트순ArrayList : pMainListPopular<br>
 	 */
-	//HashMap<String, Object> productMainList(String pdtCteg, PageInfo pi);
-	HashMap<String, Object> productMainList(String pdtCteg);
+	HashMap<String, Object> productMain(String pdtCteg);
 	
-	// 향수 전체조회 selectPerfumePdtList
-	ArrayList<ProductSelectVO> selectPerfumePdtList(String sort, PageInfo pi);
+	// 향수 전체조회 perfumePdtList
+	ArrayList<ProductSelectVO> perfumePdtList(String sort, PageInfo pi);
 	
 	// 향수 디테일조회 perfumePdtDetail
 	ProductSelectVO perfumePdtDetail(int pdtNo);
 	
-	// 주류 전체조회 selectAlcoholPdtList
-	ArrayList<ProductSelectVO> selectAlcoholPdtList(String sort, PageInfo pi);
+	// 주류 전체조회 alcoholPdtList
+	ArrayList<ProductSelectVO> alcoholPdtList(String sort, PageInfo pi);
 	
 	// 주류 디테일조회 alcoholPdtDetail
 	ProductSelectVO alcoholPdtDetail(int pdtNo);

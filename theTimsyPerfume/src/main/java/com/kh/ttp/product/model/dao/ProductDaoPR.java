@@ -70,13 +70,13 @@ public class ProductDaoPR {
 	 * String pdtIntro(상품 간략 설명), String pdtDescription(상품 상세 설명),<br>
 	 * String pdtImgSrc(제품 썸네일 이미지의 경로), float reviewAvg(제품 리뷰의 평균 별점)
 	 */
-	public ArrayList<ProductSelectVO> productMainList(SqlSessionTemplate sqlSession,
+	public ArrayList<ProductSelectVO> productMain(SqlSessionTemplate sqlSession,
 													  Map<String, Object> pMap) {
 		return (ArrayList)sqlSession.selectList("productMapperPR.productSelectList", pMap);
 	}
 	
 	//향수 전체조회
-	public ArrayList<ProductSelectVO> selectPerfumePdtList(SqlSessionTemplate sqlSession, Map<String, Object> pMap, RowBounds rowBounds) {
+	public ArrayList<ProductSelectVO> perfumePdtList(SqlSessionTemplate sqlSession, Map<String, Object> pMap, RowBounds rowBounds) {
 		return (ArrayList)sqlSession.selectList("productMapperPR.productSelectList", pMap, rowBounds);
 	}
 	
@@ -86,7 +86,7 @@ public class ProductDaoPR {
 	}
 	
 	//주류 전체조회
-	public ArrayList<ProductSelectVO> selectAlcoholPdtList(SqlSessionTemplate sqlSession, Map<String, Object> pMap, RowBounds rowBounds) {
+	public ArrayList<ProductSelectVO> alcoholPdtList(SqlSessionTemplate sqlSession, Map<String, Object> pMap, RowBounds rowBounds) {
 		return (ArrayList)sqlSession.selectList("productMapperPR.productSelectList", pMap, rowBounds);
 	}
 	
