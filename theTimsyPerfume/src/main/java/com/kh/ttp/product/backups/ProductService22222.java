@@ -1,3 +1,4 @@
+/*
 package com.kh.ttp.product.model.service;
 
 
@@ -21,9 +22,6 @@ import com.kh.ttp.user.model.vo.User;
 
 public interface ProductService {
 	
-	// 프로젝트 메인 조회 메소드(SELECT)
-	//public ArrayList<ProductSelectVO> productMain(String pdtIdenKey);
-
 	int drinkFundingInsert(ProductVO product, ProductFile productFile, ProductOption productOption, Funding funding, ProductCategory productCategory);
 	
 	int updateDrinkFunding(ProductVO product, ProductFile productFile, ProductOption productOption, Funding funding, ProductCategory productCategory);
@@ -55,10 +53,5 @@ public interface ProductService {
 	public ArrayList<CartSelectVO> selectFundingCart(int userNo);
 
 
-	
-
-
-
-
-
 }
+*/

@@ -1,10 +1,9 @@
-package com.kh.ttp.product.model.service;
+package com.kh.ttp.funding.model.service;
 
 import java.util.ArrayList;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,11 +16,9 @@ import com.kh.ttp.orderKinds.model.vo.OrderDetailVO;
 import com.kh.ttp.orderKinds.model.vo.OrderVO;
 import com.kh.ttp.orderKinds.model.vo.PayVO;
 import com.kh.ttp.orderKinds.model.vo.Receiver;
-import com.kh.ttp.product.model.dao.ProductDao;
 import com.kh.ttp.product.model.vo.CartSelectVO;
 import com.kh.ttp.product.model.vo.CartVO;
 import com.kh.ttp.product.model.vo.FundingSelectVO;
-import com.kh.ttp.product.model.vo.ProductSelectVO;
 import com.kh.ttp.product.model.vo.ProductVO;
 import com.kh.ttp.productCategory.model.dao.ProductCategoryDao;
 import com.kh.ttp.productCategory.model.vo.ProductCategory;
@@ -31,32 +28,31 @@ import com.kh.ttp.productOption.model.dao.ProductOptionDao;
 import com.kh.ttp.productOption.model.vo.ProductOption;
 import com.kh.ttp.user.model.vo.User;
 
+import lombok.RequiredArgsConstructor;
 
-@Service @EnableTransactionManagement
-public class ProductServiceImpl implements ProductService {
-	@Autowired
+
+@Service
+@RequiredArgsConstructor
+@EnableTransactionManagement
+public class FundingServiceImpl implements FundingService {
+
 	private FundingDao fundingDao;
-	@Autowired
-	private ProductDao productDao;
-	@Autowired
 	private ProductCategoryDao productCategoryDao;
-	@Autowired
 	private ProductFileDao productFileDao;
-	@Autowired
 	private ProductOptionDao productOptionDao;
-	@Autowired
 	private SqlSessionTemplate sqlSession;
-	@Autowired
 	private ReceiverDao receiverDao;
-	@Override @Transactional
+	
+	@Override
+	@Transactional
 	public int drinkFundingInsert(ProductVO product, ProductFile productFile, ProductOption productOption, Funding funding,
 			ProductCategory productCategory) {
 		    if(productCategoryDao.drinkFundingInsert(sqlSession,productCategory)>0) {
 				int result=productCategoryDao.drinkFundingSelect(sqlSession);
 				product.setPdtCategNo(result);
 				//System.out.println(p);
-				if(productDao.drinkFundingInsert(sqlSession,product)>0) {
-					int pdtNo = productDao.drinkFundingSelect(sqlSession);
+				if(fundingDao.insertFundingProduct(sqlSession,product)>0) {
+					int pdtNo = fundingDao.drinkFundingSelect(sqlSession);
 					productFile.setPdtNo(pdtNo);
 					productOption.setPdtNo(pdtNo);
 					funding.setPdtNo(pdtNo);
@@ -64,11 +60,6 @@ public class ProductServiceImpl implements ProductService {
 					productOptionDao.drinkFundingInsert(sqlSession,productOption);
 					productFileDao.drinkFundingInsert(sqlSession,productFile);
 					fundingDao.drinkFundingInsert(sqlSession,funding);
-					
-					
-					
-				
-				
 			}
 		}
 		    return 1;
@@ -80,8 +71,8 @@ public class ProductServiceImpl implements ProductService {
 	@Override @Transactional
 	public int updateDrinkFunding(ProductVO product, ProductFile productFile, ProductOption productOption, Funding funding, 
 			ProductCategory productCategory) {
-		if(productDao.updateDrinkFunding(sqlSession,product)>0) {
-			int categNo = productDao.selectPdtNo(sqlSession,product);
+		if(fundingDao.updateDrinkFunding(sqlSession,product)>0) {
+			int categNo = fundingDao.selectPdtNo(sqlSession,product);
 			//System.out.println(categNo);
 			productCategory.setPdtCategNo(categNo);
 			productCategoryDao.updateDrinkFunding(sqlSession,productCategory);
@@ -96,76 +87,70 @@ public class ProductServiceImpl implements ProductService {
 		
 		
 	}
-	/*
-	@Override
-	public ArrayList<ProductSelectVO> productMain(String pdtIdenKey) {
-		return productDao.productMain(sqlSession, pdtIdenKey);
-	}
-	*/
 	
 	@Override
 	public ArrayList<FundingSelectVO> selectNewFundingList() {
-		return productDao.selectFundingList(sqlSession);
+		return fundingDao.selectFundingList(sqlSession);
 		
 	}
 
 	@Override
 	public int newDrinkFundingListCount() {
-		return productDao.newDrinkFundingListCount(sqlSession);
+		return fundingDao.newDrinkFundingListCount(sqlSession);
 	}
 
 	@Override
 	public ArrayList<FundingSelectVO> newDrinkFundingList(PageInfo pi) {
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset,pi.getBoardLimit());
-		return productDao.newDrinkFundingList(sqlSession,rowBounds);
+		return fundingDao.newDrinkFundingList(sqlSession,rowBounds);
 	}
 
 	@Override
 	public FundingSelectVO newDrinkFundingDetail(int pdtNo) {
-		return productDao.newDrinkFundingDetail(sqlSession,pdtNo);
+		return fundingDao.newDrinkFundingDetail(sqlSession,pdtNo);
 	}
 
 	@Override
 	public int increaseCount(int pdtNo) {
-		return productDao.increaseCount(sqlSession,pdtNo);
+		return fundingDao.increaseCount(sqlSession,pdtNo);
 		
 	}
 
 	@Override
 	public ArrayList<FundingSelectVO> selectHotFundingList() {
-		return productDao.selectHotFundingList(sqlSession);
+		return fundingDao.selectHotFundingList(sqlSession);
 	}
 
 	@Override
 	public ArrayList<FundingSelectVO> hotDrinkFundingList(PageInfo pi) {
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset,pi.getBoardLimit());
-		return productDao.hotDrinkFundingList(sqlSession,rowBounds);
+		return fundingDao.hotDrinkFundingList(sqlSession,rowBounds);
 	}
 
 	@Override 
 	public FundingSelectVO selectDrinkFundingList(int pdtNo) {
-		return productDao.selectDrinkFundingList(sqlSession,pdtNo);
+		return fundingDao.selectDrinkFundingList(sqlSession,pdtNo);
 	}
 	@Override @Transactional
 	public int deleteDrinkFunding(int pdtNo) {
-		return productDao.deleteDrinkFunding(sqlSession,pdtNo);
+		return fundingDao.deleteDrinkFunding(sqlSession,pdtNo);
 	}
 	@Override @Transactional
 	public int confirmFundingDrink(OrderDetailVO orderDetail, OrderVO order, User user, ProductVO product, 
 			PayVO pay,Funding funding,Receiver receiver) {
 		if(fundingDao.confirmFundingDrink(sqlSession,funding)>0) {
-			int result1= productDao.confirmFundingDrinkPV(sqlSession,pay);
+			int result1= fundingDao.confirmFundingDrinkPV(sqlSession,pay);
 			int result  = receiverDao.selectReceiverNo(sqlSession,receiver);
-			int payNo = productDao.selectPayNo(sqlSession);
+			int payNo = fundingDao.selectPayNo(sqlSession);
 			order.setReceiverNo(result);
-			int result2=productDao.confirmFundingDrinkO(sqlSession,order);
-			int orderNo = productDao.selectOrderNo(sqlSession);
+			int result2=fundingDao.confirmFundingDrinkO(sqlSession,order);
+			int orderNo = fundingDao.selectOrderNo(sqlSession);
 			orderDetail.setOrderNo(orderNo);
 			orderDetail.setPayNo(payNo);
-			int result3 = productDao.confirmFundingDrinkOD(sqlSession,orderDetail);
-			int result4 = productDao.decreaseStock(sqlSession,product);
+			int result3 = fundingDao.confirmFundingDrinkOD(sqlSession,orderDetail);
+			int result4 = fundingDao.decreaseStock(sqlSession,product);
 			if(result1*result*result2*result3*result4 > 0) {
 				return 1;
 			}
@@ -180,13 +165,14 @@ public class ProductServiceImpl implements ProductService {
 	}
 	@Override @Transactional
 	public int insertFundingBasket(CartVO cart) {
-		productDao.insertFundingBasket(sqlSession,cart);
+		fundingDao.insertFundingBasket(sqlSession,cart);
 		return 0;
 	}
 	@Override
 	public ArrayList<CartSelectVO> selectFundingCart(int userNo) {
-		return productDao.selectFundingCart(userNo,sqlSession);
+		return fundingDao.selectFundingCart(userNo,sqlSession);
 	}
+	
 	
 
 	
