@@ -53,8 +53,8 @@ public class ReviewDAO {
 		return sqlSession.insert("reviewMapper.insertReviewFile", fileList);
 	}
 
-	public int countFundingReview(SqlSessionTemplate sqlSession, int pdtNo) {
-		return sqlSession.selectOne("reviewMapper.countFundingReview",pdtNo);
+	public int countFundingReview(SqlSessionTemplate sqlSession, int pdtOptionNo) {
+		return sqlSession.selectOne("reviewMapper.countFundingReview",pdtOptionNo);
 	}
 
 	public ArrayList<ReviewVO> selectReviewFunding(SqlSessionTemplate sqlSession, RowBounds rowBounds, int pdtNo) {

@@ -36,12 +36,13 @@ import lombok.RequiredArgsConstructor;
 @EnableTransactionManagement
 public class FundingServiceImpl implements FundingService {
 
-	private FundingDao fundingDao;
-	private ProductCategoryDao productCategoryDao;
-	private ProductFileDao productFileDao;
-	private ProductOptionDao productOptionDao;
-	private SqlSessionTemplate sqlSession;
-	private ReceiverDao receiverDao;
+	private final SqlSessionTemplate sqlSession;
+
+	private final FundingDao fundingDao;
+	private final ReceiverDao receiverDao;
+	private final ProductFileDao productFileDao;
+	private final ProductOptionDao productOptionDao;
+	private final ProductCategoryDao productCategoryDao;
 	
 	@Override
 	@Transactional

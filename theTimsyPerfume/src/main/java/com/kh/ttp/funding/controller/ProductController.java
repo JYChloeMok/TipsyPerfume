@@ -40,17 +40,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductController {
 
-	private FundingService fundingService;
-
-	private ReviewService reviewService;
+	private final FundingService fundingService;
+	private final ReviewService reviewService;
 	
 	
 	@PostMapping("insertDrink.fun")
-	public String drinkFundinginsert(MultipartFile upfile,HttpSession session,ProductVO product,ProductCategory productCategory
-			,ProductFile productFile, ProductOption productOption,Funding funding			) {
-		
-		
-		
+	public String drinkFundinginsert(MultipartFile upfile, HttpSession session,
+									 ProductVO product, ProductCategory productCategory,
+									 ProductFile productFile, ProductOption productOption, Funding funding) {
 		if(!upfile.getOriginalFilename().equals("")) {
 			productFile.setPdtFileOrigin(upfile.getOriginalFilename());
 			productFile.setPdtFileUpload(saveFile(upfile,session));
@@ -61,19 +58,13 @@ public class ProductController {
 		} else {
 			return "common/errorPage";
 		}
-		
-		
-		
-		
-		
-		
 	}
+	
+	
 	@RequestMapping("updateDrink.fun")
-	public String updateDrinkFunding(MultipartFile upfile,HttpSession session,Model model,
-									ProductVO product,ProductCategory productCategory,ProductFile productFile,ProductOption productOption,
-									Funding funding) {
-		
-		
+	public String updateDrinkFunding(MultipartFile upfile, HttpSession session, Model model,
+									ProductVO product, ProductCategory productCategory,
+									ProductFile productFile, ProductOption productOption, Funding funding) {
 		
 		if(!upfile.getOriginalFilename().equals("")) {
 			productFile.setPdtFileOrigin(upfile.getOriginalFilename());
@@ -85,11 +76,11 @@ public class ProductController {
 		} else {
 			return "common/errorPage";
 		}
-		
-		
-		
 	}
+	
+	
 	private String saveFile(MultipartFile upfile, HttpSession session) {
+		
 		String originName = upfile.getOriginalFilename();
 		
 		String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new java.util.Date());
@@ -102,11 +93,12 @@ public class ProductController {
 		try {
 			upfile.transferTo(new File(savePath + changeName));
 		} catch (IllegalStateException | IOException e) {
-			
 			e.printStackTrace();
 		}
 		return changeName;
 	}
+	
+	
 	@RequestMapping("funding.list")
 	private String selectFundingList(Model model) {
 		ArrayList<FundingSelectVO> nfs = fundingService.selectNewFundingList();
@@ -116,6 +108,8 @@ public class ProductController {
 		
 		return "funding/fundingList";
 	}
+	
+	
 	@RequestMapping("newDrinkFunding.list")
 	public String newDrinkFundingListPage(@RequestParam(value="cPage", defaultValue="1")int currentPage ,Model model) {
 		PageInfo pi = Pagination.getPageInfo(fundingService.newDrinkFundingListCount(),currentPage,12,10);
@@ -124,6 +118,8 @@ public class ProductController {
 		
 		return "funding/newDrinkFundingList";
 	}
+	
+	
 	@RequestMapping("hotDrinkFunding.list")
 	public String hotDrinkFundingListPage(@RequestParam(value="cPage", defaultValue="1")int currentPage ,Model model) {
 		PageInfo pi = Pagination.getPageInfo(fundingService.newDrinkFundingListCount(),currentPage,12,10);
@@ -131,9 +127,10 @@ public class ProductController {
 		model.addAttribute("pi",pi);
 		return "funding/hotDrinkFundingList";
 	}
+	
+	
 	@RequestMapping("detail.fList")
 	public String newDrinkFundingDetail(@RequestParam(value="pno") int pdtNo,Model model) {
-		
 		
 		if(fundingService.increaseCount(pdtNo) > 0) {
 			FundingSelectVO ps= fundingService.newDrinkFundingDetail(pdtNo);
@@ -149,10 +146,11 @@ public class ProductController {
 			model.addAttribute("listCount",listCount);
 			return "funding/newDrinkFundingDetail";
 		}else {
-				return "common/errorPage";
-			}
-		
+			return "common/errorPage";
+		}
 	}
+	
+	
 	//System.out.println("date : "+d);
 	//System.out.println("bo : " + (d.compareTo(new java.util.Date())>=0));//java.sql.Date를 java.util.Date로 강제 형변환 후 
 	//compareTo로 ps.cuttingDate(마감날짜) 와 new Date(현재날짜) 를 비교해서 마감 날짜가 현재 날짜보다 크면 true로 반환 작으면 false 
@@ -163,6 +161,8 @@ public class ProductController {
 		model.addAttribute("pdtNo",pdtNo);
 		return "funding/updateDrinkFunding";
 	}
+	
+	
 	@RequestMapping("delete.fd")
 	public String deleteDrinkFunding(@RequestParam(value="pno") int pdtNo,Model model,HttpSession session) {
 			if(fundingService.deleteDrinkFunding(pdtNo)>0) {
@@ -171,6 +171,8 @@ public class ProductController {
 			}
 				return "common/errorPage";
 	}
+	
+	
 	@RequestMapping("purchase.fd")
 	public String buyDrinkFunding(Model model,int pno,String pdtName,int pdtOptionPrice,String pdtShipping,String pdtFileUpload) {
 		model.addAttribute("pdtNo", pno);
@@ -182,13 +184,14 @@ public class ProductController {
 		return "funding/buyDrinkFunding";
 		
 	}
+	
+	
 	@RequestMapping("funding.fd")
 	public String confirmFundingDrink(HttpSession session,OrderDetailVO orderDetail,OrderVO order,User user,ProductVO product,PayVO pay,ProductOption productOption,
 			Funding funding,Receiver receiver,int selectAddress) {
+		
 		int orderPrice =  (productOption.getPdtOptionPrice()*product.getOrderQuantity())+funding.getFundingFee();//(상품가격 *상품개수)+후원비
-		
-		
-		
+
 		pay.setPayTotal(orderPrice);
 		//System.out.println(selectAddress);
 		System.out.println(receiver);
@@ -196,31 +199,28 @@ public class ProductController {
 		if(selectAddress==2 ) {
 			fundingService.insertReceiver(receiver);
 		}
-		
 		if(fundingService.confirmFundingDrink(orderDetail,order,user,product,pay,funding,receiver)>0) {
-			
 			return "common/buyConfirmPage";
 		}else {
 			return "common/errorPage";
 		}
-		
-		
 	}
+	
+	
 	@PostMapping("fundingBasket.insert")
 	public String insertFundingBasket(CartVO cart,Model model) {
 		System.out.println(cart);
 		fundingService.insertFundingBasket(cart);
 		return "redirect:funding.list";
 	}
+	
+	
 	@GetMapping("cartMain.f")
 	public String fundingCart(int userNo,Model model) {
 			ArrayList<CartSelectVO> cartSelect = fundingService.selectFundingCart(userNo);
 			model.addAttribute("cartSelect", cartSelect);
 		return "funding/fundingBascket";
 	}
-	
-		
-	
 	
 
 }
