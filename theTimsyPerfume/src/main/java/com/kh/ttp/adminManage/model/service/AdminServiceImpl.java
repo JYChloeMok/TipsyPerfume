@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import com.kh.ttp.adminManage.model.dao.AdminDao;
 import com.kh.ttp.adminManage.model.vo.AdminVo;
 import com.kh.ttp.common.model.vo.PageInfo;
-import com.kh.ttp.product.model.vo.ProductVO;
-import com.kh.ttp.adminManage.model.vo.AdminVo;
 
 @Service
 public class AdminServiceImpl implements AdminService {

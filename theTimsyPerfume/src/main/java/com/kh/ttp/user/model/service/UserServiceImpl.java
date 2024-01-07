@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kh.ttp.orderKinds.model.vo.Receiver;
+import com.kh.ttp.productSale.order.model.vo.ReceiverVO;
 import com.kh.ttp.user.model.dao.UserDao;
 import com.kh.ttp.user.model.vo.AuthVO;
 import com.kh.ttp.user.model.vo.User;
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
 	//마이페이지 보내기
 	@Override
-	public Receiver selectReceiver(int userNo) {
+	public ReceiverVO selectReceiver(int userNo) {
 		//System.out.println(userNo);//2
 		return userDao.selectReceiver(sqlSession, userNo);
 	}

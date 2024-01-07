@@ -2,9 +2,6 @@ package com.kh.ttp.user.model.vo;
 
 import java.sql.Date;
 
-import com.kh.ttp.product.model.vo.ProductVO;
-
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

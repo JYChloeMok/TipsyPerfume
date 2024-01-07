@@ -10,26 +10,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.ttp.common.model.vo.PageInfo;
 import com.kh.ttp.funding.model.dao.FundingDao;
-import com.kh.ttp.funding.model.vo.Funding;
-import com.kh.ttp.orderKinds.model.dao.ReceiverDao;
-import com.kh.ttp.orderKinds.model.vo.OrderDetailVO;
-import com.kh.ttp.orderKinds.model.vo.OrderVO;
-import com.kh.ttp.orderKinds.model.vo.PayVO;
-import com.kh.ttp.orderKinds.model.vo.Receiver;
-import com.kh.ttp.product.model.vo.CartSelectVO;
-import com.kh.ttp.product.model.vo.CartVO;
-import com.kh.ttp.product.model.vo.FundingSelectVO;
-import com.kh.ttp.product.model.vo.ProductVO;
-import com.kh.ttp.productCategory.model.dao.ProductCategoryDao;
-import com.kh.ttp.productCategory.model.vo.ProductCategory;
-import com.kh.ttp.productFile.model.dao.ProductFileDao;
-import com.kh.ttp.productFile.model.vo.ProductFile;
-import com.kh.ttp.productOption.model.dao.ProductOptionDao;
-import com.kh.ttp.productOption.model.vo.ProductOption;
+import com.kh.ttp.funding.model.vo.FundingSelectVO;
+import com.kh.ttp.funding.model.vo.FundingVO;
+import com.kh.ttp.productSale.cart.model.vo.CartSelectVO;
+import com.kh.ttp.productSale.cart.model.vo.CartVO;
+import com.kh.ttp.productSale.order.model.dao.ReceiverDao;
+import com.kh.ttp.productSale.order.model.vo.OrderDetailVO;
+import com.kh.ttp.productSale.order.model.vo.OrderVO;
+import com.kh.ttp.productSale.order.model.vo.ReceiverVO;
+import com.kh.ttp.productSale.pay.model.vo.PayVO;
+import com.kh.ttp.productSale.product.model.vo.ProductVO;
+import com.kh.ttp.productSale.productInfo.model.dao.ProductCategoryDao;
+import com.kh.ttp.productSale.productInfo.model.dao.ProductFileDao;
+import com.kh.ttp.productSale.productInfo.model.dao.ProductOptionDao;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductCategoryVO;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductFileVO;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionVO;
 import com.kh.ttp.user.model.vo.User;
 
 import lombok.RequiredArgsConstructor;
-
 
 @Service
 @RequiredArgsConstructor
@@ -46,8 +45,8 @@ public class FundingServiceImpl implements FundingService {
 	
 	@Override
 	@Transactional
-	public int drinkFundingInsert(ProductVO product, ProductFile productFile, ProductOption productOption, Funding funding,
-			ProductCategory productCategory) {
+	public int drinkFundingInsert(ProductVO product, ProductFileVO productFile, ProductOptionVO productOption, FundingVO funding,
+			ProductCategoryVO productCategory) {
 		    if(productCategoryDao.drinkFundingInsert(sqlSession,productCategory)>0) {
 				int result=productCategoryDao.drinkFundingSelect(sqlSession);
 				product.setPdtCategNo(result);
@@ -70,8 +69,8 @@ public class FundingServiceImpl implements FundingService {
 		
 	}
 	@Override @Transactional
-	public int updateDrinkFunding(ProductVO product, ProductFile productFile, ProductOption productOption, Funding funding, 
-			ProductCategory productCategory) {
+	public int updateDrinkFunding(ProductVO product, ProductFileVO productFile, ProductOptionVO productOption, FundingVO funding, 
+			ProductCategoryVO productCategory) {
 		if(fundingDao.updateDrinkFunding(sqlSession,product)>0) {
 			int categNo = fundingDao.selectPdtNo(sqlSession,product);
 			//System.out.println(categNo);
@@ -140,7 +139,7 @@ public class FundingServiceImpl implements FundingService {
 	}
 	@Override @Transactional
 	public int confirmFundingDrink(OrderDetailVO orderDetail, OrderVO order, User user, ProductVO product, 
-			PayVO pay,Funding funding,Receiver receiver) {
+			PayVO pay,FundingVO funding,ReceiverVO receiver) {
 		if(fundingDao.confirmFundingDrink(sqlSession,funding)>0) {
 			int result1= fundingDao.confirmFundingDrinkPV(sqlSession,pay);
 			int result  = receiverDao.selectReceiverNo(sqlSession,receiver);
@@ -160,7 +159,7 @@ public class FundingServiceImpl implements FundingService {
 		return 0;
 	}
 	@Override @Transactional
-	public int insertReceiver(Receiver r) {
+	public int insertReceiver(ReceiverVO r) {
 		receiverDao.insertReceiver(sqlSession,r);
 		return 0;
 	}

@@ -3,7 +3,7 @@ package com.kh.ttp.user.model.dao;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.kh.ttp.orderKinds.model.vo.Receiver;
+import com.kh.ttp.productSale.order.model.vo.ReceiverVO;
 import com.kh.ttp.user.model.vo.AuthVO;
 import com.kh.ttp.user.model.vo.User;
 
@@ -36,7 +36,7 @@ public class UserDao {
 		
 	}
 
-	public Receiver selectReceiver(SqlSessionTemplate sqlSession, int userNo) {
+	public ReceiverVO selectReceiver(SqlSessionTemplate sqlSession, int userNo) {
 		
 		return sqlSession.selectOne("userMapper.selectReceiver", userNo);
 	}

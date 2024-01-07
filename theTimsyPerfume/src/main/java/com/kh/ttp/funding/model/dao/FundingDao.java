@@ -6,28 +6,28 @@ import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.kh.ttp.funding.model.vo.Funding;
-import com.kh.ttp.orderKinds.model.vo.OrderDetailVO;
-import com.kh.ttp.orderKinds.model.vo.OrderVO;
-import com.kh.ttp.orderKinds.model.vo.PayVO;
-import com.kh.ttp.product.model.vo.CartSelectVO;
-import com.kh.ttp.product.model.vo.CartVO;
-import com.kh.ttp.product.model.vo.FundingSelectVO;
-import com.kh.ttp.product.model.vo.ProductVO;
+import com.kh.ttp.funding.model.vo.FundingSelectVO;
+import com.kh.ttp.funding.model.vo.FundingVO;
+import com.kh.ttp.productSale.cart.model.vo.CartSelectVO;
+import com.kh.ttp.productSale.cart.model.vo.CartVO;
+import com.kh.ttp.productSale.order.model.vo.OrderDetailVO;
+import com.kh.ttp.productSale.order.model.vo.OrderVO;
+import com.kh.ttp.productSale.pay.model.vo.PayVO;
+import com.kh.ttp.productSale.product.model.vo.ProductVO;
 
 @Repository
 public class FundingDao {
 	
 	/* ↓ 원래 있던 것 */
-	public int drinkFundingInsert(SqlSessionTemplate sqlSession, Funding f) {
+	public int drinkFundingInsert(SqlSessionTemplate sqlSession, FundingVO f) {
 		return sqlSession.insert("fundingMapper.insertFunding",f);
 	}
 
-	public int updateDrinkFundingF(SqlSessionTemplate sqlSession, Funding f) {
+	public int updateDrinkFundingF(SqlSessionTemplate sqlSession, FundingVO f) {
 		return sqlSession.update("fundingMapper.updateDrinkFundingF",f);
 	}
 
-	public int confirmFundingDrink(SqlSessionTemplate sqlSession,Funding f) {
+	public int confirmFundingDrink(SqlSessionTemplate sqlSession,FundingVO f) {
 		return sqlSession.update("fundingMapper.updateFundingFee",f);
 	}
 	/* ↑ 원래 있던 것 */
