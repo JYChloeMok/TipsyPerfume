@@ -7,7 +7,7 @@ function needPdtNoAlert() {
 // ajax요청으로 상품 옵션 조회 후 Select-Option요소 만들어주는 메소드
 $(() => {
 	$.ajax({
-		url : 'ajaxSelectPdtOptionOne.pa/' + $('#pdtNoDetail').val(),
+		url : 'product/option/' + $('#pdtNoDetail').val(),
 		type : 'GET',
 		success : result => {
 			console.log('옵션 통신성공');

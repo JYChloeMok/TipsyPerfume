@@ -39,6 +39,6 @@ const swiper = new Swiper('.swiper', {
 // 로그인X 성인인증X => 로그인 원함
 // 로그인X 성인인증X => 회원가입 원함
 function adultValidation(param) {
-	location.href = (Number(param)) ? "alcoholPdtDetail.pr?pdtNo=" + param
-								    : "alcoholPdtList.pr?sort=" + param;
+	location.href = (Number(param)) ? "alcoholDetail.pr?pdtNo=" + param
+								    : "alcoholList.pr?sort=" + param;
 };

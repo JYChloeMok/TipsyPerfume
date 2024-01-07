@@ -77,7 +77,7 @@
 					</div>
 					
 			        <div id="pdtListPaginationArea" class="row">
-		       		<c:set var="hrefPage" value="${pdtCteg eq 'A' ? 'alcoholPdtList.pr' : 'perfumePdtList.pr'}" />
+		       		<c:set var="hrefPage" value="${pdtCteg eq 'A' ? 'alcoholList.pr' : 'perfumeList.pr'}" />
 			        	<ul class="pagination">
 		   				    <li class="page-item">
 			        			<c:choose>
@@ -231,10 +231,10 @@
 		let $pdtNo = $pdtHiddenInput.val();
 		let $pdtCteg = $pdtHiddenInput.attr('class');
 		if($pdtCteg === 'A') {
-			location.href='alcoholPdtDetail.pr?pdtNo=' + $pdtNo;
+			location.href='alcoholDetail.pr?pdtNo=' + $pdtNo;
 		}
 		else if($pdtCteg === 'F') {
-			location.href='perfumePdtDetail.pr?pdtNo=' + $pdtNo;
+			location.href='perfumeDetail.pr?pdtNo=' + $pdtNo;
 		}
 		else {
 			alert('잘못된 요청입니다!')

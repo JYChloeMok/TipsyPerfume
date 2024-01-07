@@ -96,10 +96,10 @@ $('.pdt-detail, .pdt-detail-img').on('click', e => {
 	let $pdtNo = $pdtHiddenInput.val();
 	let $pdtCteg = $pdtHiddenInput.attr('class');
 	if($pdtCteg === 'A') {
-		location.href='alcoholPdtDetail.pr?pdtNo=' + $pdtNo;
+		location.href='alcoholDetail.pr?pdtNo=' + $pdtNo;
 	}
 	else if($pdtCteg === 'F') {
-		location.href='perfumePdtDetail.pr?pdtNo=' + $pdtNo;
+		location.href='perfumeDetail.pr?pdtNo=' + $pdtNo;
 	}
 	else {
 		alert('잘못된 요청입니다!')

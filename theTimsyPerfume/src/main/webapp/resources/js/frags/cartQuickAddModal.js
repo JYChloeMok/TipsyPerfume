@@ -2,7 +2,7 @@
 function ajaxCreateCartQuickAddModal($pdtNo, $pdtName) {
 
 	$.ajax({
-		url: '/tipsyPerfume/ajaxSelectPdtOptionOne.pa/' + $pdtNo,
+		url: 'product/option/' + $pdtNo,
 		type : 'GET',
 		success : result => {
 			

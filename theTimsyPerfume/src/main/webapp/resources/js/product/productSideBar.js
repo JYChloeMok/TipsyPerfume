@@ -12,10 +12,10 @@ $('.pdt-side-bar-sort').on('click', e => {
 	let $pdtCteg = $('#sidebarPdtCteg').val();
 	let $pdtCurrentPage = $('#sidebarCurrentPage').val();
 	if($pdtCteg == 'A') {
-		//location.href="alcoholPdtList.pr?sort=" + $pdtSidebarSort + "&currentPage=" + $pdtCurrentPage;
-		location.href='alcoholPdtList.pr?sort=' + $pdtSidebarSort + '&currentPage=' + $pdtCurrentPage;
+		//location.href="alcoholList.pr?sort=" + $pdtSidebarSort + "&currentPage=" + $pdtCurrentPage;
+		location.href='alcoholList.pr?sort=' + $pdtSidebarSort + '&currentPage=' + $pdtCurrentPage;
 
 	} else {
-		location.href='perfumePdtList.pr?sort=' + $pdtSidebarSort + '&currrentPage=' + $pdtCurrentPage;
+		location.href='perfumeList.pr?sort=' + $pdtSidebarSort + '&currrentPage=' + $pdtCurrentPage;
 	}
 });

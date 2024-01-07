@@ -54,7 +54,7 @@
 		                    <button type="button" onclick="adultValidation('New');" class="btn btn-outline-info">더보기 &gt;</button>
 		               	</c:if>
 		               	<c:if test="${pdtCteg eq 'F' }">
-		               		<button type="button" onclick="location.href='perfumePdtList.pr?sort=New'" class="btn btn-outline-info">더보기 &gt;</button>
+		               		<button type="button" onclick="location.href='perfumeList.pr?sort=New'" class="btn btn-outline-info">더보기 &gt;</button>
 		               	</c:if>
 	                </div>
 	                <!-- Slider main container -->
@@ -97,7 +97,7 @@
 				         <button type="button" onclick="adultValidation('BestSeller');" class="btn btn-outline-info">더보기 &gt;</button>
 				    	</c:if>
 				    	<c:if test="${pdtCteg eq 'F' }">
-				    		<button type="button" onclick="location.href='perfumePdtList.pr?sort=BestSeller'" class="btn btn-outline-info">더보기 &gt;</button>
+				    		<button type="button" onclick="location.href='perfumeList.pr?sort=BestSeller'" class="btn btn-outline-info">더보기 &gt;</button>
 				    	</c:if>
 				    </div>
 				    <!-- Slider main container -->
@@ -140,7 +140,7 @@
 		                    <button type="button" onclick="adultValidation('Popular');" class="btn btn-outline-info">더보기 &gt;</button>
 	                	</c:if>
 	                	<c:if test="${pdtCteg eq 'F' }">
-	                		<button type="button" onclick="location.href='perfumePdtList.pr?sort=Popular'" class="btn btn-outline-info">더보기 &gt;</button>
+	                		<button type="button" onclick="location.href='perfumeList.pr?sort=Popular'" class="btn btn-outline-info">더보기 &gt;</button>
 	                	</c:if>
 	                </div>
 	                <!-- Slider main container -->
