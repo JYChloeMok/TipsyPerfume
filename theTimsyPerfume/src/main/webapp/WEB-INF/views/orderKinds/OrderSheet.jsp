@@ -1,154 +1,250 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>주문서 페이지</title>
+<title>Insert title here</title>
 
-<style>
-	#OrderSheetWrap{
-		width: 950px;
-		margin-top: 80px;
-		border: 1px solid black;
-	}
-	#OrderSheetWrap div{border: 1px solid black;}
-	
-	/* 장바구니 각 파트 상단 타이틀영역 */
-	#orderSheetMainBar {height: 50px;}
-    #orderSheetContentBar {height: 50px;}
-	#OrderSheetWrap .order-sheet-content-block{min-height: 100px; margin-top: 30px;}
-	
-	/* 각 파트 내부div 정렬 */
-	#orderSheetMainBar div,
-	#orderSheetContentBar div,
-	#OrderSheetWrap .order-sheet-content-block div,
-	#orderSheetSummary .col-4,
-	#orderSheetSummary .row {
-		display: flex;
-		align-items: center;
-	}
-	/* 중앙 정렬 요소들 */
-	#OrderSheetWrap .order-sheet-box-area, /* 체크박스 */
-	#orderSheetMainBar .col-2, /* 메인바 */
-	#orderSheetContentBar .col, .col-2, /* 콘텐트바 */
-	#OrderSheetWrap .order-sheet-content-block .col, /* 콘텐트블록 */
-	.col-2,
-	.order-sheet-extra-info-area,
-	.order-sheet-extra-info-area .col-12,
-	#orderSheetSummary .col-4 /* 카트 서머리 */
-	 { 
-		justify-content: center;
-		text-align: center;}
-	/* 체크박스 */
-	#OrderSheetWrap .order-sheet-box-area {
-		width: 30px;
-	}
-	/* 할인, 배송 정보 영역 */
-	#OrderSheetWrap .order-sheet-extra-info-area .row {
-		width: 100%;
-		height: 100%;
-	}
-	#OrderSheetWrap .order-sheet-extra-info-area .ext-info-1 {height: 70%;}
-	#OrderSheetWrap .order-sheet-extra-info-area .ext-info-2 {height: 30%;}
-	
-	/* 총 합계, 주문버튼 */
-	#orderSheetSummary .row{min-height: 50px;}
 
-</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+			
+	<!-- 부트스트랩 -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+	
+	<!-- CSS파일 적는곳 -->
+	<link rel="stylesheet" href="resources/css/orderKinds/cartMain.css">
 
 </head>
 <body>
 
 	<jsp:include page="../common/header.jsp" />
-	
-	<div>
-		오더 완료 시~~~~~~~~~
-	</div>
-	
-	<div id="OrderSheetWrap" class="container">
-		<div id="orderSheetMainBar" class="row">
-			<div class="order-sheet-box-area"><input type="checkbox"></div>
+
+	<div id="cartMainWrap" class="container">
+		
+		
+		<div id="cartMainBar" class="row">
+			<div class="cart-box-area">
+				<label class="check-box-label">
+					<input id="cartCheckBoxAll" type="checkbox">
+				</label>
+			</div>
 			<div class="col ps-5">전체선택</div>
-			<div class="col-2"><button class="btn btn-danger">선택삭제</button></div>
+			<div class="col-2"><button class="btn btn-danger">삭제</button></div>
+			<div class="col-2"><button class="btn btn-primary">주문</button></div>
 		</div>
 		
 		<br/>
 		<br/>
-			<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 			
-			
-			
-			수정 해야함
-			
-			
-			
-			
-			
-			
-			장바구니 div구조 바뀜
-			
-			
-			
-			
-			
-			
-			
-			
-			!@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-		<div id="orderSheetContentBar" class="row">
-			<div class="order-sheet-box-area"><input type="checkbox"></div>
+		<div id="cartContentBar" class="row">
+			<div class="cart-box-area">
+				<!-- 프레임 맞추기 공백 -->
+			</div>
 			<div class="col-4 ps-5">상품(옵션)</div>
+			
 			<div class="col">수량</div>
 			<div class="col-2">가격</div>
-			<div class="col-2">할인적용/배송</div>
+			<div class="col-2">배송</div>
 			<div class="col-2">상품 합계</div>
 		</div>
-		
-		
-		<div class="row order-sheet-content-block">
-			<div class="order-sheet-box-area"><input type="checkbox"></div>
-			<div class="col-4 ps-5">향긋향수 50ML</div>
-			<div class="col">1개</div>
-			<div class="col-2">100,000원</div>
-			<div class="col-2 p-0 order-sheet-extra-info-area">
-				<div class="row">
-					<div class="col-12 ext-info-1">-2,000원<br/>회원할인 2%</div>
-					<div class="col-12 ext-info-2">배송비 3,000</div>
+
+
+		<c:choose>
+			<c:when test="${not empty cartList }">
+				<c:set var="cartPrevAmount" value="0" />
+				<c:forEach var="cMain" items="${cartList}">
+					<c:set var="cartPrevAmount" value="${cartPrevAmount + cMain.totalPrice}" />
+					<div class="row cart-content-block">
+						<div class="cart-box-area">
+							<label class="check-box-label">
+								<!-- 상품 옵션 번호 -->
+								<input value=${cMain.productOption.pdtOptionNo } class="cart-check-box-one" type="checkbox">
+							</label>
+						</div>
+						<div id="cartItemName_1" class="col-4 ps-5">${cMain.pdtName}&nbsp;${cart.productOption.pdtOptionFirst}</div>
+						<div class="col">
+							<!-- 상품수량 -->
+							<input id="cartQuantity_1" value="${cMain.cart.cartQuantity }" type="number" min="1" class="cartQuantity pdt-dt-input form-control" name="#" placeholder="1">
+						</div>
+						<div class="col-2">
+							<fmt:formatNumber value="${cMain.productOption.pdtOptionPrice}" pattern="#,###" />원
+						</div>
+						<div class="col-2 p-0 cart-extra-info-area">
+							<input type="hidden" class="last-shipping" value="${cMain.pdtShipping}">
+							<c:choose>
+								<c:when test="${cMain.pdtShipping eq 0}">
+									무료배송
+								</c:when>
+								<c:otherwise>
+									<fmt:formatNumber value="${cMain.pdtShipping}" pattern="#,###" />원
+								</c:otherwise>
+							</c:choose>
+						</div>
+						<div class="col-2">
+							<fmt:formatNumber value="${cMain.totalPrice }" pattern="#,###" />원
+						</div>
+					</div>
+				</c:forEach>
+				<script>
+					$(() => {
+						let $shippingArr = $('.last-shipping');
+						
+						let $prevAmount = $('#cartPrevAmount');
+						let lastShipping = 0;
+						let lastAmount = 0;
+						
+						let sArr = [];
+						$.each($shippingArr, (index, element) => {
+							sArr.push(element.value);
+						});
+						
+						lastShipping = Math.min(...sArr);
+						
+						// 인풋요소들
+						$('#cartLastShipping').val(lastShipping);
+						$('#cartLastAmount').val();
+						console.log(typeof $prevAmount);
+						
+						// 상품 합계 div
+						$prevAmount = (Number)($prevAmount.val());
+						$('#cartAmountDiv1').html($prevAmount.toLocaleString() + '원');
+						// 최종 배송비 div
+						const $lastShippingDiv = $('#cartAmountDiv2');
+						if(lastShipping == 0) {
+							$lastShippingDiv.html('무료배송');
+						} else {
+							$lastShippingDiv.html(lastShipping.toLocaleString() + '원');
+						}
+						// 최종 합계 div
+						$('#cartAmountDiv3').html('= 총 ' + ($prevAmount - lastShipping).toLocaleString() + '원');
+					});
+				</script>
+				<br/>
+				<br/>	
+				<br/>	
+				
+				<div id="cartSummary" class="row">
+					<div class="col">
+						<div class="row ps-5">전체금액</div>
+						<div id="123" class="row">
+							<input id="cartPrevAmount" value="${cartPrevAmount }" type="hidden"><!-- value .toLocaleString() 가공해서 띄움 -->
+							<input id="cartLastShipping" value="" type="hidden">
+							<input id="cartLastAmount" value="" type="hidden">
+							<c:remove var="cartPrevAmount" />
+
+							<div id="cartAmountDiv1" class="col summary-col">
+								<!-- 상품 총 합계 뜨는곳 -->
+							</div>
+							<div class="col-1 summary-col"> | </div>
+							<div id="cartAmountDiv2" class="col summary-col">
+								<!-- 배송비 뜨는곳 -->
+							</div>
+						</div>
+						<div id="cartAmountDiv3" class="row ps-5">
+							<!-- 최종 금액 뜨는곳 -->
+						</div><!-- cartTotalAmount영역에 value .toLocaleString() 가공해서 띄움 -->
+					</div>
+					<div class="col-4">
+						<button id="cartMainOrderBtn" class="btn btn-primary">주문하기</button>
+					</div>
 				</div>
-			</div>
-			<div class="col-2">98,000원</div>
-		</div>
-		<div class="row order-sheet-content-block">
-			<div class="order-sheet-box-area"><input type="checkbox"></div>
-			<div class="col-4 ps-5">영혼을 달래주는 술 800ML</div>
-			<div class="col">2개</div>
-			<div class="col-2">150,000원</div>
-			<div class="col-2 p-0 order-sheet-extra-info-area">
-				<div class="row">
-					<div class="col-12 ext-info-1">-6,000원<br/>회원할인 2%</div>
-					<div class="col-12 ext-info-2">무료배송</div>
-				</div>
-			</div>
-			<div class="col-2">294,000원</div>
-		</div>
-		
-		
-		<br/>
-		<br/>	
-		<br/>	
-		
-		<div id="orderSheetSummary" class="row">
-			<div class="col">
-				<div class="row ps-5">전체금액</div>
-				<div class="row ps-5">400,000 - 8,000할인 | 무료배송</div>
-				<div class="row ps-5">= 392,000원</div>
-			</div>
-			<div class="col-4">
-				<button class="btn btn-primary">주문하기</button>
-			</div>
-		</div>
+			</c:when>
+			<c:otherwise>
+				<div>장바구니에 추가된 내역이 없습니다</div>
+			</c:otherwise>
+		</c:choose>
 	</div>
+	
+		<!--
+		CART_NO,
+		USER_NO,
+		PDT_NO,
+		PDT_OPTION_NO,
+		CART_QUANTITY
+		-->
+		<script>
+			// 주문버튼 클릭 시 
+			$('#cartMainOrderBtn').on('click', () => {
+				let $cartCheckedItems = $('.cart-check-box-one:checked');
+				
+				//if($cartCheckedItems.length > 0) {
+					
+				// totalAmount 비교용 토탈금액
+				let $totalAmount = $('#cartTotalAmount').val();
+
+				// itemCode배열 : 선택된 cartNo 배열로
+				let itemCodeList = [];
+				$cartCheckedItems.each((index, element) => {
+					itemCodeList.push(element.value);
+				});	
+				console.log(itemCodeList);
+				 // 체크된 상태면 어짜피 다른애들도 다 체크됐으니까 다른애들 가져와도 ㅇㅋ
+
+				$.ajax({
+					url : 'pay/kakao/ready',
+					type : 'POST',
+					data : JSON.stringify({
+						totalAmount : $totalAmount,
+						itemCodeList : itemCodeList,
+						itemName : $('#cartItemName_0').text()
+					}),
+					contentType:"application/json; charset=utf-8",
+					//dataType: 'json', // 받아올 때 타입 json parsing해서 객체로 써야함
+					success : result => {
+						console.log('성공')
+						console.log(result);
+						alert(result);
+						location.href = result;
+					},
+					error : () => {
+						console.log('에러발생');
+					}
+				});
+			});
+			//}
+			//cart-item
+			//$checkedItems = $('.cart-check-box-one:checked').closest('.cart-content-block');
+			//cart-content-block
+				
+			
+				
+			
+			// 재고 조회 ajax
+			//function checkPdtStock() {
+				
+			//}
+			//ProductOption
+			//
+		</script>
+		<script>
+			// 수량 변경 시 상품합계 업데이트(USER_NO, PDT_OPTION_NO, 상품합계(1개가격*개수) 상품번호
+			//$('.cartQuantity').on('change', () => {
+				//ajax
+			//});
+					
+			// 모든 상품 체크 선택 시 (주문 취소하거나 페이지 재렌더링은 그냥 체크 다 해제된 상태)
+			$('#cartCheckBoxAll').change(() => {
+				let $cartCheckBoxAll = $('#cartCheckBoxAll');
+				let $checkBoxOne = $('.cart-check-box-one');
+				
+				if($cartCheckBoxAll.prop('checked')) {
+					$checkBoxOne.prop('checked', true);
+				} else {
+					$checkBoxOne.prop('checked', false);
+				}
+			});
+		</script>
+		
+		
+	<br/><br/><br/>
+	<br/><br/><br/>	
+	<br/><br/><br/>	
 
 </body>
 </html>

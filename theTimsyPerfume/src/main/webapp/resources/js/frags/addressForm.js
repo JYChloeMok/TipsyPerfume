@@ -1,6 +1,6 @@
 // 주소검색 API
 $('#searchingAreaPopUp').on('click', () => {
-    new daum.Postcode({
+	new daum.Postcode({
         oncomplete: data => {
             $('#postalCode').val(data.zonecode);
             $('#address').val(data.roadAddress + ' (' + data.buildingName + ')');

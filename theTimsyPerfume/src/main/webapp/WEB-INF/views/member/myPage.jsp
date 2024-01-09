@@ -142,7 +142,7 @@
           
           -->	
                 <!-- 배송지2.script사용. -->
-                <jsp:include page="../frags/addressEnrollForm.jsp" />
+                <jsp:include page="../frags/addressForm.jsp" />
 	
 	<script>
 		$(() => {

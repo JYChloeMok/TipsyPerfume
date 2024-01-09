@@ -28,16 +28,21 @@
 	<div id="cartMainWrap" class="container">
 		
 		
-		<div id="cartMainBar" class="row">
-			<div class="cart-box-area">
-				<label class="check-box-label">
-					<input id="cartCheckBoxAll" type="checkbox">
-				</label>
-			</div>
-			<div class="col ps-5">전체선택</div>
-			<div class="col-2"><button class="btn btn-danger">삭제</button></div>
-			<div class="col-2"><button class="btn btn-primary">주문</button></div>
-		</div>
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
 		
 		<br/>
 		<br/>
@@ -61,11 +66,10 @@
 				<c:forEach var="cMain" items="${cartList}">
 					<c:set var="cartPrevAmount" value="${cartPrevAmount + cMain.totalPrice}" />
 					<div class="row cart-content-block">
-						<div class="cart-box-area">
-							<label class="check-box-label">
-								<!-- 상품 옵션 번호 -->
-								<input value=${cMain.productOption.pdtOptionNo } class="cart-check-box-one" type="checkbox">
-							</label>
+						<div class="bi bi-x-square cart-box-area">
+							<i class="bi bi-x-square"></i>
+							 <!-- 상품 옵션 번호 -->
+							<input value=${cMain.productOption.pdtOptionNo } class="bi bi-x-square" type="hidden">
 						</div>
 						<div id="cartItemName_1" class="col-4 ps-5">${cMain.pdtName}&nbsp;${cart.productOption.pdtOptionFirst}</div>
 						<div class="col">
@@ -128,6 +132,23 @@
 				<br/>
 				<br/>	
 				<br/>	
+				
+				
+				<div class="accordion row" id="addressAccordion">
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+								배송지 선택
+							</button>
+						</h2>
+						<div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#addressAccordion">
+							<div class="accordion-body">
+								<jsp:include page="../frags/addressForm.jsp" />
+							</div>
+						</div>
+					</div>
+				</div>
+				
 				
 				<div id="cartSummary" class="row">
 					<div class="col">

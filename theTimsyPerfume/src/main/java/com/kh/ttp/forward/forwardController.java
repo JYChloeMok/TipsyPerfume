@@ -33,7 +33,18 @@ public class forwardController {
 		return "common/errorPage";
 	}
 	
-	
+	@GetMapping("orderSheet")
+	public String orderSheet() {
+		return "orderKinds/OrderSheet";
+	}
+	@GetMapping("addressForm")
+	public String addressForm() {
+		return "frags/addressForm";
+	}
+	@GetMapping("paymentTest")
+	public String paymentTest() {
+		return "orderKinds/paymentTest";
+	}
 	
 
 }

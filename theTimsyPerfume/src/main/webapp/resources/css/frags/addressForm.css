@@ -5,8 +5,8 @@
 #address:focus {   
 	caret-color: transparent;
 	outline: none;
-		box-shadow: none;
-		border: 1px solid #ced4da;
+	box-shadow: none;
+	border: 1px solid #ced4da;
 }
 
 #searchingAreaPopUp:hover,
