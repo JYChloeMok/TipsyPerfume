@@ -17,16 +17,29 @@
 <body>
 
 	
+	
+	
 	<button onclick="requestPay()">결제하기</button>
 	
     <!-- PortOne SDK -->
     <script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 
 	<script>
+		// 카트 -> 주문서화면
+		// 주문하기 버튼 클릭 시
+		// 카트화면 : 선택된 카트넘버들(productNo) pathVariable로 주문서 화면에 넘김
+		// 주문서 화면 띄우기
+		
+		// 주문서화면
+		// 결제 화면 클릭 시
+		
 		var IMP = window.IMP;
 		IMP.init('imp77122200');
-
 		function requestPay() {
+			// orderInfo받아서 결제정보 만들기
+			let order = getOrderInfo();
+			console.log(order);
+			/*
 			IMP.request_pay({
 				pg : "kakaopay.TC0ONETIME",
 				pay_method : "card",
@@ -38,12 +51,17 @@
 				buyer_tel : "010-1234-5678",
 				buyer_addr : "서울특별시 강남구 삼성동",
 				buyer_postcode : "123-456",
-				//m_redirect_url 모바일 리디렉팅 endPoint URL주소
+				kcpProducts: "장바구니 상품 묶어서 결제 시 추가파라미터 객체배열로 전달",
+				// PostMapping 넘긴 후
+				// server측 트랜잭션 1개 : cart 비우기
+				
 			}, function(rsp) {
 				// callback
 				//rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
 				
 				if (rsp.success) { // success속성
+					
+					
 					// 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우
 					// jQuery로 HTTP 요청
 					console.log('성공!');
@@ -85,13 +103,14 @@
 						success : rsp.success
 						*/
 						
-						
+				/*		
 					})
 				} else {
 					alert("결제에 실패하였습니다. 에러 내용: " + rsp.error_msg);
 				}
 
 			});
+			*/
 		}
 	</script>
 

@@ -11,39 +11,29 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
-			
+		
 	<!-- 부트스트랩 -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 	
 	<!-- CSS파일 적는곳 -->
-	<link rel="stylesheet" href="resources/css/orderKinds/cartMain.css">
-
+	<link rel="stylesheet" href="resources/css/orderKinds/orderSheet.css">
+	
+	<!-- 포트원 결제 -->
+	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 </head>
 <body>
 
 	<jsp:include page="../common/header.jsp" />
-
+	${itemList}
 	<div id="cartMainWrap" class="container">
-		
-		
-		<div id="cartMainBar" class="row">
-			<div class="cart-box-area">
-				<label class="check-box-label">
-					<input id="cartCheckBoxAll" type="checkbox">
-				</label>
-			</div>
-			<div class="col ps-5">전체선택</div>
-			<div class="col-2"><button class="btn btn-danger">삭제</button></div>
-			<div class="col-2"><button class="btn btn-primary">주문</button></div>
-		</div>
 		
 		<br/>
 		<br/>
 			
 		<div id="cartContentBar" class="row">
-			<div class="cart-box-area">
+			<div class="close-box-area">
 				<!-- 프레임 맞추기 공백 -->
 			</div>
 			<div class="col-4 ps-5">상품(옵션)</div>
@@ -61,11 +51,9 @@
 				<c:forEach var="cMain" items="${cartList}">
 					<c:set var="cartPrevAmount" value="${cartPrevAmount + cMain.totalPrice}" />
 					<div class="row cart-content-block">
-						<div class="cart-box-area">
-							<label class="check-box-label">
-								<!-- 상품 옵션 번호 -->
-								<input value=${cMain.productOption.pdtOptionNo } class="cart-check-box-one" type="checkbox">
-							</label>
+						<div class="bi bi-x-square close-box-area">
+							 <!-- 상품 옵션 번호 -->
+							<input value=${cMain.productOption.pdtOptionNo } type="hidden">
 						</div>
 						<div id="cartItemName_1" class="col-4 ps-5">${cMain.pdtName}&nbsp;${cart.productOption.pdtOptionFirst}</div>
 						<div class="col">
@@ -129,6 +117,23 @@
 				<br/>	
 				<br/>	
 				
+				
+				<div class="accordion row" id="addressAccordion">
+					<div class="accordion-item">
+						<h2 class="accordion-header">
+							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+								배송지 선택
+							</button>
+						</h2>
+						<div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#addressAccordion">
+							<div class="accordion-body">
+								<jsp:include page="../frags/addressForm.jsp" />
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
 				<div id="cartSummary" class="row">
 					<div class="col">
 						<div class="row ps-5">전체금액</div>
@@ -151,7 +156,7 @@
 						</div><!-- cartTotalAmount영역에 value .toLocaleString() 가공해서 띄움 -->
 					</div>
 					<div class="col-4">
-						<button id="cartMainOrderBtn" class="btn btn-primary">주문하기</button>
+						<button id="cartMainOrderBtn" onclick="requestPay()" class="btn btn-primary">결제하기</button>
 					</div>
 				</div>
 			</c:when>
@@ -161,6 +166,75 @@
 		</c:choose>
 	</div>
 	
+	<script>
+		// x마크 누르면 오더페이지에 해당 상품 div remove()
+		$(() => {
+			$('.close-box-area').on('click', e => {
+				//console.log($(e.target).closest('.cart-content-block'));
+				if(confirm('해당 삭제하시겠습니까? (장바구니는 유지됩니다.)')) {
+					$(e.target).closest('.cart-content-block').remove();
+				}
+			});
+		});
+		
+		// pg, merchant_uid, email, name, tel, address, postcode
+		
+		// 결제하기 버튼 누르면 결제요청
+		function requestPay() {
+			$.ajax({
+			
+			});
+			var IMP = window.IMP;
+			IMP.init("imp77122200");
+			IMP.request_pay(
+				{
+					pg: "kakaopay.TC0ONETIME",
+					pay_method: "card",
+					merchant_uid: "ORD20180131-0000011",   // 주문번호
+					name: "노르웨이 회전 의자",
+					amount: 64900,                         // 숫자 타입
+					//
+					buyer_email: "gildong@gmail.com",
+					buyer_name: "홍길동",
+					buyer_tel: "010-4242-4242",
+					buyer_addr: "서울특별시 강남구 신사동",
+					buyer_postcode: "01181"
+				},
+			function (response) { // callback
+		            // callback
+		            //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+		            
+		            // 결제검증
+					if (response.success) {
+						verify(response.imp_uid); // verify필요
+					}
+		            
+			});
+		}
+		
+		function verifyAmount() {
+			$.ajax({
+				url : "https//api.iamport.kr/users/getToken".
+				method : "post",
+				headers : { "contentType" : "application/json"},
+				data : {
+					imp_key : '${API_KEY}',
+					imp_secret : '${API_SECRET}'
+				}
+			})
+			
+		}
+		
+		$(() => {
+			console.log(itemList);
+		})
+	</script>
+	
+	
+	
+	
+	
+		<!-- ------------------------------------------------------------------------------------------- -->
 		<!--
 		CART_NO,
 		USER_NO,

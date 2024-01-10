@@ -1,0 +1,58 @@
+#cartMainWrap{
+	width: 950px;
+	margin-top: 80px;
+	border: 1px solid black;
+}
+#cartMainWrap div{border: 1px solid black;}
+
+/* 장바구니 각 파트 상단 타이틀영역 */
+#cartMainBar {height: 50px;}
+#cartContentBar {height: 50px;}
+#cartMainWrap .cart-content-block{min-height: 100px; margin-top: 30px;}
+
+/* 각 파트 내부div 정렬 */
+#cartMainBar div,
+#cartContentBar div,
+#cartMainWrap .cart-content-block div,
+#cartSummary .col-4,
+#cartSummary .row,
+#cartSummary .summary-col {
+	display: flex;
+	align-items: center;
+}
+/* 중앙 정렬 요소들 */
+#cartMainWrap .close-box-area, /* 체크박스 */
+#cartMainBar .col-2, /* 메인바 */
+#cartContentBar .col, .col-2, /* 콘텐트바 */
+#cartMainWrap .cart-content-block .col, /* 콘텐트블록 */
+.col-2,
+.cart-extra-info-area,
+.cart-extra-info-area .col-12,
+#cartSummary .col-4, /* 카트 서머리 */
+#cartSummary .summary-col
+ { 
+	justify-content: center;
+	text-align: center;}
+/* 체크박스 div */
+#cartMainWrap .close-box-area {
+	width: 30px;
+}
+#cartMainWrap .check-box-label {
+	width:30px;
+	height:30px;
+	margin: 0px;
+}
+#cartCheckBoxAll,
+#cartMainWrap .check-box-label, .cart-check-box-one:hover {
+	cursor: pointer;
+}
+/* 할인, 배송 정보 영역 */
+#cartMainWrap .cart-extra-info-area .row {
+	width: 100%;
+	height: 100%;
+}
+
+/* 전체 금액, 배송비, 총 합계, 주문버튼 영역 */
+#cartSummary .row,
+#cartSummary .summary-col
+{min-height: 50px;}
