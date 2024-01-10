@@ -18,7 +18,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 	
 	<!-- CSS파일 적는곳 -->
-	<link rel="stylesheet" href="resources/css/orderKinds/orderSheet.css">
+	<link rel="stylesheet" href="resources/css/productSale/orderMain.css">
 	
 	<!-- 포트원 결제 -->
 	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
@@ -26,7 +26,14 @@
 <body>
 
 	<jsp:include page="../common/header.jsp" />
-	${itemList}
+	
+	<script>
+		$(() => {
+			console.log(sessionStorage.getItem('jsonItemList'));
+		})
+	</script>
+	
+	
 	<div id="cartMainWrap" class="container">
 		
 		<br/>

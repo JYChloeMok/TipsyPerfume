@@ -18,7 +18,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 	
 	<!-- CSS파일 적는곳 -->
-	<link rel="stylesheet" href="resources/css/orderKinds/cartMain.css">
+	<link rel="stylesheet" href="resources/css/productSale/cartMain.css">
 
 </head>
 <body>
@@ -63,13 +63,13 @@
 						<div class="cart-box-area">
 							<label class="check-box-label">
 								<!-- 주문서 전송용 인풋 : 상품 옵션 번호 -->
-								<input name="OrderProductVO[${status.index }].pdtOptionNo" value=${cMain.productOption.pdtOptionNo } class="cart-check-box-one" type="checkbox">
+								<input value=${cMain.productOption.pdtOptionNo } class="cart-check-box-one" type="checkbox">
 							</label>
 						</div>
 						<div class="col-4 ps-5">${cMain.pdtName}&nbsp;${cart.productOption.pdtOptionFirst}</div>
 						<div class="col">
 							<!-- 주문서 전송용 인풋 : 상품수량 -->
-							<input name="OrderProductVO[${status.index }].orderQuantity" value="${cMain.cart.cartQuantity }" type="number" min="1" class="cartQuantity pdt-dt-input form-control" name="#" placeholder="1">
+							<input value="${cMain.cart.cartQuantity }" type="number" min="1" class="cartQuantity pdt-dt-input form-control" name="#" placeholder="1">
 						</div>
 						
 						<div class="col-2">
@@ -92,40 +92,7 @@
 						</div>
 					</div>
 				</c:forEach>
-				<script>
-					$(() => {
-						let $shippingArr = $('.last-shipping');
-						
-						let $prevAmount = $('#cartPrevAmount');
-						let lastShipping = 0;
-						let lastAmount = 0;
-						
-						let sArr = [];
-						$.each($shippingArr, (index, element) => {
-							sArr.push(element.value);
-						});
-						
-						lastShipping = Math.min(...sArr);
-						
-						// 인풋요소들
-						$('#cartLastShipping').val(lastShipping);
-						$('#cartLastAmount').val();
-						console.log(typeof $prevAmount);
-						
-						// 상품 합계 div
-						$prevAmount = (Number)($prevAmount.val());
-						$('#cartAmountDiv1').html($prevAmount.toLocaleString() + '원');
-						// 최종 배송비 div
-						const $lastShippingDiv = $('#cartAmountDiv2');
-						if(lastShipping == 0) {
-							$lastShippingDiv.html('무료배송');
-						} else {
-							$lastShippingDiv.html(lastShipping.toLocaleString() + '원');
-						}
-						// 최종 합계 div
-						$('#cartAmountDiv3').html('= 총 ' + ($prevAmount - lastShipping).toLocaleString() + '원');
-					});
-				</script>
+
 				<br/>
 				<br/>	
 				<br/>	
@@ -164,16 +131,55 @@
 		<!-- 폼태그
 		<input id="orderProductList" type="hidden" name="orderProductList"> -->
 	</div>
-	
-		<!--
-		CART_NO,
-		USER_NO,
-		PDT_NO,
-		PDT_OPTION_NO,
-		CART_QUANTITY
-		-->
+
 		<script>
-			// 주문버튼 클릭 시
+			// 실행 시 상품 가격 등 계산해 화면에 띄움
+			$(() => {
+				calcCartMoney();
+			});
+		</script>
+		
+		<script>
+			// 장바구니 상품 가격 등 계산하는 메소드(상품가격, 배송비, 상품 총 합계 등)
+			function calcCartMoney() {
+				let $shippingArr = $('.last-shipping');
+				
+				let $prevAmount = $('#cartPrevAmount');
+				let lastShipping = 0;
+				let lastAmount = 0;
+				
+				let sArr = [];
+				$.each($shippingArr, (index, element) => {
+					sArr.push(element.value);
+				});
+				
+				lastShipping = Math.min(...sArr);
+				
+				// 인풋요소들
+				$('#cartLastShipping').val(lastShipping);
+				$('#cartLastAmount').val();
+				//console.log(typeof $prevAmount);
+				
+				// 상품 합계 div
+				$prevAmount = (Number)($prevAmount.val());
+				$('#cartAmountDiv1').html($prevAmount.toLocaleString() + '원');
+				
+				// 최종 배송비 div
+				const $lastShippingDiv = $('#cartAmountDiv2');
+				if(lastShipping == 0) {
+					$lastShippingDiv.html('무료배송');
+				} else {
+					$lastShippingDiv.html(lastShipping.toLocaleString() + '원');
+				}
+				
+				// 최종 합계 div
+				$('#cartAmountDiv3').html('= 총 ' + ($prevAmount - lastShipping).toLocaleString() + '원');
+			}
+		</script>
+		
+		
+		<script>
+			// 주문버튼 클릭 시 수행되는 메소드
 			$('#cartMainOrderBtn').on('click', () => {
 				// itemList : 선택된 productOptionNo 배열
 				let $checkedItems = $('.cart-check-box-one:checked');
@@ -185,7 +191,8 @@
 					alert('올바르지 않은 입력입니다!');
 					return false;
 				}
-				// 조건에 맞는 경우 객체배열 생성 => 로컬스토리지에 저장 => 주문서 페이지로 포워딩
+				
+				// 조건에 맞는 경우 객체배열 생성 => JSON형태 세션스토리지에 저장 => 주문서 페이지로 이동
 				else {
 					$checkedItems.each((index, element) => {
 						itemList.push({
@@ -195,18 +202,12 @@
 					});
 					sessionStorage.setItem("jsonItemList", JSON.stringify(itemList));
 					alert(localStorage.getItem("jsonItemList"));
-					location.href = 'orderSheet';
+					location.href = 'orderMain';
 				}
 			});// 메소드끝
 		</script>
 		
-		
 		<script>
-			// 수량 변경 시 상품합계 업데이트(USER_NO, PDT_OPTION_NO, 상품합계(1개가격*개수) 상품번호
-			//$('.cartQuantity').on('change', () => {
-				//ajax
-			//});
-					
 			// 모든 상품 체크 선택 시 (주문 취소하거나 페이지 재렌더링은 그냥 체크 다 해제된 상태)
 			$('#cartCheckBoxAll').change(() => {
 				let $cartCheckBoxAll = $('#cartCheckBoxAll');
@@ -219,6 +220,13 @@
 				}
 			});
 		</script>
+		
+		<script>
+			// 수량 변경 시 상품합계 업데이트(USER_NO, PDT_OPTION_NO, 상품합계(1개가격*개수) 상품번호
+			//$('.cartQuantity').on('change', () => {
+				//ajax
+			//});
+		</script>		
 		
 		
 	<br/><br/><br/>

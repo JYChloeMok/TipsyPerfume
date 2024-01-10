@@ -22,7 +22,7 @@ public class CartController {
 	@GetMapping("cartMain.ca")
 	public ModelAndView cartMain(ModelAndView mv, HttpSession session) { // 로그인 인터셉터
 		mv.addObject("cartList", cartService.cartMain(((User)session.getAttribute("loginUser")).getUserNo()))
-		  .setViewName("orderKinds/cartMain");
+		  .setViewName("productSale/cartMain");
 		return mv;
 		//System.out.println(productService.cartMain(((User)session.getAttribute("loginUser")).getUserNo()));
 	}

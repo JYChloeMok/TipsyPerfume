@@ -19,7 +19,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
     <!-- CSS파일 경로적기 -->
-    <link href="resources/css/product/productList.css" rel="stylesheet">
+    <link href="resources/css/productSale/productList.css" rel="stylesheet">
 
 </head>
 
@@ -261,7 +261,7 @@
     </script>
 
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-	<!-- <script src="resources/js/product/productList.js"></script> -->
+	<!-- <script src="resources/js/productSale/productList.js"></script> -->
 
 </body>
 

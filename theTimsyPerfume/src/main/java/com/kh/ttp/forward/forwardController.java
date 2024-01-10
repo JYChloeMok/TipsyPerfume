@@ -17,7 +17,6 @@ public class forwardController {
 		return"funding/fundingList";
 	}
 	
-	
 	@RequestMapping("starDrinkFunding.list")
 	public String starDrinkFundingListPage() {
 		return "funding/starDrinkFundingList";
@@ -38,18 +37,13 @@ public class forwardController {
 		return "common/errorPage";
 	}
 	
-	@GetMapping("orderSheet")
-	public String orderSheet() {
-		return "orderKinds/OrderSheet";
-	}
-	
 	@GetMapping("addressForm")
 	public String addressForm() {
 		return "frags/addressForm";
 	}
 	@GetMapping("paymentTest")
 	public String paymentTest() {
-		return "orderKinds/paymentTest";
+		return "productSale/paymentTest";
 	}
 	
 

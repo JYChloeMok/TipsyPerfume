@@ -21,7 +21,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 
 	<!-- CSS파일 경로적기 -->
-    <link href="resources/css/product/productMain.css" rel="stylesheet">
+    <link href="resources/css/productSale/productMain.css" rel="stylesheet">
     	
 </head>
 
@@ -176,7 +176,7 @@
 	<jsp:include page="../common/footer.jsp" />
 
 	<!-- js파일 -->
-	<script src="resources/js/product/productMain.js"></script>
+	<script src="resources/js/productSale/productMain.js"></script>
 	
 	<!-- 성인 인터셉터에서 세션에 담긴 성인인증 상태 삭제 -->
 	<c:if test="${adultResult eq 'N'}">

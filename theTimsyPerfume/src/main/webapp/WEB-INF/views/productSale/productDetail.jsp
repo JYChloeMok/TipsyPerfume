@@ -17,7 +17,7 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 	<!-- CSS파일 경로적기 -->
-	<link rel="stylesheet" href="resources/css/product/productDetail.css">
+	<link rel="stylesheet" href="resources/css/productSale/productDetail.css">
 </head>
 <body>
 
@@ -203,7 +203,7 @@
 	<!-- 푸터 -->
 	<jsp:include page="../common/footer.jsp" />
 	
-	<script src="resources/js/product/productDetail.js"></script>
+	<script src="resources/js/productSale/productDetail.js"></script>
 	
 
 </body>
