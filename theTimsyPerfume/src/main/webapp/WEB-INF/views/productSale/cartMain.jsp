@@ -72,8 +72,8 @@
 							<span class="cart-pdt-name">${cMain.pdtName}</span>
 							&nbsp;
 							<!-- 주문서 전송용 : 상품 옵션 정보 -->
-							<input name="pdtOptionFirst[]" type="hidden" value="${cMain.productOption.pdtOptionFirst}">
-							<span class="">${cMain.productOption.pdtOptionFirst}</span>
+							<input name="pdtOptionFirst[]" type="hidden" value="${cMain.productOption.pdtOptionFirst}" class="cart-pdt-option-first">
+							<span>${cMain.productOption.pdtOptionFirst}</span>
 						</div>
 		
 						<div class="col">
@@ -147,23 +147,17 @@
 	
 <!-- -------------------------------------------------------------------------------------- -->
 		<script>
-			// 화면 켜질 떄 장바구니 상품 가격 등 계산하는 함수 호출
-			$(() => {
-				calcCartMoney();
-			});
-			
-			// 숫자(정수) 검증 메소드
+			// 숫자(정수) 검증 함수
 			function isInteger(value) {
 				//return /^[0-9]+$/.test(value);
 				return /^\d+$/.test(value);
 			};
 			
-			
 			// 카트 수량 변경 함수
 			$('.cart-quantity').on('change', e => {
 				let $cartQuantity = $(e.target).val();
 				let $cartNo = $(e.target).closest('.cart-content-block').find('.cart-check-box').val();
-				// 정수 외 입력 시 alert
+				// 정수 외 입력 시 오류 alert
 				if(!(isInteger($cartNo)) || !(isInteger($cartQuantity))) {
 					alert('올바른 값이 아닙니다! 페이지를 새로고침 해주세요.');
 					return false;
@@ -173,7 +167,6 @@
 					url : 'cart/quantity/' + $cartNo,
 					method : 'PUT',
 					data : { cartQuantity : $cartQuantity },
-					contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
 					success : result => {
 						console.log('카트 수량 변경 성공');
 						console.log(result);
@@ -183,8 +176,13 @@
 						console.log(result);
 					}
 				})
-			})
+			});
 			
+			
+			// 화면 켜질 떄 장바구니 상품 가격 등 계산하는 함수 호출
+			$(() => {
+				calcCartMoney();
+			});
 			
 			
 			// 장바구니 상품 가격 등 계산하는 메소드
@@ -208,28 +206,33 @@
 				
 				//console.log(typeof $cartAmountBefore);
 				
-				// 상품별 합계 금액을 띄움 (cartAmountDiv영역에 동적생성)
+				// 상품별 합계 금액 출력 및 히든타입 input요소 생성 (cartAmountDiv영역에 동적생성)
 				$cartAmountBefore = (Number)($cartAmountBefore.val());
-				$('#cartAmountDiv').html($cartAmountBefore.toLocaleString() + '원');
+				let cartAmountStr = '<input id="cartAmount" type="hidden" value="'+ $cartAmountBefore +'">'
+								  + $cartAmountBefore.toLocaleString() + '원';
+				$('#cartAmountDiv').html(cartAmountStr);
 				
-				// 최종 배송비를 띄움 (0원일 시 '무료배송' 출력 / shippingAmountDiv영역에 동적생성)
+				// 최종 배송비 출력 및 히든타입 input요소 생성 (0원일 시 '무료배송' 출력 / shippingAmountDiv영역에 동적생성)
 				const $shippingAmountDiv = $('#shippingAmountDiv');
+				let shippingAmountStr = '<input id="shippingAmount" type="hidden" value="'+ pdtShippingMin +'">';
 				if(pdtShippingMin == 0) {
-					$shippingAmountDiv.html('무료배송');
+					shippingAmountStr += '무료배송';
 				} else {
-					$shippingAmountDiv.html(pdtShippingMin.toLocaleString() + '원');
+					shippingAmountStr += (pdtShippingMin.toLocaleString() + '원');
 				}
+				$shippingAmountDiv.html(shippingAmountStr);
 				
-				// 주문 최종 합계 금액을 띄움 (orderAmountDiv 영역에 동적생성)
-				$('#orderAmountDiv').html('= 총 ' + ($cartAmountBefore + pdtShippingMin).toLocaleString() + '원');
+				// 주문 최종 합계 금액 출력 및 히든타입 input요소 생성  (orderAmountDiv 영역에 동적생성)
+				let orderAmount = ($cartAmountBefore + pdtShippingMin);
+				let orderAmountStr = '<input id="orderAmount" type="hidden" value="'+ orderAmount +'">'
+									+ '= 총 ' + orderAmount.toLocaleString() + '원';
+				$('#orderAmountDiv').html(orderAmountStr);
 			}
 		</script>
 		
 		
-		
 		<script>
 			//$('[name="cartNo[]"]').each((index, element) => {} 선택된 애만 사용 불가능
-		
 		
 			// 주문버튼 클릭 시 수행되는 메소드
 			function makeOrder() {
@@ -239,29 +242,37 @@
 				let $checkedParentArr = $checkedArr.closest('.cart-content-block');
 				
 				// 선택된 상품 이름 span요소 배열
-				let $checkedNames = $checkedParentArr.find('.cart-pdt-name').html();
+				let $checkedNames = $checkedParentArr.find('.cart-pdt-name');
 				// 선택된 상품 가격 인풋요소 배열
 				let $checkedAmountArr = $checkedParentArr.find('.cart-pdt-option-price');
 				// 선택된 옵션 내용(ML, 용량) span요소 배열
-				$checkedOptionFirtst = $checkedParentArr.find('.cart-pdt-option-first').html();
+				$checkedOptionFirst = $checkedParentArr.find('.cart-pdt-option-first');
 				// 선택된 상품 수량 인풋요소 배열
 				let $checkedQuantityArr = $checkedParentArr.find('.cart-quantity');
 				
 				// 총 상품 합산 금액
 				// 배송비
 				// 최종 주문 가격				
+				let orderAmountInfo = {
+										cartAmount : $('#cartAmount').val(),
+										shippingAmount : $('#shippingAmount').val(),
+										orderAmount : $('#orderAmount').val()
+									  };
 				
 				// 주문할 상품 정보 객체를 담을 배열
 				let productList = [];
-				
-				
 				// 상품 선택이 안됐거나 / 상품배열.length != 수량배열.length일 경우(길이가 일치하지 않을 경우) 리턴 false
 				let checkedArrLength = $checkedArr.length;
 				if(checkedArrLength == 0 ||
-				   checkedArrLength != checkedNames.length ||
+				   checkedArrLength != $checkedNames.length ||
 				   checkedArrLength != $checkedAmountArr.length ||
 				   checkedArrLength != $checkedQuantityArr.length ||
-				   checkedArrLength != checkedOptionFirtst.length) {
+				   checkedArrLength != $checkedOptionFirst.length) {
+ 					console.log(checkedArrLength);
+					console.log($checkedNames.length);
+					console.log($checkedAmountArr.length);
+					console.log($checkedQuantityArr.length);
+					console.log($checkedOptionFirst.length);
 					alert('올바르지 않은 입력입니다!');
 					return false;
 				}
@@ -269,6 +280,8 @@
 				// 반복문 돌면서 상품 개수가 하나라도 0이면 리턴 false 그 외의 경우 객체배열 생성
 				$checkedArr.each((index, element) => {
 					let orderQuantity = $checkedQuantityArr[index].value;
+					console.log(orderQuantity);
+					console.log('dd');
 					if(orderQuantity == 0) {
 						alert('올바르지 않은 입력입니다!');
 						return false;
@@ -276,12 +289,12 @@
 					productList.push({
 						pdtOptionNo : element.value,
 						orderQuantity : $checkedQuantityArr[index].value
-						
 					})
-				});
+				})
 				
 				// JSON 문자열 형태 세션스토리지에 저장 => 주문서 페이지로 이동
 				sessionStorage.setItem("jsonProductList", JSON.stringify(productList));
+				sessionStorage.setItem("orderAmountInfo", JSON.stringify(orderAmountInfo));
 				
 				// 주문서 페이지로 이동
 				/*
@@ -289,27 +302,6 @@
 				*/
 			}; // 메소드끝
 		</script>
-		
-		
-		<script>
-			function Arr(arr) {
-				arr.each((index, element) => {
-					let arrValue = arr[index].value;
-					if(arrValue == 0) {
-						alert('올바르지 않은 입력입니다!');
-						return false;
-					}
-					productList.push({
-						pdtOptionNo : element.value,
-						orderQuantity : $checkedQuantityArr[index].value
-						
-					})
-				});
-				return arr;
-			}
-			
-		</script>
-		
 		
 		<script>
 			// 모든 상품 체크 선택 시 (주문 취소하거나 페이지 재렌더링은 그냥 체크 다 해제된 상태)
