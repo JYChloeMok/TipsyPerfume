@@ -60,6 +60,11 @@ public class AjaxCartController {
 	@PutMapping("quantity/{cartNo}")
 	public ResponseEntity<String> updateCart(CartVO cart, HttpSession session) {
 		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
+		/*
+		 * System.out.println(cart); System.out.println(cart.getCartNo());
+		 * System.out.println(cart.getCartQuantity());
+		 * System.out.println(cart.getUserNo());
+		 */
 		String result = (cartService.updateCart(cart) != 0) ? "success" : "fail";
 		HttpHeaders header = productUtil.makeHeader("application", "json", "UTF-8");
 		return new ResponseEntity<String>(result, header, HttpStatus.OK);

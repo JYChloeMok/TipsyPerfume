@@ -161,10 +161,10 @@
 			
 			// 카트 수량 변경 함수
 			$('.cart-quantity').on('change', e => {
-				let $cartAddingQuantity = $(e.target).val();
+				let $cartQuantity = $(e.target).val();
 				let $cartNo = $(e.target).closest('.cart-content-block').find('.cart-check-box').val();
 				// 정수 외 입력 시 alert
-				if(!(isInteger($cartNo)) || !(isInteger($cartAddingQuantity))) {
+				if(!(isInteger($cartNo)) || !(isInteger($cartQuantity))) {
 					alert('올바른 값이 아닙니다! 페이지를 새로고침 해주세요.');
 					return false;
 				}
@@ -172,7 +172,7 @@
 				$.ajax({
 					url : 'cart/quantity/' + $cartNo,
 					method : 'PUT',
-					data : { cartAddingQuantity : $cartAddingQuantity },
+					data : { cartQuantity : $cartQuantity },
 					success : result => {
 						console.log('카트 수량 변경 성공');
 						console.log(result);
