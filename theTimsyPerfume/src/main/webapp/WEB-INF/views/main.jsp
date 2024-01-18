@@ -16,7 +16,6 @@
 
 
 
-
 <style>
 #alcohol{
 			border-radius: 50%;

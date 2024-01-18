@@ -43,7 +43,7 @@
 	margin: 0px;
 }
 #cartCheckBoxAll,
-#cartMainWrap .check-box-label, .cart-check-box-one:hover {
+#cartMainWrap .check-box-label, .cart-check-box:hover {
 	cursor: pointer;
 }
 /* 할인, 배송 정보 영역 */

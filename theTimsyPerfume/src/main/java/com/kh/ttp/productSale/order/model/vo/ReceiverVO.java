@@ -1,10 +1,13 @@
 package com.kh.ttp.productSale.order.model.vo;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data @AllArgsConstructor @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @Builder
 public class ReceiverVO {
 
 	private int receiverNo;

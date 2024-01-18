@@ -2,10 +2,12 @@ package com.kh.ttp.productSale.cart.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,6 +55,18 @@ public class AjaxCartController {
 		}
 		return productUtil.makeAjaxErrorResult();
 	}
+	
+	// 카트 수량 업데이트 (TB_CART에서 변경 가능한건 수량밖에 없음)
+	@PutMapping("quantity/{cartNo}")
+	public ResponseEntity<String> updateCart(CartVO cart, HttpSession session) {
+		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
+		String result = (cartService.updateCart(cart) != 0) ? "success" : "fail";
+		HttpHeaders header = productUtil.makeHeader("application", "json", "UTF-8");
+		return new ResponseEntity<String>(result, header, HttpStatus.OK);
+	}
+	
+	
+	
 	
 	
 }

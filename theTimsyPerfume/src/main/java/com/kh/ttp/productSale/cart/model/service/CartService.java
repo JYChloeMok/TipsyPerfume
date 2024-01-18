@@ -55,4 +55,12 @@ public interface CartService {
 	 */
 	int checkStockAddCart(CartVO cart);
 
+
+	/**
+	 * 장바구니 수량 업데이트 메소드
+	 * @param cart : cartNo(장바구니 번호PK), userNo(유저 번호PK / 검증용), cartQuantity(수량)이 담긴 CartVO타입 객체
+	 * @return : 성공 시 1, 실패 시 0 반환
+	 */
+	int updateCart(CartVO cart);
+
 }

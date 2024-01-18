@@ -58,5 +58,10 @@ public class CartServiceImpl implements CartService {
 		return -1;
 	}
 
+	@Override
+	public int updateCart(CartVO cart) {
+		return cartDao.updateCart(sqlSession, cart);
+	}
+
 	
 }

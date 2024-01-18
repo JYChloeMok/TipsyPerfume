@@ -29,6 +29,7 @@
 	
 	<script>
 		$(() => {
+			console.log(sessionStorage.getItem('itemList'));
 			console.log(sessionStorage.getItem('jsonItemList'));
 		})
 	</script>

@@ -12,8 +12,11 @@ import com.kh.ttp.user.model.vo.User;
 @Controller
 public class OrderController {
 	
-	@GetMapping("orderMain")
-	public String orderSheet() {
+	//@GetMapping("orderMain")
+	public String orderMain() {
+		// cartNo정보로 조회
+		
+		
 		return "productSale/orderMain";
 	}
 	

@@ -51,7 +51,7 @@ public final class ProductSaleUtil {
 		header.setContentType(new MediaType(type, subtype, Charset.forName(encoding)));
 		return header;
 	}
-	/***********************************/
+	/**********************************OK말고 다른거 해야하는데(코드 종류가 많음) */
 	public ResponseEntity<String> makeAjaxErrorResult() {
 		return new ResponseEntity<String>("ERROR", makeHeader("text", "html", "UTF-8"), HttpStatus.OK);
 	}

@@ -15,6 +15,7 @@ public class CartMainVO {
 	private int totalPrice;
 	private String pdtName;
 	private String pdtShipping;
+	
 	private CartVO cart;
 	private ProductOptionVO productOption;
 	

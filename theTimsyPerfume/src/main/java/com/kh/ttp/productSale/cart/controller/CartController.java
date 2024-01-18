@@ -24,7 +24,6 @@ public class CartController {
 		mv.addObject("cartList", cartService.cartMain(((User)session.getAttribute("loginUser")).getUserNo()))
 		  .setViewName("productSale/cartMain");
 		return mv;
-		//System.out.println(productService.cartMain(((User)session.getAttribute("loginUser")).getUserNo()));
 	}
 	
 	
