@@ -66,7 +66,7 @@ public class AjaxCartController {
 		 * System.out.println(cart.getUserNo());
 		 */
 		String result = (cartService.updateCart(cart) != 0) ? "success" : "fail";
-		HttpHeaders header = productUtil.makeHeader("application", "json", "UTF-8");
+		HttpHeaders header = productUtil.makeHeader("html", "text", "UTF-8");
 		return new ResponseEntity<String>(result, header, HttpStatus.OK);
 	}
 	

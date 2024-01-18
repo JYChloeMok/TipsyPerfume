@@ -173,15 +173,16 @@
 					url : 'cart/quantity/' + $cartNo,
 					method : 'PUT',
 					data : { cartQuantity : $cartQuantity },
+					contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
 					success : result => {
 						console.log('카트 수량 변경 성공');
 						console.log(result);
 					},
-					error : () => {
+					error : result => {
 						console.log('카트 수량 변경 실패');
+						console.log(result);
 					}
 				})
-				console.log(e.target.value)
 			})
 			
 			
