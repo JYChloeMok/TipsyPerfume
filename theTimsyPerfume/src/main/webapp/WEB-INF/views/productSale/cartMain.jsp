@@ -153,7 +153,7 @@
 			};
 			
 			
-			// 카트 수량 변경 함수
+			// 카트 수량 변경 ajax
 			$('.cart-quantity').on('change', e => {
 				let $cartQuantity = $(e.target).val();
 				let $cartNo = $(e.target).closest('.cart-content-block').find('.cart-check-box').val();
@@ -184,45 +184,33 @@
 				calcCartMoney();
 			});
 			
-
-			// 상품 전체 가격 등 계산하는 함수
-			// (상품 총 합계 금액 - 최소 배송비) = 결제할 최종 상품가격
-			function calcCartMoney() {
-				// 각 상품별 배송비 인풋요소 배열
-				//let $pdtShippingArr = $('.pdt-shipping');
-				// 상품별 합계 금액 ((상품금액 * 수량) + 배송비)
-				//let $cartAmountBefore = $('#cartAmountBefore');
-				// 최종 배송비
-				//let pdtShippingMin = 0;
+			/*시작****************************************************************/
+			
+			var cartInfoObj = {
+				// 최종 배송비 가격 (선택 상품들 중 최저 배송비)
+				getShippingFee : () => {
+					let shippingInputArr = $('.pdt-shipping');
+					let shippingFeeArr = [];
+					$.each(shippingInputArr, (index, element) => {
+						shippingFeeArr.push(element.value);
+					});
+					return Math.min(...shippingFeeArr);
+				},
+				getCartAmount : () => {
+					return (Number)($('#cartAmountBefore').val());
+				},
+				test : () => {
+					var self = this;
+					console.log(self.getShippingFee());
+				}
+			};
+			
+			$('#testBtn').on('click', () => {
+				console.log(cartInfoObj.test());
 				
-				
-				// 최소 배송비 계산용 임시 배열 sArr
-				//let sArr = [];
-				// sArr 초기화 (배송비 인풋요소 배열의 value를 배열로 만듬)
-				//$.each($pdtShippingArr, (index, element) => {
-				//	sArr.push(element.value);
-				//});
-				// sArr의 최소값을 최종 배송비로 설정함
-				//pdtShippingMin = Math.min(...sArr);
-				
-				//console.log(typeof $cartAmountBefore);
-				let cartShipping = {
-					// 최종 배송비(상품들 중 최저 배송비)
-					getMinShippingFee : () => {
-						let shippingInputArr = $('.pdt-shipping');
-						let shippingFeeArr = [];
-						$.each(shippingInputArr, (index, element) => {
-							shippingFeeArr.push(element.value);
-						});
-						return Math.min(...shippingFeeArr);
-					},
-					//
-				};
-				
-				let cartAmount = {
-					amountBefore : (Number)($('#cartAmountBefore').val()),
-				};
-				
+			});
+			
+			
 				// 정보 동적 생성용 문자열
 				let cartStr = {
 					getCartAmountStr : () => {
@@ -248,10 +236,33 @@
 						return str;
 					}
 				};
-				$('#testBtn').on('click', () => {
-					console.log(cartStr.getOrderAmountStr());
-					
-				});
+	
+			/*끝****************************************************************/
+			
+			
+
+			// 상품 전체 가격 등 계산하는 함수
+			// (상품 총 합계 금액 - 최소 배송비) = 결제할 최종 상품가격
+			function calcCartMoney() {
+				// 각 상품별 배송비 인풋요소 배열
+				//let $pdtShippingArr = $('.pdt-shipping');
+				// 상품별 합계 금액 ((상품금액 * 수량) + 배송비)
+				//let $cartAmountBefore = $('#cartAmountBefore');
+				// 최종 배송비
+				//let pdtShippingMin = 0;
+				
+				
+				// 최소 배송비 계산용 임시 배열 sArr
+				//let sArr = [];
+				// sArr 초기화 (배송비 인풋요소 배열의 value를 배열로 만듬)
+				//$.each($pdtShippingArr, (index, element) => {
+				//	sArr.push(element.value);
+				//});
+				// sArr의 최소값을 최종 배송비로 설정함
+				//pdtShippingMin = Math.min(...sArr);
+				
+				//console.log(typeof $cartAmountBefore);
+				
 				/*
 				// 상품별 합계 금액 출력 및 히든타입 input요소 생성 (cartAmountDiv영역에 동적생성)
 				//$cartAmountBefore = (Number)($cartAmountBefore.val());
