@@ -143,15 +143,15 @@
 			</c:otherwise>
 		</c:choose>
 	</div>
-	
+	<button id="testBtn">테스트입니당</button>
 	
 <!-- -------------------------------------------------------------------------------------- -->
 		<script>
 			// 숫자(정수) 검증 함수
 			function isInteger(value) {
-				//return /^[0-9]+$/.test(value);
 				return /^\d+$/.test(value);
 			};
+			
 			
 			// 카트 수량 변경 함수
 			$('.cart-quantity').on('change', e => {
@@ -162,7 +162,7 @@
 					alert('올바른 값이 아닙니다! 페이지를 새로고침 해주세요.');
 					return false;
 				}
-				// 조건 부합할 시 ajax 장바구니 update 요청
+				// 정수 입력 시 ajax 장바구니 수량 update 요청
 				$.ajax({
 					url : 'cart/quantity/' + $cartNo,
 					method : 'PUT',
@@ -179,42 +179,89 @@
 			});
 			
 			
-			// 화면 켜질 떄 장바구니 상품 가격 등 계산하는 함수 호출
+			// 상품 전체 가격 등 계산하는 함수 호출
 			$(() => {
 				calcCartMoney();
 			});
 			
-			
-			// 장바구니 상품 가격 등 계산하는 메소드
+
+			// 상품 전체 가격 등 계산하는 함수
 			// (상품 총 합계 금액 - 최소 배송비) = 결제할 최종 상품가격
 			function calcCartMoney() {
 				// 각 상품별 배송비 인풋요소 배열
-				let $pdtShippingArr = $('.pdt-shipping');
+				//let $pdtShippingArr = $('.pdt-shipping');
 				// 상품별 합계 금액 ((상품금액 * 수량) + 배송비)
-				let $cartAmountBefore = $('#cartAmountBefore');
+				//let $cartAmountBefore = $('#cartAmountBefore');
 				// 최종 배송비
-				let pdtShippingMin = 0;
-				// 최소 배송비 계산용 임시 배열 sArr
-				let sArr = [];
+				//let pdtShippingMin = 0;
 				
+				
+				// 최소 배송비 계산용 임시 배열 sArr
+				//let sArr = [];
 				// sArr 초기화 (배송비 인풋요소 배열의 value를 배열로 만듬)
-				$.each($pdtShippingArr, (index, element) => {
-					sArr.push(element.value);
-				});
+				//$.each($pdtShippingArr, (index, element) => {
+				//	sArr.push(element.value);
+				//});
 				// sArr의 최소값을 최종 배송비로 설정함
-				pdtShippingMin = Math.min(...sArr);
+				//pdtShippingMin = Math.min(...sArr);
 				
 				//console.log(typeof $cartAmountBefore);
+				let cartShipping = {
+					// 최종 배송비(상품들 중 최저 배송비)
+					getMinShippingFee : () => {
+						let shippingInputArr = $('.pdt-shipping');
+						let shippingFeeArr = [];
+						$.each(shippingInputArr, (index, element) => {
+							shippingFeeArr.push(element.value);
+						});
+						return Math.min(...shippingFeeArr);
+					},
+					//
+				};
 				
+				let cartAmount = {
+					amountBefore : (Number)($('#cartAmountBefore').val()),
+				};
+				
+				// 정보 동적 생성용 문자열
+				let cartStr = {
+					getCartAmountStr : () => {
+						str = '<input id="cartAmount" type="hidden" value="'
+							+ cartAmount.amountBefore
+							+ '">'
+					  		+ cartAmount.amountBefore.toLocaleString()
+					  		+ '원';
+						return str;
+					},
+					getShippingStr : () => {
+						str = '<input id="shippingAmount" type="hidden" value="'
+							+ cartShipping.getMinShippingFee()
+							+'">';
+						return str;
+					},
+					getOrderAmountStr : () => {
+						str = '<input id="orderAmount" type="hidden" value="'
+							+ (cartAmount.amountBefore + cartShipping.getMinShippingFee()) +'">'
+							+ '= 총 '
+							+ (cartAmount.amountBefore + cartShipping.getMinShippingFee()).toLocaleString()
+							+ '원';
+						return str;
+					}
+				};
+				$('#testBtn').on('click', () => {
+					console.log(cartStr.getOrderAmountStr());
+					
+				});
+				/*
 				// 상품별 합계 금액 출력 및 히든타입 input요소 생성 (cartAmountDiv영역에 동적생성)
-				$cartAmountBefore = (Number)($cartAmountBefore.val());
-				let cartAmountStr = '<input id="cartAmount" type="hidden" value="'+ $cartAmountBefore +'">'
-								  + $cartAmountBefore.toLocaleString() + '원';
+				//$cartAmountBefore = (Number)($cartAmountBefore.val());
+				//let cartAmountStr = '<input id="cartAmount" type="hidden" value="'+ $cartAmountBefore +'">'
+				//				  + $cartAmountBefore.toLocaleString() + '원';
 				$('#cartAmountDiv').html(cartAmountStr);
 				
 				// 최종 배송비 출력 및 히든타입 input요소 생성 (0원일 시 '무료배송' 출력 / shippingAmountDiv영역에 동적생성)
 				const $shippingAmountDiv = $('#shippingAmountDiv');
-				let shippingAmountStr = '<input id="shippingAmount" type="hidden" value="'+ pdtShippingMin +'">';
+				//let shippingAmountStr = '<input id="shippingAmount" type="hidden" value="'+ pdtShippingMin +'">';
 				if(pdtShippingMin == 0) {
 					shippingAmountStr += '무료배송';
 				} else {
@@ -224,11 +271,18 @@
 				
 				// 주문 최종 합계 금액 출력 및 히든타입 input요소 생성  (orderAmountDiv 영역에 동적생성)
 				let orderAmount = ($cartAmountBefore + pdtShippingMin);
-				let orderAmountStr = '<input id="orderAmount" type="hidden" value="'+ orderAmount +'">'
-									+ '= 총 ' + orderAmount.toLocaleString() + '원';
-				$('#orderAmountDiv').html(orderAmountStr);
+				//let orderAmountStr = '<input id="orderAmount" type="hidden" value="'+ orderAmount +'">'
+				//					+ '= 총 ' + orderAmount.toLocaleString() + '원';
+				$('#orderAmountDiv').html(orderAmountStr);*/
 			}
+
 		</script>
+		
+		<script>
+		</script>
+		
+		
+		
 		
 		
 		<script>
