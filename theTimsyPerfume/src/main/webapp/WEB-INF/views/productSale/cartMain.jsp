@@ -199,9 +199,9 @@
 				getCartAmount : () => {
 					return (Number)($('#cartAmountBefore').val());
 				},
-				test : () => {
+				test : function() {
 					var self = this;
-					console.log(self.getShippingFee());
+					return self.getCartAmount();
 				}
 			};
 			
@@ -209,7 +209,8 @@
 				console.log(cartInfoObj.test());
 				
 			});
-			
+			// 화살표 함수가 this를 바인딩 하는 방식이 다름
+			// 자신의 this를 갖지 않고 외부 스코프의 this(여기서 전역스코프)를 가르키게 됨
 			
 				// 정보 동적 생성용 문자열
 				let cartStr = {
