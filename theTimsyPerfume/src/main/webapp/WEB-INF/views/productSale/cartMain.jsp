@@ -185,10 +185,10 @@
 			});
 			
 			/*시작****************************************************************/
-			
-			var cartInfoObj = {
-				// 최종 배송비 가격 (선택 상품들 중 최저 배송비)
-				getShippingFee : () => {
+			// 카트에서 사용되는 값 관련 객체
+			let cartInfoObj = {
+				// 최종 배송비(최저 배송비) 가격
+				getShippingFee : function() {
 					let shippingInputArr = $('.pdt-shipping');
 					let shippingFeeArr = [];
 					$.each(shippingInputArr, (index, element) => {
@@ -196,47 +196,45 @@
 					});
 					return Math.min(...shippingFeeArr);
 				},
-				getCartAmount : () => {
+				// 물건값 총 합계
+				getCartAmount : function() {
 					return (Number)($('#cartAmountBefore').val());
 				},
-				test : function() {
-					var self = this;
-					return self.getCartAmount();
-				}
+				// 동적생성용 문자열 (물건값 총 합계)
+				getCartAmountStr : function() {
+					str = '<input id="cartAmount" type="hidden" value="'
+						+ cartAmount.amountBefore
+						+ '">'
+				  		+ cartAmount.amountBefore.toLocaleString()
+				  		+ '원';
+					return str;
+				},
+				// 동적생성용 문자열 (최종 주문 금액)
+				getOrderAmountStr : function() {
+					str = '<input id="orderAmount" type="hidden" value="'
+						+ (cartAmount.amountBefore + cartShipping.getMinShippingFee()) +'">'
+						+ '= 총 '
+						+ (cartAmount.amountBefore + cartShipping.getMinShippingFee()).toLocaleString()
+						+ '원';
+					return str;
+				},
+				// 동적생성용 문자열 (배송비)
+				getShippingFeeStr : function() {
+					str = '<input id="shippingAmount" type="hidden" value="'
+						+ cartShipping.getMinShippingFee()
+						+'">';
+					return str;
+				},
+				
 			};
 			
-			$('#testBtn').on('click', () => {
-				console.log(cartInfoObj.test());
-				
-			});
 			// 화살표 함수가 this를 바인딩 하는 방식이 다름
 			// 자신의 this를 갖지 않고 외부 스코프의 this(여기서 전역스코프)를 가르키게 됨
-			
-				// 정보 동적 생성용 문자열
-				let cartStr = {
-					getCartAmountStr : () => {
-						str = '<input id="cartAmount" type="hidden" value="'
-							+ cartAmount.amountBefore
-							+ '">'
-					  		+ cartAmount.amountBefore.toLocaleString()
-					  		+ '원';
-						return str;
-					},
-					getShippingStr : () => {
-						str = '<input id="shippingAmount" type="hidden" value="'
-							+ cartShipping.getMinShippingFee()
-							+'">';
-						return str;
-					},
-					getOrderAmountStr : () => {
-						str = '<input id="orderAmount" type="hidden" value="'
-							+ (cartAmount.amountBefore + cartShipping.getMinShippingFee()) +'">'
-							+ '= 총 '
-							+ (cartAmount.amountBefore + cartShipping.getMinShippingFee()).toLocaleString()
-							+ '원';
-						return str;
-					}
-				};
+			// 일반함수로 정의해야 자신만의 this를 가짐
+			$('#testBtn').on('click', () => {
+				console.log(cartInfoObj.test());
+			});
+
 	
 			/*끝****************************************************************/
 			
