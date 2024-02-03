@@ -27,12 +27,9 @@ import lombok.RequiredArgsConstructor;
 public class AjaxCartController {
 
 	
-	
 	private final ProductSaleUtil productUtil;
 	
 	private final CartService cartService;
-
-	
 	
 	/**
 	 * 장바구니에 상품 추가 요청이 들어오면 재고 및 현재 장바구니에 있는 상품인지 체크 함
@@ -60,16 +57,20 @@ public class AjaxCartController {
 	@PutMapping("quantity/{cartNo}")
 	public ResponseEntity<String> updateCart(CartVO cart, HttpSession session) {
 		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
-		/*
-		 * System.out.println(cart); System.out.println(cart.getCartNo());
-		 * System.out.println(cart.getCartQuantity());
-		 * System.out.println(cart.getUserNo());
-		 */
 		String result = (cartService.updateCart(cart) != 0) ? "success" : "fail";
 		HttpHeaders header = productUtil.makeHeader("html", "text", "UTF-8");
 		return new ResponseEntity<String>(result, header, HttpStatus.OK);
 	}
 	
+	// 카트 아이템 삭제
+	@PutMapping("delete/{cartNo}")
+	public ResponseEntity<String> deleteCart(CartVO cart, HttpSession session) {
+		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
+		String result = (cartService.deleteCart(cart) != 0) ? "success" : "fail";
+		HttpHeaders header = productUtil.makeHeader("html", "text", "UTF-8");
+		return new ResponseEntity<String>(result, header, HttpStatus.OK);
+	}
+	 
 	
 	
 	

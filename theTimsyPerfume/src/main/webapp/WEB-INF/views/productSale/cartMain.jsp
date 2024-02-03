@@ -34,8 +34,8 @@
 				</label>
 			</div>
 			<div class="col ps-5">전체선택</div>
-			<div class="col-2"><button class="btn btn-danger">삭제</button></div>
-			<div class="col-2"><button type="submit" class="btn btn-primary">주문</button></div>
+			<div class="col-2"><button onclick="deleteCart()" type="button" class="btn btn-danger">삭제</button></div>
+			<div class="col-2"><button onclick="makeOrder()" type="button" class="btn btn-primary">주문</button></div>
 		</div>
 		
 		<br/>
@@ -87,7 +87,7 @@
 							<fmt:formatNumber value="${cMain.productOption.pdtOptionPrice}" pattern="#,###" />원
 						</div>
 						
-						<div class="col-2">
+						<div class="col-2 item-amount-area">
 							<!-- (상품 개당 가격 * 개수) @@@@@@@@@@@@@@@@@@@ -->
 							<input value="${cMain.totalPrice}" type="hidden" class="cart-total-price">
 							<fmt:formatNumber value="${cMain.totalPrice }" pattern="#,###" />원
@@ -131,7 +131,7 @@
 						</div>
 					</div>
 					<div class="col-4">
-						<button id="cartMainOrderBtn" onclick="makeOrder()" type="submit" class="btn btn-primary">주문하기</button>
+						<button id="cartMainOrderBtn" onclick="makeOrder()" type="button" class="btn btn-primary">주문하기</button>
 					</div>
 				</div>
 			</c:when>
@@ -168,7 +168,7 @@
 		/* 끝 (검증, 디스플레이, 기타 유틸 종류)*************************************************************** */
 	</script>
 		
-		
+	
 	<script>
 		/* 시작 (카트 메인 관련 cartMainObj)*************************************************************** */
 		// 카트 메인에서 사용되는 값, 함수 관련 객체
@@ -235,6 +235,15 @@
 						+ orderAmount +'">'
 						+ '= 총 '
 						+ orderAmount.toLocaleString()
+						+ '원';
+				return str;
+			},
+			// 문자열 (한가지 상품의 가격 * 수량)
+			getItemAmountStr : function(amount) {
+				let str = '<input value="'
+						+ amount
+						+ '" type="hidden" class="cart-total-price">'
+						+ ((Number)(amount)).toLocaleString()
 						+ '원';
 				return str;
 			},
@@ -346,7 +355,9 @@
 		}; // 메소드끝
 		/* 끝 (주문 관련)*************************************************************** */
 	</script>
-		
+	<script>
+	 // 선택 아이템 삭제
+	</script>
 	
 	<script>
 		/* 시작 (메소드 호출부)*************************************************************** */
@@ -359,39 +370,59 @@
 		// /////////////////////////////////////////////////////////////////////////////////
 		
 		/* 시작 (ajax 요청부)*************************************************************** */
-		// 카트 수량 변경 ajax
+		// 카트 수량 변경 ajax 요청
 		$('.cart-quantity').on('change', e => {
-			let $cartItem = $(e.target);
+			// 수량
 			let $cartQuantity = $(e.target).val();
-			let $cartNo = $(e.target).closest('.cart-content-block').find('.cart-check-box').val();
-			// 정수 외 입력 시 오류 alert
+			// 수량 인풋의 부모 div
+			let $tempParentDiv = $(e.target).closest('.cart-content-block');
+			// 카트 번호
+			let $cartNo = $tempParentDiv.find('.cart-check-box').val();
+			// 선택 아이템 가격
+			let $itemPrice = $tempParentDiv.find('.cart-pdt-option-price').val();
+			
+			// 해당 아이템의 카트 번호 / 수량이 정수 외 입력값이라면 오류 alert
 			if(!(isInteger($cartNo)) || !(isInteger($cartQuantity))) {
 				alert('올바른 값이 아닙니다! 페이지를 새로고침 해주세요.');
 				return false;
 			}
-			// 정수 입력 시 ajax 장바구니 수량 update 요청
+			// 그 외 올바른 정수값이라면 update 요청
 			$.ajax({
 				url : 'cart/quantity/' + $cartNo,
 				method : 'PUT',
 				data : { cartQuantity : $cartQuantity },
 				success : result => {
 					console.log('카트 수량 변경 성공');
-					console.log(result);
-					console.log($cartItem)
-					// 해당 아이템 부분 가격 변경
-					
-					// 토탈 금액 변경
-					
-					// 배송비 변경
-					
-					// 총 주문 금액 변경
+					if(result === 'success') {
+						// 수량 변경 후 아이템 토탈
+						let itemAmount = $itemPrice * $cartQuantity;
+						// 요소들이 생성될 div영역
+						let $itemAmountArea = $tempParentDiv.find('.item-amount-area');
+						// 요소 생성용 문자열
+						let str = cartMainObj.getItemAmountStr(itemAmount);
+						
+						// 요소 생성 / 상품 총 합계, 배송비, 총 주문금액 영역에도 변경금액 반영
+						$itemAmountArea.html(str);
+						cartMainObj.makeAllAmountArea();
+					}
+					else {
+						confirm('수량 변경에 실패했습니다. 페이지를 새로고침 합니다.');
+						location.reload();
+					}
 				},
 				error : result => {
 					console.log('카트 수량 변경 실패');
 					console.log(result);
+					confirm('알 수 없는 이유로 수량 변경에 실패했습니다. 나중에 다시 시도해주세요!');
+					location.reload();
 				}
 			})
 		});
+		
+		
+		// 카트 아이템 삭제 ajax요청
+		$()
+		
 		/* 끝 (ajax 요청부)**************************************************************** */
 	</script>
 		

@@ -60,6 +60,11 @@ public class CartDao {
 	public int updateCart(SqlSessionTemplate sqlSession, CartVO cart) {
 		return sqlSession.update("productMapper.updateCart", cart);
 	}
+
+
+	public int deleteCart(SqlSessionTemplate sqlSession, CartVO cart) {
+		return sqlSession.delete("productMapper.deleteCart", cart);
+	}
 	
 	
 }

@@ -63,4 +63,12 @@ public interface CartService {
 	 */
 	int updateCart(CartVO cart);
 
+
+	/**
+	 * 장바구니 품목 삭제 메소드
+	 * @param cart : cartNo(장바구니 번호PK), userNo(유저 번호PK / 검증용)이 담긴 CartVO타입 객체
+	 * @return : 성공 시 1, 실패 시 0반환
+	 */
+	int deleteCart(CartVO cart);
+
 }
