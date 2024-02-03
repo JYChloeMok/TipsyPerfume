@@ -56,9 +56,9 @@
 		<c:choose>
 			<c:when test="${not empty cartList }">
 				<!-- 물건값 총 합계 계산용 변수 (출력 시 포맷태그 사용) -->
-				<c:set var="cartAmount" value="0" />
+				<%-- <c:set var="cartAmount" value="0" /> --%>
 				<c:forEach var="cMain" items="${cartList}" varStatus="status">
-					<c:set var="cartAmount" value="${cartAmount + cMain.totalPrice}" />
+					<%-- <c:set var="cartAmount" value="${cartAmount + cMain.totalPrice}" /> --%>
 					<div class="row cart-content-block">
 						<div class="cart-box-area">
 							<label class="check-box-label">
@@ -67,29 +67,29 @@
 							</label>
 						</div>
 						<div class="col-4 ps-5">
-							<!-- 주문서 전송용 : 상품 이름 -->
+							<!-- 상품 이름 -->
 							<input name="pdtName" type="hidden" value="${cMain.pdtName}">
 							<span class="cart-pdt-name">${cMain.pdtName}</span>
 							&nbsp;
-							<!-- 주문서 전송용 : 상품 옵션 정보 -->
+							<!-- 상품 옵션 정보 -->
 							<input name="pdtOptionFirst" type="hidden" value="${cMain.productOption.pdtOptionFirst}" class="cart-pdt-option-first">
 							<span>${cMain.productOption.pdtOptionFirst}</span>
 						</div>
 		
 						<div class="col">
-							<!-- 주문서 전송용 : 상품 수량 -->
+							<!-- 상품 수량 -->
 							<input name="cartQuantity" value="${cMain.cart.cartQuantity }" type="number" min="1" class="cart-quantity pdt-dt-input form-control" placeholder="1">
 						</div>
 						
 						<div class="col-2">
-							<!-- 주문서 전송용 : 상품 개당 가격 -->
+							<!-- 상품 개당 가격 -->
 							<input name="pdtOptionPrice" value="${cMain.productOption.pdtOptionPrice}" type="hidden" class="cart-pdt-option-price">
 							<fmt:formatNumber value="${cMain.productOption.pdtOptionPrice}" pattern="#,###" />원
 						</div>
 						
 						<div class="col-2">
-							<!-- (상품 개당 가격 * 개수) -->
-							<input value="${cMain.totalPrice}" type="hidden">
+							<!-- (상품 개당 가격 * 개수) @@@@@@@@@@@@@@@@@@@ -->
+							<input value="${cMain.totalPrice}" type="hidden" class="cart-total-price">
 							<fmt:formatNumber value="${cMain.totalPrice }" pattern="#,###" />원
 						</div>
 						
@@ -107,10 +107,7 @@
 					</div>
 				</c:forEach>
 
-				<br/>
-				<br/>	
-				<br/>	
-				
+				<br/><br/><br/>	
 				
 				<!-- 체크된 상품 최종 정보  -->
 				<div id="cartSummary" class="row">
@@ -118,18 +115,19 @@
 						<div class="row ps-5">전체금액</div>
 						<div id="123" class="row">
 							<div id="cartAmountDiv" class="col summary-col">
-								<!-- 주문서 전송용 : 물건값 총 합계 (전체 상품 금액 총 합) -->
+								<!-- 물건값 총 합계 (전체 상품 금액 총 합) @@@@@@@@@@@@@@@@@@@ -->
 								<input id="cartAmount" value="${cartAmount }" type="hidden">
-								<fmt:formatNumber value="${cartAmount }" pattern="#,###" />원
-								<c:remove var="cartAmount" />
+								
+								<%-- <fmt:formatNumber value="${cartAmount }" pattern="#,###" />원
+								<c:remove var="cartAmount" /> --%>
 							</div>
 							<div class="col-1 summary-col"> | </div>
 							<div id="shippingAmountDiv" class="col summary-col">
-								<!-- 주문서 전송용 : 배송비 금액 (상품 배송비 중 최소 배송비) 뜨는곳 -->
+								<!-- 배송비 금액 (상품 배송비 중 최소 배송비) 뜨는곳 @@@@@@@@@@@@@@@@@@@ -->
 							</div>
 						</div>
 						<div id="orderAmountDiv" class="row ps-5">
-							<!-- 주문서 전송용 : 주문 최종 금액 (할인, 배송비 등 전부 계산한 최종 금액) 뜨는곳 -->
+							<!-- 주문 최종 금액 (할인, 배송비 등 전부 계산한 최종 금액) 뜨는곳 @@@@@@@@@@@@@@@@@@@ -->
 						</div>
 					</div>
 					<div class="col-4">
@@ -154,6 +152,7 @@
 			
 			// 카트 수량 변경 ajax
 			$('.cart-quantity').on('change', e => {
+				let $cartItem = $(e.target);
 				let $cartQuantity = $(e.target).val();
 				let $cartNo = $(e.target).closest('.cart-content-block').find('.cart-check-box').val();
 				// 정수 외 입력 시 오류 alert
@@ -169,6 +168,14 @@
 					success : result => {
 						console.log('카트 수량 변경 성공');
 						console.log(result);
+						console.log($cartItem)
+						// 해당 아이템 부분 가격 변경
+						
+						// 토탈 금액 변경
+						
+						// 배송비 변경
+						
+						// 총 주문 금액 변경
 					},
 					error : result => {
 						console.log('카트 수량 변경 실패');
@@ -177,18 +184,21 @@
 				})
 			});
 			
+
 			
-			// 상품 전체 가격 등 계산하는 함수 호출
-			$(() => {
-				calcCartMoney();
-			});
 			
 			/*시작****************************************************************/
 			// 카트에서 사용되는 값 관련 객체
-			let cartInfoObj = {
+			let cartMainObj = {
 				// 물건값 총 합계
 				getCartAmount : function() {
-					return (Number)($('#cartAmount').val());
+					// (낱개 가격 * 개수) 배열
+					let $cartTotalInputArr = $('.cart-total-price');
+					let cartTotal = 0;
+					$.each($cartTotalInputArr, (index, element) => {
+						cartTotal += (Number)(element.value);
+					});
+					return cartTotal;
 				},
 				// 최종 배송비(최저 배송비) 가격
 				getShippingFee : function() {
@@ -199,10 +209,18 @@
 					});
 					return Math.min(...shippingFeeArr);
 				},
-				// 동적생성용 문자열 (물건값 총 합계)
-				getCartAmountStr : function() {
+				// 문자열 (물건값 총 합계)
+				getCartAmountStr : function(param) {
 					let self = this;
-					let cartAmount = self.getCartAmount();
+					let cartAmount = 0;
+					console.log(param)
+					// 파라미터가 0 초과면 cartAmount는 파라미터, 그 외의 경우 #cartAmount input요소의 밸류
+					if(param > 0) {
+						cartAmount = param;
+					} else {
+						cartAmount = self.getCartAmount();
+					}
+					
 					let str = '<input id="cartAmount" type="hidden" value="'
 							+ cartAmount
 							+ '">'
@@ -210,11 +228,23 @@
 				  			+ '원';
 					return str;
 				},
-				// 물건값 총 합계 영역 동적생성
-				setCartAmountArea : function() {
+				// 문자열 (최종 배송비)
+				getShippingFeeStr : function() {
+					let self = this;
+					let shippingFee = self.getShippingFee();
 					
+					let str = '';
+					if(shippingFee > 0) {
+						str = '<input id="shippingAmount" type="hidden" value="'
+								+ shippingFee
+								+'">';
+					}
+					else {
+						str = '무료배송';
+					}
+					return str;
 				},
-				// 동적생성용 문자열 (최종 주문 금액)
+				// 문자열 (최종 주문 금액)
 				getOrderAmountStr : function() {
 					let self = this;
 					let orderAmount = (self.getCartAmount() + self.getShippingFee());
@@ -225,93 +255,44 @@
 							+ '원';
 					return str;
 				},
-				// 최종 주문 금액 영역 동적생성
-				setOrderAmountArea : function() {
-					
-				},
-				// 동적생성용 문자열 (최종 배송비)
-				getShippingFeeStr : function() {
+				// 물건값 총 합계 영역 동적생성
+				makeCartAmountArea : function() {
 					let self = this;
-					let str = '<input id="shippingAmount" type="hidden" value="'
-							+ self.getShippingFee()
-							+'">';
-					return str;
+					const str = self.getCartAmountStr();
+					$('#cartAmountDiv').html(str);
 				},
 				// 최종 배송비 영역 동적생성
-				setShippingFeeArea : function() {
-					
-				}
+				makeShippingFeeArea : function() {
+					let self = this;
+					const str = self.getShippingFeeStr();
+					$('#shippingAmountDiv').html(str);
+				},
+				// 최종 주문 금액 영역 동적생성
+				makeOrderAmountArea : function() {
+					let self = this;
+					const str = self.getOrderAmountStr();
+					$('#orderAmountDiv').html(str);
+				},
 			};
 			
 			// 화살표 함수가 this를 바인딩 하는 방식이 다름
 			// 자신의 this를 갖지 않고 외부 스코프의 this(여기서 전역스코프)를 가르키게 됨
 			// 일반함수로 정의해야 자신만의 this를 가짐
 			$('#testBtn').on('click', () => {
-				let quantityArr = $('.cartQuantity');
-				let priceArr = $('.pdtOptionPrice');
-				console.log(quantityArr);
-				console.log(priceArr);
 			});
-
-	
 			/*끝****************************************************************/
-			
-			
-
-			// 상품 전체 가격 등 계산하는 함수 (구버전)
-			// (상품 총 합계 금액 - 최소 배송비) = 결제할 최종 상품가격
-			function calcCartMoney() {
-				/*
-				// 각 상품별 배송비 인풋요소 배열
-				let $pdtShippingArr = $('.pdt-shipping');
-				// 상품별 합계 금액 ((상품금액 * 수량) + 배송비)
-				let $cartAmountBefore = $('#cartAmountBefore');
-				// 최종 배송비
-				let pdtShippingMin = 0;
-				
-				
-				// 최소 배송비 계산용 임시 배열 sArr
-				let sArr = [];
-				// sArr 초기화 (배송비 인풋요소 배열의 value를 배열로 만듬)
-				$.each($pdtShippingArr, (index, element) => {
-					sArr.push(element.value);
-				});
-				// sArr의 최소값을 최종 배송비로 설정함
-				pdtShippingMin = Math.min(...sArr);
-				
-				console.log(typeof $cartAmountBefore);
-				*/
-			/*	
-				// 상품별 합계 금액 출력 및 히든타입 input요소 생성 (cartAmountDiv영역에 동적생성)
-				$cartAmountBefore = (Number)($cartAmountBefore.val());
-				let cartAmountStr = '<input id="cartAmount" type="hidden" value="'+ $cartAmountBefore +'">'
-				//				  + $cartAmountBefore.toLocaleString() + '원';
-				$('#cartAmountDiv').html(cartAmountStr);
-				
-				// 최종 배송비 출력 및 히든타입 input요소 생성 (0원일 시 '무료배송' 출력 / shippingAmountDiv영역에 동적생성)
-				const $shippingAmountDiv = $('#shippingAmountDiv');
-				//let shippingAmountStr = '<input id="shippingAmount" type="hidden" value="'+ pdtShippingMin +'">';
-				if(pdtShippingMin == 0) {
-					shippingAmountStr += '무료배송';
-				} else {
-					shippingAmountStr += (pdtShippingMin.toLocaleString() + '원');
-				}
-				$shippingAmountDiv.html(shippingAmountStr);
-				
-				// 주문 최종 합계 금액 출력 및 히든타입 input요소 생성  (orderAmountDiv 영역에 동적생성)
-				let orderAmount = ($cartAmountBefore + pdtShippingMin);
-				//let orderAmountStr = '<input id="orderAmount" type="hidden" value="'+ orderAmount +'">'
-				//					+ '= 총 ' + orderAmount.toLocaleString() + '원';
-				$('#orderAmountDiv').html(orderAmountStr);
-			*/
-			}
-
-			
-			
 		</script>
 		
+		
 		<script>
+		// 물건값 총 합계 계산
+		$(() => {
+			cartMainObj.makeCartAmountArea();
+			cartMainObj.makeShippingFeeArea();
+			cartMainObj.makeOrderAmountArea();
+		})
 		</script>
+		
 		
 		
 		
