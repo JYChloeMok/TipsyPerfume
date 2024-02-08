@@ -21,116 +21,80 @@
 	</script>
 	
 	<div id="test1"></div>
+	<input id="name" type="text" value="밀맥주 라이트"><br>
 	
+	<input id="price" type="number" value="7000"><br>
+	<input id="quantity" type="number" value="3"><br>
+	
+	<input id="buyer_email" value="admin@admin.com"><br>
+	<input id="buyer_name" value="홍길동"><br>
+	<input id="buyer_tel" value="010-4242-4242"><br>
+	<input id="buyer_addr" type="text" value="서울특별시 강남구 신사동"><br>
+	<input id="buyer_postcode" type="text" value="01181"><br>
 
-	<!--
+
+
+
 	<script>
-		function orderPayment() {
-			preparePayment();
-			preCheckAmount();
+		let orderMainObj = {
+			makeOrderNum : function() {
+				
+			},
+			
 		};
-		
-	
-		var orderProduct = [
-			{pdtOptionNo : 2, orderQuantity : 15},
-			{pdtOptionNo : 12, orderQuantity : 20}
-		];
+	</script>
 
-		// 결제 전 금액 등록 (사용자 화면에서 들어온 금액 == DB의 금액과 일치할 경우에만 결제 프로세스 진행)
-		function preparePayment() {
-			$.ajax({
-				url : 'preparePayment',
-				method : 'post', // get with body x / JSON형태로 주고받기 위해 post
-				data : JSON.stringify(orderProduct),
-				contentType : 'application/json; charset=UTF-8',
-				success : result => {
-					// merchantUid & amount 사전등록
-					$.ajax({
-						url: "https://api.iamport.kr/payments/prepare",
-						method: "post",
-						headers: { "Content-Type": "application/json" }, 
-						data: {
-							merchant_uid: result.merchantUid, // 가맹점 주문번호
-							amount: result.amount // 결제 예정금액
-						},
-						success : result => {
-							console.log('preAmountCheck 성공');
-						},
-						error : () => {
-							console.log('preAmountCheck 에러발생');
-						}
-					})
-				},
-				error : () => {
-					console.log('1. prepare과정 에러')	
+	<script>
+		function makePayment(data) {
+			var IMP = window.IMP;
+			IMP.init("impXXXXXXXXX");
+			
+			IMP.request_pay({
+				pg: "kcp.{상점ID}",
+				pay_method: "card",
+				merchant_uid: "57008833-33004",
+				name: "당근 10kg",
+				amount: 1004,
+				buyer_email: "Iamport@chai.finance",
+				buyer_name: "포트원 기술지원팀",
+				buyer_tel: "010-1234-5678",
+				buyer_addr: "서울특별시 강남구 삼성동",
+				buyer_postcode: "123-456",
+			},
+			function (result) {
+				// callback
+				//rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+				if(rsp.success) {
+					// 결제 성공 로직
+					data.impUid = rsp.imp_uid;
+					data.merchant_uid = rsp.merchant_uid;
+					paymentComplete(data);
+				}
+				else {
+					// 결제 실패 로직
 				}
 			});
 		};
-		
-		
 	</script>
+
+
+
 	
-	
-	
-	
-	<script>
-		// 결제 완료 후 로직
-		function orderProduct {
-			$.ajax({
-				url: "{서버의 결제 정보를 받는 가맹점 endpoint}", 
-		        method: "POST",
-		        headers: { "Content-Type": "application/json" },
-		        data: {
-		            imp_uid: rsp.imp_uid,            // 결제 고유번호
-		            merchant_uid: rsp.merchant_uid   // 주문번호
-	        	},
-	        	success : result => {
-	        		console.log('주문서 발행 성공');
-	        		console.log(result);
-	        	},
-	        	error : () => {
-	        		console.log('주문서 발행 실패');
-	        	}
-			})
-		};
-	</script>
-	
-	<script>
-		
-		var orderData = [
-							{pdtOptionNo : 2, orderQuantity : 15},
-							{pdtOptionNo : 12, orderQuantity : 20}
-						];
-		var IMP = window.IMP;
-      	IMP.init("impXXXXXXXXX");
-	 
-		function requestPay() {
-			IMP.request_pay(
-			    {
-					pg: "kcp.{상점ID}",
-					pay_method: "card",
-					merchant_uid: "57008833-33004",
-					name: "당근 10kg",
-					amount: 1004,
-					buyer_email: "Iamport@chai.finance",
-					buyer_name: "포트원 기술지원팀",
-					buyer_tel: "010-1234-5678",
-					buyer_addr: "서울특별시 강남구 삼성동",
-					buyer_postcode: "123-456",
-			    },
-			    rsp => {
-			    	// callback
-			    	//rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-			    	if (rsp.success) {
-			    		// 결제 성공 시: 결제 승인 또는 가상계좌 발급에 성공한 경우	
-			    		// jQuery로 HTTP 요청
-			    		orderProduct();
-			    	}
-			    }
-			);
-		};
-	</script>
-	-->
+
+
+	const data = {
+		payMethod : $("input[type='radio']:checked").val(),
+		orderNum : $("#order_num").val(),
+		name : $(".order_info li").eq(0).find(".food_name").text(),
+		amount : Number($("#total").val()) - Number($(".point_input").val()),
+		phone : $("input[name='phone']").val(),
+		request : $("textarea[name='request']").val(),
+		usedPoint : $("input[name='usedPoint']").val(),
+		deliveryAddress1 : $("#deliveryAddress1").val(),
+	 	deliveryAddress2 : $("#deliveryAddress2").val(),
+	 	deliveryAddress3 : $("#deliveryAddress3").val(),
+	 	totalPrice : $("#total").val()
+	}
 
 	
 	
