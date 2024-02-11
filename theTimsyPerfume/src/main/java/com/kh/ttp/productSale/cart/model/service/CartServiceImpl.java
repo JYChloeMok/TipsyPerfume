@@ -51,7 +51,7 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public int checkStockAddCart(CartVO cart) {
+	public int insertCartAjax(CartVO cart) {
 		if(selectStockWithOption(cart) > 0) {
 			return (countCartOne(cart) == 0) ? insertCartOne(cart) : updateCartAddUpOne(cart);
 		}																						 // 재고가 없음
@@ -59,12 +59,12 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public int updateCart(CartVO cart) {
+	public int updateCartAjax(CartVO cart) {
 		return cartDao.updateCart(sqlSession, cart);
 	}
 
 	@Override
-	public int deleteCart(CartVO cart) {
+	public int deleteCartAjax(CartVO cart) {
 		return cartDao.deleteCart(sqlSession, cart);
 	}
 

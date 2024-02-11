@@ -47,10 +47,9 @@ $('#detailAddCartBtn').on('click', () => {
 		console.log('장바구니 추가하기 가능');
 		$.ajax({
 			method : 'POST',
-			url : 'ajaxCheckStockAddCart.ca',
+			url : 'cart/' + $pdtOptionNo,
 			data : {
 				pdtNo : $pdtNo,
-				pdtOptionNo : $pdtOptionNo,
 				pdtCteg : $('#pdtCtegDetail').val(),
 				cartQuantity : $cartQuantity
 			},

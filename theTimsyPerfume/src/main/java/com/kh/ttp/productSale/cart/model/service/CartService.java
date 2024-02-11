@@ -53,7 +53,7 @@ public interface CartService {
 	 * @param cart : pdtNo(상품PK), pdtOptionNo(상품옵션PK), cartQuantity(카트에 추가할 수량)
 	 * @return : INSERT 혹은 UPDATE 성공 시 1, 실패 시 0, 재고가 없을 시 -1 반환
 	 */
-	int checkStockAddCart(CartVO cart);
+	int insertCartAjax(CartVO cart);
 
 
 	/**
@@ -61,7 +61,7 @@ public interface CartService {
 	 * @param cart : cartNo(장바구니 번호PK), userNo(유저 번호PK / 검증용), cartQuantity(수량)이 담긴 CartVO타입 객체
 	 * @return : 성공 시 1, 실패 시 0 반환
 	 */
-	int updateCart(CartVO cart);
+	int updateCartAjax(CartVO cart);
 
 
 	/**
@@ -69,6 +69,6 @@ public interface CartService {
 	 * @param cart : cartNo(장바구니 번호PK), userNo(유저 번호PK / 검증용)이 담긴 CartVO타입 객체
 	 * @return : 성공 시 1, 실패 시 0반환
 	 */
-	int deleteCart(CartVO cart);
+	int deleteCartAjax(CartVO cart);
 
 }

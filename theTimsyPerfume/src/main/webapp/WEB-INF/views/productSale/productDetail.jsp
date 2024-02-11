@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -72,7 +73,7 @@
 					</div>
 					<div class="row pdt-section-su detail-bg">
 						<div class="col-7 pdt-dt-align-center">용량 : 50ml 100ml 150ml</div>
-						<div class="col-5 pdt-dt-align-center">배송비 : ${pdtDetail.pdtShipping }</div>
+						<div class="col-5 pdt-dt-align-center">배송비 : <fmt:formatNumber value="${pdtDetail.pdtShipping }" pattern="#,###" />원</div>
 					</div>
 		
 		
@@ -202,7 +203,7 @@
 	
 	<!-- 푸터 -->
 	<jsp:include page="../common/footer.jsp" />
-	
+	<!-- js파일 -->
 	<script src="resources/js/productSale/productDetail.js"></script>
 	
 

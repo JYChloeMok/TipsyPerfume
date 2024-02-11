@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,15 +39,15 @@ public class AjaxCartController {
 	 * @param pdtCteg : 상품 카테고리, "F"(향수) / "A"(주류)
 	 * @return : INSERT 혹은 UPDATE 성공 시 1, 실패 시 0, 재고가 없을 시 -1 반환
 	 */
-	@PostMapping("ajaxCheckStockAddCart.ca")
-	public ResponseEntity<String> ajaxCheckStockAddCart(CartVO cart,
+	@PostMapping("{pdtOptionNo}")
+	public ResponseEntity<String> insertCartAjax(CartVO cart,
 									  					@RequestParam String pdtCteg,
 									  					HttpSession session) {
 		User loginUser = LoginUser.getLoginUser(session);
-	
+		// 카테고리 값이 검증되었고, 카테고리가 "A"(알콜)가 아니거나 유저가 성인일 때(인증상태 "Y")
 		if(productUtil.isPdtCtegValid(pdtCteg) && (!("A".equals(pdtCteg)) || "Y".equals(loginUser.getAdultStatus()))) {
 			cart.setUserNo(loginUser.getUserNo());
-			return new ResponseEntity<String>(String.valueOf(cartService.checkStockAddCart(cart)),
+			return new ResponseEntity<String>(String.valueOf(cartService.insertCartAjax(cart)),
 											  productUtil.makeHeader("text", "html", "UTF-8"),
 											  HttpStatus.OK);
 		}
@@ -55,23 +56,22 @@ public class AjaxCartController {
 	
 	// 카트 수량 업데이트 (TB_CART에서 변경 가능한건 수량밖에 없음)
 	@PutMapping("quantity/{cartNo}")
-	public ResponseEntity<String> updateCart(CartVO cart, HttpSession session) {
+	public ResponseEntity<String> updateCartAjax(CartVO cart, HttpSession session) {
 		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
-		String result = (cartService.updateCart(cart) != 0) ? "success" : "fail";
+		String result = (cartService.updateCartAjax(cart) != 0) ? "success" : "fail";
 		HttpHeaders header = productUtil.makeHeader("html", "text", "UTF-8");
 		return new ResponseEntity<String>(result, header, HttpStatus.OK);
 	}
 	
 	// 카트 아이템 삭제
-	@PutMapping("delete/{cartNo}")
-	public ResponseEntity<String> deleteCart(CartVO cart, HttpSession session) {
+	@DeleteMapping("delete/{cartNoArr}")
+	public ResponseEntity<String> deleteCartAjax(CartVO cart, HttpSession session) {
 		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
-		String result = (cartService.deleteCart(cart) != 0) ? "success" : "fail";
+		String result = (cartService.deleteCartAjax(cart) != 0) ? "success" : "fail";
 		HttpHeaders header = productUtil.makeHeader("html", "text", "UTF-8");
 		return new ResponseEntity<String>(result, header, HttpStatus.OK);
 	}
 	 
-	
 	
 	
 	

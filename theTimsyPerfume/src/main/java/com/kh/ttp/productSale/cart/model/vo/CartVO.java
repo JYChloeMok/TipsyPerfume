@@ -1,5 +1,7 @@
 package com.kh.ttp.productSale.cart.model.vo;
 
+import java.util.List;
+
 import com.kh.ttp.productSale.product.model.vo.ProductVO;
 
 import lombok.AllArgsConstructor;
@@ -25,4 +27,6 @@ public class CartVO extends ProductVO {
 	private int pdtOptionNo;
 	private int cartQuantity;
 	private int cartAddingQuantity;
+	
+	private List<Integer> cartNoArr;
 }

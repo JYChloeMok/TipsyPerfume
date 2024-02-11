@@ -40,7 +40,7 @@ public class ProductViewController {
 			mv.addObject("sort", sort)
 			  .addObject("pdtCteg", pdtCteg)
 			  .addObject("pMap", productService.productMain(pdtCteg))
-			  .setViewName("product/productMain");
+			  .setViewName("productSale/productMain");
 		} else {
 			productUtil.makeErrorMsg(mv, "상품 메인화면 이동 실패...");
 		}
@@ -66,7 +66,7 @@ public class ProductViewController {
 		  .addObject("sort", sort)
 		  .addObject("pdtCteg", "F") // 향수 식별자(사이드바 정렬보기 요청 시 필요)
 		  .addObject("pdtList", productService.perfumeList(sort, pi))
-		  .setViewName("product/productList");
+		  .setViewName("productSale/productList");
 		return mv;
 	}
 	
@@ -90,7 +90,7 @@ public class ProductViewController {
 		  .addObject("sort", sort)
 		  .addObject("pdtCteg", "A")
 		  .addObject("pdtList", productService.alcoholList(sort, pi))
-		  .setViewName("product/productList");
+		  .setViewName("productSale/productList");
 		return mv;
 	}
 	
@@ -105,7 +105,7 @@ public class ProductViewController {
 	public ModelAndView perfumeDetail(ModelAndView mv, @RequestParam(value="pdtNo", defaultValue="0") int pdtNo) {
 		if(pdtNo > 0) {
 			mv.addObject("pdtDetail", productService.perfumeDetail(pdtNo))
-			  .setViewName("product/productDetail");
+			  .setViewName("productSale/productDetail");
 		} else {
 			productUtil.makeErrorMsg(mv, "상품 번호가 올바르지 않습니다!<br>나중에 다시 시도해주세요.");
 		}
@@ -125,7 +125,7 @@ public class ProductViewController {
 		
 		if(pdtNo > 0) {
 			mv.addObject("pdtDetail", productService.alcoholDetail(pdtNo))
-			  .setViewName("product/productDetail");
+			  .setViewName("productSale/productDetail");
 		} else {
 			productUtil.makeErrorMsg(mv, "상품 번호가 올바르지 않습니다!<br>나중에 다시 시도해주세요.");
 		}

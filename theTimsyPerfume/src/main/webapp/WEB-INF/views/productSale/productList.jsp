@@ -163,10 +163,9 @@
 		let $pdtOptionNo = $('#cartModalSelectInput').attr('option', 'selected').val();
 		$.ajax({
 			method : 'POST',
-			url : 'ajaxCheckStockAddCart.ca',
+			url : 'cart/' + $pdtOptionNo,
 			data : {
 					pdtNo : $pdtNo,
-					pdtOptionNo : $pdtOptionNo,
 					pdtCteg : $('#pdtListCteg').val(),
 					cartAddingQuantity : 1
 			},
