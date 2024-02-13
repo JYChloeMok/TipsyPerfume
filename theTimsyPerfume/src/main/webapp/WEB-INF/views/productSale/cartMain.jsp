@@ -171,6 +171,7 @@
 		// 전체선택 & 전체 체크해제 (처음 페이지 진입 시에는 모두 checked상태)
 		$('#cartCheckBoxAll').change(() => {
 			cartCheckBoxObj.changeCheckBoxAll();
+			cartStrUtilObj.makeAllAmountArea();
 		});
 		
 		
@@ -178,6 +179,8 @@
 		// 모든 개별상품 체크 시 전체 선택에 checked & 하나라도 체크 안되어있으면 전체선택 체크해제
 		$('.cart-check-box').change(() => {
 			cartCheckBoxObj.changeCheckBoxOne();
+			// 최종 금액부분 변경
+			cartStrUtilObj.makeAllAmountArea();
 		});
 		
 		
@@ -257,7 +260,7 @@
 			},
 			// 선택된 상품 배송비 input배열
 			getShippingArr : function() {
-				return this.findWithSelector('.cart-quantity');
+				return this.findWithSelector('.pdt-shipping');
 			},
 			// 주문 금액 관련 정보
 			billingInfo : {
@@ -281,15 +284,16 @@
 			getShippingFee : function() {
 				let $shippingArr = this.getShippingArr();
 				let shippingFeeArr = [];
-
-				$shippingArr.each((index, element) => {
-					shippingFeeArr.push(element.value);
-				})
 				
-				return Math.min(...shippingFeeArr);
+				if($shippingArr.length > 0) {
+					$shippingArr.each((index, element) => {
+						shippingFeeArr.push(element.value);
+					})
+					return Math.min(...shippingFeeArr);
+				}
+				return 0;
 			}
 		};
-		
 		
 		// 요소 생성용 문자열 & 요소 생성 =================================================================
 		const cartStrUtilObj = {
@@ -305,22 +309,25 @@
 			},
 			// 최종 배송비용 문자열
 			getShippingFeeStr : function() {
-				let shippingFee = cartItemObj.getShippingFee;
+				let shippingFee = cartItemObj.getShippingFee();
 				let str = '';
 				
 				if(shippingFee > 0) {
 					str = '<input id="shippingAmount" type="hidden" value="'
 							+ shippingFee
-							+'">';
+							+'">'
+							+ shippingFee.toLocaleString()
+							+ '원';
 				}
 				else {
 					str = '무료배송';
 				}
 				return str;
 			},
-			// 최종 주문 금액 용문자열 (상품금액 + 배송비)
+			// 최종 주문 금액용 문자열 (상품금액 + 배송비)
 			getOrderAmountStr : function() {
 				let orderAmount = (cartItemObj.getCartAmount() + cartItemObj.getShippingFee());
+				console.log(cartItemObj.getShippingFee())
 				let str = '<input id="orderAmount" type="hidden" value="'
 						+ orderAmount +'">'
 						+ '= 총 '
@@ -328,7 +335,7 @@
 						+ '원';
 				return str;
 			},
-			// 상품(한가지)의 가격 * 수량 @@@@@@@@@@@@@@@@@@@@@@@@@@@
+			// 상품(한가지) 금액용 문자열(매개변수 금액 = 상품 개당가격 * 개수)
 			getItemAmountStr : function(amount) {
 				let str = '<input value="'
 						+ amount
@@ -388,15 +395,16 @@
 					console.log('카트 수량 변경 성공');
 					if(result === 'success') {
 						// 수량 변경 후 아이템 토탈
-						let itemAmount = ($itemPrice * $cartQuantity);
+						let amount = ($itemPrice * $cartQuantity);
 						// 요소 생성용 문자열
-						let str = cartMainStr.getItemAmountStr(itemAmount);
+						let str = cartStrUtilObj.getItemAmountStr(amount);
 						// 요소들이 생성될 div영역
 						let $itemAmountArea = $tempParentDiv.find('.item-amount-area');
 						
 						// 요소 생성
 						$itemAmountArea.html(str);
-						cartMainObj.makeAllAmountArea();
+						// 금액 영역 3파트 생성 (물건값 총 합계, 최종 배송비, 최종 주문 금액)
+						cartStrUtilObj.makeAllAmountArea();
 					}
 					else {
 						confirm('수량 변경에 실패했습니다. 페이지를 새로고침 합니다.');
@@ -446,7 +454,10 @@
 		// 카트 아이템 삭제 ajax요청
 	/* 끝 (ajax 요청부)**************************************************************** */
 	</script>
-		<script>
+	
+	
+	
+	<script>
 	/* 시작 (주문 관련 cartOrderObj)*************************************************************** */
 		//$('[name="cartNo[]"]').each((index, element) => {} 선택된 애만 사용 불가능
 		// 선택된 상품 이름(span요소) 배열
