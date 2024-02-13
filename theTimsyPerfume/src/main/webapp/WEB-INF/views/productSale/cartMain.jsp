@@ -426,7 +426,6 @@
 			$.each(cartItemObj.getItemArr(), (index, element) => {
 				cartNoArr.push(element.value);
 			})
-			console.log(cartItemObj.getParentArr())
 			// 아이템 삭제
 			cartItemObj.getParentArr().remove()
 			
@@ -466,168 +465,44 @@
 		// 주문버튼 클릭 시 수행되는 메소드
 		function makeOrder() {
 			
-			let c = checkedItemObj;
+			let c = cartItemObj;
 			// 체크된 상품
 			$itemArr = c.getItemArr();
 			// 개당 가격(input요소) 배열
 			$priceArr = c.getPriceArr();
 			// 상품 수량(input요소) 배열
-			$quantiryArr = c.getQuantityArr();
-			// 총 상품 합산 금액, 배송비, 최종 주문 가격
+			$quantityArr = c.getQuantityArr();
 			
-			// 주문할 상품 정보 객체를 담을 배열
-			let orderItemList = [];
-			
-			// 상품 선택이 안됐거나 / 상품배열.length != 수량배열.length일 경우(길이가 일치하지 않을 경우) 리턴 false
+			// 조건에 맞지 않을 시 return false
 			let itemArrLength = $itemArr.length;
-			if(itemArrLength == 0 // 상품 선택이 안됐거나
-			   || itemArrLength != $priceArr.length // 상품배열 != 가격정보 배열
-			   || itemArrLength != $checkedQuantityArr.length) {
-				console.log(checkedArr.length);
-				console.log($checkedAmountArr.length);
-				console.log($checkedQuantityArr.length);
-				alert('올바르지 않은 입력입니다!');
+			if(itemArrLength == 0 // 상품 선택이 안됨
+			   || itemArrLength != $priceArr.length // 상품배열.length != 가격배열.length
+			   || itemArrLength != $quantityArr.length) { // 상품배열.length != 수량배열.length
+				alert('올바르지 않은 입력입니다! 페이지를 새로고침 해주세요.');
 				return false;
 			}
+
+			// 주문서 전송용 정보
+			// 상품 번호나 선택 개수가 하나라도 1 미만이면 return false / 그 외의 경우 배열에 상품 번호 추가
+			let orderQuantity = 0;
+			let cartNoArr = [];
 			
-			// 반복문 돌면서 상품 개수가 하나라도 0이면 리턴 false 그 외의 경우 객체배열 생성
-			$checkedArr.each((index, element) => {
-				let orderQuantity = $checkedQuantityArr[index].value;
-				console.log(orderQuantity);
-				console.log('dd');
-				if(orderQuantity == 0) {
+			$itemArr.each((index, element) => {
+				orderQuantity = $quantityArr[index].value;
+				if(element.value < 1 || orderQuantity < 1) {
 					alert('올바르지 않은 입력입니다!');
 					return false;
 				}
-				productList.push({
-					pdtOptionNo : element.value,
-					orderQuantity : $checkedQuantityArr[index].value
-				})
+				cartNoArr.push(element.value);
 			})
-			
-			// JSON 문자열 형태 세션스토리지에 저장 => 주문서 페이지로 이동
-			sessionStorage.setItem("jsonProductList", JSON.stringify(productList));
-			sessionStorage.setItem("orderAmountInfo", JSON.stringify(orderAmountInfo));
-			
+
 			// 주문서 페이지로 이동
-			/*
-			location.href = 'orderMain';
-			*/
+			location.href = 'orderMain.od?cartArr=' + cartNoArr;
 		}; // 메소드끝
 		/* 끝 (주문 관련)*************************************************************** */
 	</script>	
 		
 
-	<script>
-	/* 		
-	// 카트 메인 총금액 계산 관련 객체, 함수
-	//const cartMainObj = {
-	const calcCartInfo = {
-/* 			// 선택한 아이템 전체 총 금액 합산
-		getCartAmount : function() {
-			$itemArr = checkedItemInfo.getItemArr();
-			
-			// 품목별 총 금액 (낱개 가격 * 선택한 개수) 배열
-			let $cartTotalInputArr = $('.cart-total-price');
-			let cartTotal = 0;
-			// 선택된 품목 토탈 가격 더한 후 리턴
-			$.each($cartTotalInputArr, (index, element) => {
-				cartTotal += (Number)(element.value);
-			});
-			return cartTotal;
-		}, */
-/* 			// 최종 배송비(최저 배송비) 가격
-		getShippingFee : function() {
-			let shippingInputArr = $('.pdt-shipping');
-			let shippingFeeArr = [];
-			$.each(shippingInputArr, (index, element) => {
-				shippingFeeArr.push(element.value);
-			});
-			return Math.min(...shippingFeeArr);
-		}, */
-		// 문자열 (물건값 총 합계)
-		/* getCartAmountStr : function(param) {
-			let self = this;
-			let cartAmount = 0;
-			console.log(param)
-			// 파라미터가 0 초과면 cartAmount는 파라미터, 그 외의 경우 #cartAmount input요소의 밸류
-			if(param > 0) {
-				cartAmount = param;
-			} else {
-				cartAmount = self.getCartAmount();
-			}
-			
-			let str = '<input id="cartAmount" type="hidden" value="'
-					+ cartAmount
-					+ '">'
-		  			+ cartAmount.toLocaleString()
-		  			+ '원';
-			return str;
-		}, */
-		// 문자열 (최종 배송비)
-		/* getShippingFeeStr : function() {
-			let self = this;
-			let shippingFee = self.getShippingFee();
-			
-			let str = '';
-			if(shippingFee > 0) {
-				str = '<input id="shippingAmount" type="hidden" value="'
-						+ shippingFee
-						+'">';
-			}
-			else {
-				str = '무료배송';
-			}
-			return str;
-		}, */
-		// 문자열 (최종 주문 금액)
-/* 			getOrderAmountStr : function() {
-			let self = this;
-			let orderAmount = (self.getCartAmount() + self.getShippingFee());
-			let str = '<input id="orderAmount" type="hidden" value="'
-					+ orderAmount +'">'
-					+ '= 총 '
-					+ orderAmount.toLocaleString()
-					+ '원';
-			return str;
-		}, */
-		// 문자열 (한가지 상품의 가격 * 수량)
-/* 			getItemAmountStr : function(amount) {
-			let str = '<input value="'
-					+ amount
-					+ '" type="hidden" class="cart-total-price">'
-					+ ((Number)(amount)).toLocaleString()
-					+ '원';
-			return str;
-		}, */
-/* 		// 물건값 총 합계 영역 동적생성
-		makeCartAmountArea : function() {
-			let self = this;
-			const str = self.getCartAmountStr();
-			$('#cartAmountDiv').html(str);
-		},
-		// 최종 배송비 영역 동적생성
-		makeShippingFeeArea : function() {
-			let self = this;
-			const str = self.getShippingFeeStr();
-			$('#shippingAmountDiv').html(str);
-		},
-		// 최종 주문 금액 영역 동적생성
-		makeOrderAmountArea : function() {
-			let self = this;
-			const str = self.getOrderAmountStr();
-			$('#orderAmountDiv').html(str);
-		},
-		// 금액 영역 3파트 생성 (물건값 총 합계, 최종 배송비, 최종 주문 금액)
-		makeAllAmountArea : function() {
-			let self = this;
-			self.makeCartAmountArea();
-			self.makeShippingFeeArea();
-			self.makeOrderAmountArea();
-		}
-	}; */
-	</script>	
-		
 		
 	<br/><br/><br/>
 	<br/><br/><br/>	
