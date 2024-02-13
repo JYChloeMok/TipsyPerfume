@@ -497,7 +497,7 @@
 			})
 
 			// 주문서 페이지로 이동
-			location.href = 'orderMain.od?cartArr=' + cartNoArr;
+			location.href = 'orderMain.od?cartReq=' + cartNoArr;
 		}; // 메소드끝
 		/* 끝 (주문 관련)*************************************************************** */
 	</script>	
