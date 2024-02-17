@@ -1,6 +1,5 @@
 package com.kh.ttp.productSale.order.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -8,11 +7,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kh.ttp.productSale.order.model.service.ReceiverService;
 import com.kh.ttp.productSale.order.model.vo.ReceiverVO;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class ReceiverController {
 
-	@Autowired
-	private ReceiverService receiverService;
+	private final ReceiverService receiverService;
 	
 	@ResponseBody
 	@PostMapping(value="ajaxInsertReceiver.re", produces="text/html; charset=UTF-8")

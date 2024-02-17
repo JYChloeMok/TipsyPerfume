@@ -128,6 +128,23 @@
 		</c:choose>
 	</div>
 	
+	<script>
+		$(() => {
+			// 배송지 정보
+			$.ajax({
+				url : 'receiver',
+				method : 'GET',
+				success : result => {
+					console.log(result);
+					console.log('배송지 정보 조회 성공!')
+				},
+				error : () => {
+					console.log('배송지 정보 조회 에러발생');
+				}
+			});
+		});
+	</script>
+	
 	
 	
 <!-- 	<script>
