@@ -15,7 +15,10 @@ import com.kh.ttp.pay.model.vo.PaymentVO;
 import com.kh.ttp.productSale.order.model.vo.OrderDetailVO;
 import com.kh.ttp.productSale.order.model.vo.OrderProductVO;
 
+import lombok.RequiredArgsConstructor;
+
 @Controller
+@RequiredArgsConstructor
 public class AjaxOrderController {
 
 	

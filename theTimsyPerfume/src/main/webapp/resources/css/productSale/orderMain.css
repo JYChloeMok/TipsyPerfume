@@ -1,9 +1,9 @@
-#cartMainWrap{
+#orderMainWrap{
 	width: 950px;
 	margin-top: 80px;
 	border: 1px solid black;
 }
-#cartMainWrap div{border: 1px solid black;}
+#orderMainWrap div{border: 1px solid black;}
 
 /* 장바구니 각 파트 상단 타이틀영역 */
 #cartMainBar {height: 50px;}

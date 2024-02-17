@@ -466,6 +466,7 @@
 		function makeOrder() {
 			
 			let c = cartItemObj;
+			
 			// 체크된 상품
 			$itemArr = c.getItemArr();
 			// 개당 가격(input요소) 배열
@@ -482,8 +483,8 @@
 				return false;
 			}
 
-			// 주문서 전송용 정보
-			// 상품 번호나 선택 개수가 하나라도 1 미만이면 return false / 그 외의 경우 배열에 상품 번호 추가
+			// 주문서 전송용 정보 (상품 번호 배열)
+			// 상품 번호나 구매하려는 개수가 하나라도 1 미만이면 return false
 			let orderQuantity = 0;
 			let cartNoArr = [];
 			
@@ -496,7 +497,7 @@
 				cartNoArr.push(element.value);
 			})
 
-			// 주문서 페이지로 이동
+			// 주문서 페이지로 이동 (쿼리스트링에 배열)
 			location.href = 'orderMain.od?cartReq=' + cartNoArr;
 		}; // 메소드끝
 		/* 끝 (주문 관련)*************************************************************** */

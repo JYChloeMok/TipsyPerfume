@@ -18,163 +18,119 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 	
 	<!-- CSS파일 적는곳 -->
-	<link rel="stylesheet" href="resources/css/productSale/orderMain.css">
+	<!-- <link rel="stylesheet" href="resources/css/productSale/orderMain.css"> -->
 	
 	<!-- 포트원 결제 -->
 	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+
+	<style>
+		#orderMainWrap div {
+			border: 1px solid black;
+		}
+	</style>
 </head>
 <body>
 
 	<jsp:include page="../common/header.jsp" />
 	
-	<script>
-		$(() => {
-			console.log(sessionStorage.getItem('itemList'));
-			console.log(sessionStorage.getItem('jsonItemList'));
-		})
-	</script>
+	<h1>오더리스트</h1><br>
 	
 	
-	<div id="cartMainWrap" class="container">
-		
-		<br/>
-		<br/>
-			
-		<div id="cartContentBar" class="row">
-			<div class="close-box-area">
-				<!-- 프레임 맞추기 공백 -->
-			</div>
-			<div class="col-4 ps-5">상품(옵션)</div>
-			
-			<div class="col">수량</div>
-			<div class="col-2">가격</div>
-			<div class="col-2">배송</div>
-			<div class="col-2">상품 합계</div>
-		</div>
+	<div id="orderMainWrap" class="container">
 
-
+		<!-- 상품 출력부 -->
 		<c:choose>
-			<c:when test="${not empty cartList }">
-				<c:set var="cartPrevAmount" value="0" />
-				<c:forEach var="cMain" items="${cartList}">
-					<c:set var="cartPrevAmount" value="${cartPrevAmount + cMain.totalPrice}" />
-					<div class="row cart-content-block">
-						<div class="bi bi-x-square close-box-area">
-							 <!-- 상품 옵션 번호 -->
-							<input value=${cMain.productOption.pdtOptionNo } type="hidden">
+			<c:when test="${not empty orderMain}">
+			
+				<div id="orderContentBar" class="row">
+					<div class="col-4 ps-5">상품(옵션)</div>
+					<div class="col-2">수량</div>
+					<div class="col-2">가격</div>
+					<div class="col-2">상품 합계</div>
+					<div class="col-2">배송비</div>
+				</div>
+				
+				<c:forEach var="order" items="${orderMain.orderList}">
+					<div class="row order-content-block">
+						<!-- 주문서 전송용 : 카트번호 -->
+						<input type="hidden" value=${order.cart.cartNo }>
+						
+						<!-- 상품 이름, 옵션 정보 -->
+						<div class="col-4 ps-5">
+							<span class="cart-pdt-name">${order.pdtName}</span>
+							&nbsp;
+							<span>${order.productOption.pdtOptionFirst}</span>
 						</div>
-						<div id="cartItemName_1" class="col-4 ps-5">${cMain.pdtName}&nbsp;${cart.productOption.pdtOptionFirst}</div>
-						<div class="col">
-							<!-- 상품수량 -->
-							<input id="cartQuantity_1" value="${cMain.cart.cartQuantity }" type="number" min="1" class="cartQuantity pdt-dt-input form-control" name="#" placeholder="1">
-						</div>
+		
+						<!-- 상품 수량 -->
 						<div class="col-2">
-							<fmt:formatNumber value="${cMain.productOption.pdtOptionPrice}" pattern="#,###" />원
+							<input value="${order.cart.cartQuantity }" type="number" min="1" class="form-control" readOnly>
 						</div>
-						<div class="col-2 p-0 cart-extra-info-area">
-							<input type="hidden" class="last-shipping" value="${cMain.pdtShipping}">
+						
+						<!-- 상품 개당 가격 -->
+						<div class="col-2">
+							<input name="pdtOptionPrice" value="${order.productOption.pdtOptionPrice}" type="hidden" class="cart-pdt-option-price">
+							<fmt:formatNumber value="${order.productOption.pdtOptionPrice}" pattern="#,###" />원
+						</div>
+						
+						<!-- (상품 개당 가격 * 개수) -->
+						<div class="col-2 item-amount-area">
+							<input value="${order.totalPrice}" type="hidden">
+							<fmt:formatNumber value="${order.totalPrice }" pattern="#,###" />원
+						</div>
+						
+						<!-- 배송비 -->
+						<div class="col-2 p-0">
+							<input type="hidden" class="pdt-shipping" value="${order.pdtShipping}">
 							<c:choose>
-								<c:when test="${cMain.pdtShipping eq 0}">
+								<c:when test="${order.pdtShipping eq 0}">
 									무료배송
 								</c:when>
 								<c:otherwise>
-									<fmt:formatNumber value="${cMain.pdtShipping}" pattern="#,###" />원
+									<fmt:formatNumber value="${order.pdtShipping}" pattern="#,###" />원
 								</c:otherwise>
 							</c:choose>
 						</div>
-						<div class="col-2">
-							<fmt:formatNumber value="${cMain.totalPrice }" pattern="#,###" />원
-						</div>
 					</div>
 				</c:forEach>
-				<script>
-					$(() => {
-						let $shippingArr = $('.last-shipping');
-						
-						let $prevAmount = $('#cartPrevAmount');
-						let lastShipping = 0;
-						let lastAmount = 0;
-						
-						let sArr = [];
-						$.each($shippingArr, (index, element) => {
-							sArr.push(element.value);
-						});
-						
-						lastShipping = Math.min(...sArr);
-						
-						// 인풋요소들
-						$('#cartLastShipping').val(lastShipping);
-						$('#cartLastAmount').val();
-						console.log(typeof $prevAmount);
-						
-						// 상품 합계 div
-						$prevAmount = (Number)($prevAmount.val());
-						$('#cartAmountDiv1').html($prevAmount.toLocaleString() + '원');
-						// 최종 배송비 div
-						const $lastShippingDiv = $('#cartAmountDiv2');
-						if(lastShipping == 0) {
-							$lastShippingDiv.html('무료배송');
-						} else {
-							$lastShippingDiv.html(lastShipping.toLocaleString() + '원');
-						}
-						// 최종 합계 div
-						$('#cartAmountDiv3').html('= 총 ' + ($prevAmount - lastShipping).toLocaleString() + '원');
-					});
-				</script>
-				<br/>
-				<br/>	
-				<br/>	
+
+				<br/><br/><br/>	
 				
-				
-				<div class="accordion row" id="addressAccordion">
-					<div class="accordion-item">
-						<h2 class="accordion-header">
-							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-								배송지 선택
-							</button>
-						</h2>
-						<div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#addressAccordion">
-							<div class="accordion-body">
-								<jsp:include page="../frags/addressForm.jsp" />
-							</div>
-						</div>
-					</div>
-				</div>
-				
-				
+				<!-- 체크된 상품 최종 정보  -->
 				<div id="cartSummary" class="row">
 					<div class="col">
 						<div class="row ps-5">전체금액</div>
 						<div id="123" class="row">
-							<input id="cartPrevAmount" value="${cartPrevAmount }" type="hidden"><!-- value .toLocaleString() 가공해서 띄움 -->
-							<input id="cartLastShipping" value="" type="hidden">
-							<input id="cartLastAmount" value="" type="hidden">
-							<c:remove var="cartPrevAmount" />
-
-							<div id="cartAmountDiv1" class="col summary-col">
-								<!-- 상품 총 합계 뜨는곳 -->
+							<div id="cartAmountDiv" class="col summary-col">
+								<!-- 물건값 총 합계 (전체 상품 금액 총 합) -->
+								<input id="cartAmount" value="${cartAmount }" type="hidden">
+								
+								<%-- <fmt:formatNumber value="${cartAmount }" pattern="#,###" />원
+								<c:remove var="cartAmount" /> --%>
 							</div>
 							<div class="col-1 summary-col"> | </div>
-							<div id="cartAmountDiv2" class="col summary-col">
-								<!-- 배송비 뜨는곳 -->
+							<div id="shippingAmountDiv" class="col summary-col">
+								<!-- 배송비 금액 (상품 배송비 중 최소 배송비) 뜨는곳 @@@@@@@@@@@@@@@@@@@ -->
 							</div>
 						</div>
-						<div id="cartAmountDiv3" class="row ps-5">
-							<!-- 최종 금액 뜨는곳 -->
-						</div><!-- cartTotalAmount영역에 value .toLocaleString() 가공해서 띄움 -->
+						<div id="orderAmountDiv" class="row ps-5">
+							<!-- 주문 최종 금액 (할인, 배송비 등 전부 계산한 최종 금액) 뜨는곳 @@@@@@@@@@@@@@@@@@@ -->
+						</div>
 					</div>
 					<div class="col-4">
-						<button id="cartMainOrderBtn" onclick="requestPay()" class="btn btn-primary">결제하기</button>
+						<button id="cartMainOrderBtn" onclick="makeOrder()" type="button" class="btn btn-primary">주문하기</button>
 					</div>
 				</div>
 			</c:when>
 			<c:otherwise>
-				<div>장바구니에 추가된 내역이 없습니다</div>
+				<div class="row">장바구니에 추가된 내역이 없습니다</div>
 			</c:otherwise>
 		</c:choose>
 	</div>
 	
-	<script>
+	
+	
+<!-- 	<script>
 		// x마크 누르면 오더페이지에 해당 상품 div remove()
 		$(() => {
 			$('.close-box-area').on('click', e => {
@@ -242,14 +198,14 @@
 	
 	
 	
-		<!-- ------------------------------------------------------------------------------------------- -->
-		<!--
+		-------------------------------------------------------------------------------------------
+		
 		CART_NO,
 		USER_NO,
 		PDT_NO,
 		PDT_OPTION_NO,
 		CART_QUANTITY
-		-->
+		
 		<script>
 			// 주문버튼 클릭 시 
 			$('#cartMainOrderBtn').on('click', () => {
@@ -321,7 +277,7 @@
 					$checkBoxOne.prop('checked', false);
 				}
 			});
-		</script>
+		</script> -->
 		
 		
 	<br/><br/><br/>
