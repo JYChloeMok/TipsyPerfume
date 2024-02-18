@@ -1,5 +1,6 @@
 <h3>
-- Typsy Perfume<br>
+- Tipsy Perfume
+  <br>
 &nbsp;&nbsp;주류 향수 판매 웹사이트 프로젝트
   <br>
 </h3>
