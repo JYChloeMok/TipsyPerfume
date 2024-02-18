@@ -6,6 +6,7 @@
 <br>
 
 <p>
+- Java, Spring Framework, Maven, MyBatis, Oracle, JSP, JavaScript(jQuery)
 - TTP.sql<br>
 &nbsp;&nbsp;: 테이블 관련 스크립트 파일<br>
 &nbsp;&nbsp;(username : TTP, password : TTP)<br>
