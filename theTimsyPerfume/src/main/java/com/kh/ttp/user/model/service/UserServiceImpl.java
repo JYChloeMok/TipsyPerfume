@@ -1,25 +1,28 @@
 package com.kh.ttp.user.model.service;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.kh.ttp.productSale.order.model.vo.ReceiverVO;
+import com.kh.ttp.productSale.receiver.model.dao.ReceiverDao;
+import com.kh.ttp.productSale.receiver.model.vo.ReceiverVO;
 import com.kh.ttp.user.model.dao.UserDao;
 import com.kh.ttp.user.model.vo.AuthVO;
 import com.kh.ttp.user.model.vo.User;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 @EnableTransactionManagement
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private UserDao userDao;
-	
-	@Autowired
-	private SqlSessionTemplate sqlSession;
+	private final UserDao userDao;
+	private final ReceiverDao receiverDao;
+	private final SqlSessionTemplate sqlSession;
 	
 	@Override
 	public User loginUser(User u) {
@@ -43,12 +46,15 @@ public class UserServiceImpl implements UserService {
 
 
 	//마이페이지 보내기
+	/*
 	@Override
-	public ReceiverVO selectReceiver(int userNo) {
+	 public List<ReceiverVO> selectReceiver(int userNo) {
+	 
 		//System.out.println(userNo);//2
-		return userDao.selectReceiver(sqlSession, userNo);
+		return receiverDao.selectReceiver(sqlSession, userNo);
 	}
-
+	*/
+	
 	//마이페이지 수정하기
 	@Override
 	public int updateUser(User u) {

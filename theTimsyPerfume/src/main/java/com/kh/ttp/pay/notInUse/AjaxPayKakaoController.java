@@ -1,3 +1,4 @@
+/*
 package com.kh.ttp.pay.controller;
 
 import java.io.BufferedReader;
@@ -104,14 +105,12 @@ public class AjaxPayKakaoController {
 	public void pay(@PathVariable(value = "product_id") int product_id, Model model, HttpSession session) {
 		
 		// 재고 체크
-		/*
 		try {
 			// Product product = productService.findProductById(productId;) 실제 있는 상품인지 체크
 			if(product == null) {
 				//에러센딩
 			}
 		}
-		*/
 		
 		// 주문번호 생성
 		User user = LoginUser.getLoginUser(session);
@@ -119,7 +118,6 @@ public class AjaxPayKakaoController {
 		String paymentId = "pid-" + orderSerial;
 		
 		// orderDTO만들기 주문정보 생성(상태 30분 이상 지나면 주문실패)
-		/*
 		Order order = Order.builder()
 				.productId()
 				.merchantUid()
@@ -128,9 +126,7 @@ public class AjaxPayKakaoController {
 				.status("try")
 				.build();
 		order = this.orderService.save(order);
-		*/
 		
-		/*
 		if(product.getStock() == 0) {
 			order.update_status("fail", fail_reason "재고소진");
 			orderService.save(order) // 재고소진
@@ -140,7 +136,6 @@ public class AjaxPayKakaoController {
 			product.update_stock(product.getStock() - 1);
 			this.orderService.save(order);
 		}
-		*/
 		
 		// 멀티PG분기(db관리)
 		String[] pg_code = "tosspayments" "ksnet";
@@ -177,7 +172,6 @@ public class AjaxPayKakaoController {
 	              msg += '에러내용 : ' + rsp.error_msg;
 	              alert(msg);
 	          }
-		*/
 		
 		// 처음 DB 결제상태 UPDAE
 		//주문번호, 결제고유번호, 결제상태를 인자로 넘겨준다
@@ -187,3 +181,4 @@ public class AjaxPayKakaoController {
 	
 	
 }
+ */

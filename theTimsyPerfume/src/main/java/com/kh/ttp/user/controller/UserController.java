@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kh.ttp.productSale.order.model.vo.ReceiverVO;
+import com.kh.ttp.productSale.receiver.model.service.ReceiverService;
+import com.kh.ttp.productSale.receiver.model.vo.ReceiverVO;
 import com.kh.ttp.user.model.service.UserService;
 import com.kh.ttp.user.model.vo.AuthVO;
 import com.kh.ttp.user.model.vo.User;
@@ -38,6 +39,7 @@ public class UserController {
  
 	private final JavaMailSender sender;
 	
+	private final ReceiverService receiverService;
 	
 	@GetMapping("loginForm.me")
 	public String loginUser(Model model, HttpServletRequest request) {
@@ -113,9 +115,8 @@ public class UserController {
 			//System.out.println("1");
 			int userNo = ((User)session.getAttribute("loginUser")).getUserNo();
 			//서비스에서 넘버를 주고 거기서 리시버를 셀렉트 
-			ReceiverVO rc = userService.selectReceiver(userNo);
 			//System.out.println(rc);
-			mv.addObject("rc", rc).setViewName("member/myPage");
+			mv.addObject("rc", receiverService.selectReceiver(userNo)).setViewName("member/myPage");
 			return mv;
 		} 
 	

@@ -1,3 +1,4 @@
+/*
 package com.kh.ttp.pay.model.vo;
 
 import lombok.AllArgsConstructor;
@@ -14,3 +15,4 @@ public class PaymentVO {
 	private int amount;
 	
 }
+*/

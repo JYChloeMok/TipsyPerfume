@@ -1,3 +1,4 @@
+/*
 package com.kh.ttp.pay.model.service;
 
 import java.io.BufferedReader;
@@ -143,12 +144,5 @@ public class PayKakaoServiceImpl implements PayKakaoService {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
 }
+*/

@@ -20,6 +20,7 @@ public class OrderDetailVO {
 	ORDER_PRICE	NUMBER
 	ORDER_QUANTITY	NUMBER
 	*/
+	
 	private int orderDetailNo;
 	private int orderNo;
 	private int payNo;

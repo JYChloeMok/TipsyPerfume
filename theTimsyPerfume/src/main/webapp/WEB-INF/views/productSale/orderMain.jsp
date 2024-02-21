@@ -51,13 +51,13 @@
 				</div>
 				
 				<c:forEach var="order" items="${orderMain.orderList}">
-					<div class="row order-content-block">
+					<div class="row">
 						<!-- 주문서 전송용 : 카트번호 -->
 						<input type="hidden" value=${order.cart.cartNo }>
 						
 						<!-- 상품 이름, 옵션 정보 -->
 						<div class="col-4 ps-5">
-							<span class="cart-pdt-name">${order.pdtName}</span>
+							<span class="order-pdt-name">${order.pdtName}</span>
 							&nbsp;
 							<span>${order.productOption.pdtOptionFirst}</span>
 						</div>
@@ -69,12 +69,12 @@
 						
 						<!-- 상품 개당 가격 -->
 						<div class="col-2">
-							<input name="pdtOptionPrice" value="${order.productOption.pdtOptionPrice}" type="hidden" class="cart-pdt-option-price">
+							<input name="pdtOptionPrice" value="${order.productOption.pdtOptionPrice}" type="hidden" class="order-pdt-option-price">
 							<fmt:formatNumber value="${order.productOption.pdtOptionPrice}" pattern="#,###" />원
 						</div>
 						
 						<!-- (상품 개당 가격 * 개수) -->
-						<div class="col-2 item-amount-area">
+						<div class="col-2">
 							<input value="${order.totalPrice}" type="hidden">
 							<fmt:formatNumber value="${order.totalPrice }" pattern="#,###" />원
 						</div>
@@ -104,9 +104,6 @@
 							<div id="cartAmountDiv" class="col summary-col">
 								<!-- 물건값 총 합계 (전체 상품 금액 총 합) -->
 								<input id="cartAmount" value="${cartAmount }" type="hidden">
-								
-								<%-- <fmt:formatNumber value="${cartAmount }" pattern="#,###" />원
-								<c:remove var="cartAmount" /> --%>
 							</div>
 							<div class="col-1 summary-col"> | </div>
 							<div id="shippingAmountDiv" class="col summary-col">
@@ -118,7 +115,7 @@
 						</div>
 					</div>
 					<div class="col-4">
-						<button id="cartMainOrderBtn" onclick="makeOrder()" type="button" class="btn btn-primary">주문하기</button>
+						<button id="orderMainPayBtn" onclick="requestPay()" type="button" class="btn btn-primary">결제하기</button>
 					</div>
 				</div>
 			</c:when>
@@ -129,6 +126,13 @@
 	</div>
 	
 	<script>
+		// 최종 결제 금액
+		// (디스플레이) 로딩 시 가격 계산해 띄워줌 (물건값 총 합계 / 배송비 / 최종 주문 금액)
+		$(() => {
+			cartStrUtilObj.makeAllAmountArea();
+		});
+	
+	
 		$(() => {
 			// 배송지 정보
 			$.ajax({
@@ -144,158 +148,6 @@
 			});
 		});
 	</script>
-	
-	
-	
-<!-- 	<script>
-		// x마크 누르면 오더페이지에 해당 상품 div remove()
-		$(() => {
-			$('.close-box-area').on('click', e => {
-				//console.log($(e.target).closest('.cart-content-block'));
-				if(confirm('해당 삭제하시겠습니까? (장바구니는 유지됩니다.)')) {
-					$(e.target).closest('.cart-content-block').remove();
-				}
-			});
-		});
-		
-		// pg, merchant_uid, email, name, tel, address, postcode
-		
-		// 결제하기 버튼 누르면 결제요청
-		function requestPay() {
-			$.ajax({
-			
-			});
-			var IMP = window.IMP;
-			IMP.init("imp77122200");
-			IMP.request_pay(
-				{
-					pg: "kakaopay.TC0ONETIME",
-					pay_method: "card",
-					merchant_uid: "ORD20180131-0000011",   // 주문번호
-					name: "노르웨이 회전 의자",
-					amount: 64900,                         // 숫자 타입
-					//
-					buyer_email: "gildong@gmail.com",
-					buyer_name: "홍길동",
-					buyer_tel: "010-4242-4242",
-					buyer_addr: "서울특별시 강남구 신사동",
-					buyer_postcode: "01181"
-				},
-			function (response) { // callback
-		            // callback
-		            //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-		            
-		            // 결제검증
-					if (response.success) {
-						verify(response.imp_uid); // verify필요
-					}
-		            
-			});
-		}
-		
-		function verifyAmount() {
-			$.ajax({
-				url : "https//api.iamport.kr/users/getToken".
-				method : "post",
-				headers : { "contentType" : "application/json"},
-				data : {
-					imp_key : '${API_KEY}',
-					imp_secret : '${API_SECRET}'
-				}
-			})
-			
-		}
-		
-		$(() => {
-			console.log(itemList);
-		})
-	</script>
-	
-	
-	
-	
-	
-		-------------------------------------------------------------------------------------------
-		
-		CART_NO,
-		USER_NO,
-		PDT_NO,
-		PDT_OPTION_NO,
-		CART_QUANTITY
-		
-		<script>
-			// 주문버튼 클릭 시 
-			$('#cartMainOrderBtn').on('click', () => {
-				let $cartCheckedItems = $('.cart-check-box-one:checked');
-				
-				//if($cartCheckedItems.length > 0) {
-					
-				// totalAmount 비교용 토탈금액
-				let $totalAmount = $('#cartTotalAmount').val();
-
-				// itemCode배열 : 선택된 cartNo 배열로
-				let itemCodeList = [];
-				$cartCheckedItems.each((index, element) => {
-					itemCodeList.push(element.value);
-				});	
-				console.log(itemCodeList);
-				 // 체크된 상태면 어짜피 다른애들도 다 체크됐으니까 다른애들 가져와도 ㅇㅋ
-
-				$.ajax({
-					url : 'pay/kakao/ready',
-					type : 'POST',
-					data : JSON.stringify({
-						totalAmount : $totalAmount,
-						itemCodeList : itemCodeList,
-						itemName : $('#cartItemName_0').text()
-					}),
-					contentType:"application/json; charset=utf-8",
-					//dataType: 'json', // 받아올 때 타입 json parsing해서 객체로 써야함
-					success : result => {
-						console.log('성공')
-						console.log(result);
-						alert(result);
-						location.href = result;
-					},
-					error : () => {
-						console.log('에러발생');
-					}
-				});
-			});
-			//}
-			//cart-item
-			//$checkedItems = $('.cart-check-box-one:checked').closest('.cart-content-block');
-			//cart-content-block
-				
-			
-				
-			
-			// 재고 조회 ajax
-			//function checkPdtStock() {
-				
-			//}
-			//ProductOption
-			//
-		</script>
-		<script>
-			// 수량 변경 시 상품합계 업데이트(USER_NO, PDT_OPTION_NO, 상품합계(1개가격*개수) 상품번호
-			//$('.cartQuantity').on('change', () => {
-				//ajax
-			//});
-					
-			// 모든 상품 체크 선택 시 (주문 취소하거나 페이지 재렌더링은 그냥 체크 다 해제된 상태)
-			$('#cartCheckBoxAll').change(() => {
-				let $cartCheckBoxAll = $('#cartCheckBoxAll');
-				let $checkBoxOne = $('.cart-check-box-one');
-				
-				if($cartCheckBoxAll.prop('checked')) {
-					$checkBoxOne.prop('checked', true);
-				} else {
-					$checkBoxOne.prop('checked', false);
-				}
-			});
-		</script> -->
-		
 		
 	<br/><br/><br/>
 	<br/><br/><br/>	

@@ -27,11 +27,11 @@ import com.kh.ttp.productSale.funding.model.vo.FundingSelectVO;
 import com.kh.ttp.productSale.funding.model.vo.FundingVO;
 import com.kh.ttp.productSale.order.model.vo.OrderDetailVO;
 import com.kh.ttp.productSale.order.model.vo.OrderVO;
-import com.kh.ttp.productSale.order.model.vo.ReceiverVO;
 import com.kh.ttp.productSale.product.model.vo.ProductVO;
 import com.kh.ttp.productSale.productInfo.model.vo.ProductCategoryVO;
 import com.kh.ttp.productSale.productInfo.model.vo.ProductFileVO;
 import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionVO;
+import com.kh.ttp.productSale.receiver.model.vo.ReceiverVO;
 import com.kh.ttp.user.model.vo.User;
 
 import lombok.RequiredArgsConstructor;

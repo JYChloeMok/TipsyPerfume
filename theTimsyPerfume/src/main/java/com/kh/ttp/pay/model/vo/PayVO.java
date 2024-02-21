@@ -12,6 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class PayVO extends OrderDetailVO {
+
 	/*
 	PAY_NO	NUMBER
 	PAY_METHOD	VARCHAR2(1 BYTE)
@@ -22,6 +23,7 @@ public class PayVO extends OrderDetailVO {
 	PAY_STATUS	VARCHAR2(1 BYTE)
 	PAY_DATE	DATE
 	*/
+	
 	private String payMethod;
 	private int payTotal;
 	private int payAdjust;

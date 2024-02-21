@@ -1,11 +1,11 @@
-package com.kh.ttp.productSale.order.controller;
+package com.kh.ttp.productSale.receiver.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.kh.ttp.productSale.order.model.service.ReceiverService;
-import com.kh.ttp.productSale.order.model.vo.ReceiverVO;
+import com.kh.ttp.productSale.receiver.model.service.ReceiverService;
+import com.kh.ttp.productSale.receiver.model.vo.ReceiverVO;
 
 import lombok.RequiredArgsConstructor;
 

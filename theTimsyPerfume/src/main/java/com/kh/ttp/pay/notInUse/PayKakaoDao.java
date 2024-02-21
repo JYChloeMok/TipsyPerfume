@@ -1,3 +1,4 @@
+/*
 package com.kh.ttp.pay.model.dao;
 
 import java.util.Map;
@@ -29,6 +30,7 @@ public class PayKakaoDao {
 		return sqlSession.selectOne("payKakaoMapper.selectPayKakao", userEmail);
 	}
 	
+
 	
 	
 	
@@ -39,13 +41,10 @@ public class PayKakaoDao {
 	
 	
 	
-	
-	
-	/*
 	public void checkReadyInput(SqlSessionTemplate sqlSession, PayKakaoReady kakaoReady) {
 		HashMap<String, Object> map = sqlSession.selectOne("payKakaoMapper.checkReadyInput", kakaoReady);
 	}
-	*/
 	
 	
 }
+*/	

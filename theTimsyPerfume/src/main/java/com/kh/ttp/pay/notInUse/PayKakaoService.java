@@ -1,3 +1,4 @@
+/*
 package com.kh.ttp.pay.model.service;
 
 import java.io.IOException;
@@ -22,21 +23,5 @@ public interface PayKakaoService {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
+*/
