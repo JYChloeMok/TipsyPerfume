@@ -23,13 +23,18 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public HashMap orderMain(CartVO cart) {
 		
+		// 조회결과
 		ArrayList<CartMainVO> orderList = orderDao.orderMain(sqlSession, cart);
+		
+		// 조회해온 결과로 최종 주문금액, 배송비 계산하는 메소드
+		int cartAmount = calcCartAmount(orderList);
+		int orderShipping = calcCartAmount(orderList);
 		
 		HashMap orderMain = new HashMap();
 		orderMain.put("orderList", orderList);
-		orderMain.put("orderAmount", calcOrderAmount(orderList));
-		orderMain.put("orderShipping", calcMinShipping(orderList));
-		
+		orderMain.put("cartAmount", cartAmount);
+		orderMain.put("orderShipping", orderShipping);
+		orderMain.put("orderAmount", cartAmount + orderShipping);
 		return orderMain;
 	}
 	
@@ -53,12 +58,13 @@ public class OrderServiceImpl implements OrderService {
 	}
 	
 	
-	private int calcOrderAmount(ArrayList<CartMainVO> orderList) {
+	private int calcCartAmount(ArrayList<CartMainVO> orderList) {
 		int sum = 0;
 		for(CartMainVO item : orderList) {
 			sum += item.getTotalPrice();
 		}
 		return sum;
 	}
+	
 	
 }

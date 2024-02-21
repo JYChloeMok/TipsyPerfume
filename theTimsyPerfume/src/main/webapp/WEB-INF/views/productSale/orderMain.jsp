@@ -51,7 +51,7 @@
 				</div>
 				
 				<c:forEach var="order" items="${orderMain.orderList}">
-					<div class="row">
+					<div class="row order-content-block">
 						<!-- 주문서 전송용 : 카트번호 -->
 						<input type="hidden" value=${order.cart.cartNo }>
 						
@@ -97,23 +97,36 @@
 				<br/><br/><br/>	
 				
 				<!-- 체크된 상품 최종 정보  -->
-				<div id="cartSummary" class="row">
+				<div id="orderSummary" class="row">
 					<div class="col">
 						<div class="row ps-5">전체금액</div>
 						<div id="123" class="row">
-							<div id="cartAmountDiv" class="col summary-col">
+							<div id="orderMainCartAmountDiv" class="col summary-col">
 								<!-- 물건값 총 합계 (전체 상품 금액 총 합) -->
-								<input id="cartAmount" value="${cartAmount }" type="hidden">
+								<input id="orderAmount" value="${orderMain.cartAmount }" type="hidden">
+								<fmt:formatNumber value="${orderMain.cartAmount }" pattern="#,###" />원
 							</div>
 							<div class="col-1 summary-col"> | </div>
-							<div id="shippingAmountDiv" class="col summary-col">
+							<div id="orderMainShippingAmountDiv" class="col summary-col">
 								<!-- 배송비 금액 (상품 배송비 중 최소 배송비) 뜨는곳 @@@@@@@@@@@@@@@@@@@ -->
+								<input id="orderAmount" value="${orderMain.orderShipping }" type="hidden">
+								<fmt:formatNumber value="${orderMain.orderShipping }" pattern="#,###" />원 
 							</div>
 						</div>
-						<div id="orderAmountDiv" class="row ps-5">
+						<div id="orderMainOrderAmountDiv" class="row ps-5">
 							<!-- 주문 최종 금액 (할인, 배송비 등 전부 계산한 최종 금액) 뜨는곳 @@@@@@@@@@@@@@@@@@@ -->
+							<input id="orderAmount" value="${orderMain.orderAmount }" type="hidden">
+							<fmt:formatNumber value="${orderMain.orderAmount }" pattern="#,###" />원
 						</div>
 					</div>
+					<!-- 
+							// 최종배송비&주문금액  cartMain JS 재활용
+							// => 불가 / id 선택자 사용해서 겹침
+							// => service레이어에서 계산해서 값 가져옴 (장바구니 페이지와 달리 여기는 값update될 일 없으니까)
+							// => class로 설정하거나 차라리 페이지를 전부 ajax로 가져오는게 편할듯
+							// 일단 공통으로 사용하는 Obj종류나 CSS들 가능하면 class로 설정하자
+							// (근데 그럼 아이디는 어디에 씀 의미가??? 공통사용/나중에 확장 될 수도 있다고 생각하면 class를 쓸텐데 뭘까)
+					 -->
 					<div class="col-4">
 						<button id="orderMainPayBtn" onclick="requestPay()" type="button" class="btn btn-primary">결제하기</button>
 					</div>
@@ -129,9 +142,10 @@
 		// 최종 결제 금액
 		// (디스플레이) 로딩 시 가격 계산해 띄워줌 (물건값 총 합계 / 배송비 / 최종 주문 금액)
 		$(() => {
-			cartStrUtilObj.makeAllAmountArea();
+			// cartStrUtilObj.makeAllAmountArea();
+			console.log('${orderMain}');
 		});
-	
+		
 	
 		$(() => {
 			// 배송지 정보
@@ -147,6 +161,10 @@
 				}
 			});
 		});
+		
+
+		
+		
 	</script>
 		
 	<br/><br/><br/>

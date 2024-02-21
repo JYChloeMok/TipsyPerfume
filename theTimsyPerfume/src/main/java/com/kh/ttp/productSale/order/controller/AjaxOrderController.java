@@ -1,19 +1,7 @@
 package com.kh.ttp.productSale.order.controller;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.kh.ttp.pay.model.vo.PaymentVO;
-import com.kh.ttp.productSale.order.model.vo.OrderDetailVO;
-import com.kh.ttp.productSale.order.model.vo.OrderProductVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,16 +13,19 @@ public class AjaxOrderController {
 	// 주문하기 테스트
 	@GetMapping("orderMain")
 	public String orderTest() {
-		return "productSale/orderTest";
+		return "productSale/orderMain";
 	}
 
+
+	
+	
+	
+	
 	
 	
 	// 주문페이지에서 결제버튼 클릭 시 가맹점 주문번호 MERCHANT_UID 생성
 	//@GetMapping("pay")
-	
-	
-	
+	/*
 	// 사전 등록
 	@ResponseBody
 	@RequestMapping("preparePayment") // 실제로는 Get으로 써야하는 요청이지만 Post사용 = 추후 변경될 수 있으니 RequestMapping
@@ -78,11 +69,10 @@ public class AjaxOrderController {
 		// 재고 체크 및 감소
 		
 		// 결제요청
-
 		
 		return "success";
 	}
-	
+	*/
 	
 	
 	

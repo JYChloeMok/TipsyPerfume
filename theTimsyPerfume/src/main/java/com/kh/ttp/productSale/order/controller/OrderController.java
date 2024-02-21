@@ -14,6 +14,7 @@ import com.kh.ttp.common.util.LoginUser;
 import com.kh.ttp.productSale.cart.model.vo.CartVO;
 import com.kh.ttp.productSale.common.ProductSaleUtil;
 import com.kh.ttp.productSale.order.model.service.OrderService;
+import com.kh.ttp.user.model.vo.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -49,7 +50,7 @@ public class OrderController {
 			}
 		}
 		// 유저넘버 세팅
-		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
+		cart.setUserNo(((User)LoginUser.getLoginUser(session)).getUserNo());
 		
 		model.addAttribute("orderMain", orderService.orderMain(cart));
 		return "productSale/orderMain";
