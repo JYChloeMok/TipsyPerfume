@@ -247,32 +247,44 @@
 		
 		// 비동기작업 성공 시 resolve(), 실패 시 reject()호출
 		let paymentPromise = new Promise((resolve, reject) => {
-			// UID번호, 주문자=로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
+			// 주문 준비 값 Get요청 : UID번호, 주문자=로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
 			$.ajax({
 				url : '/payment/prepare',
 				type : 'GET',
 				success : result => {
+					console.log('페이먼트 정보 불러오기 성공! ↓');
 					console.log(result);
-					if(result) {
-						resolve(result);						
-					}
-					else {
-						// 값이 falsy해도 통신 자체가 성공했다면 resolve()를 사용해야함 / reject()는 통신 성공 or 실패여부에 따라 사용
-						console.log('notAvailable! 페이먼트 정보 불러오기 통신에 성공하였으나 result값이 유효하지 않습니다');
-						resolve('notAvailable');
-					}
+					// 코드 복잡해져서 여기서는 그냥 resolve호출하고 result넘기는 로직만 수행, 나머지는 then에서
+ 					resolve(result);						
 				},
 				error : () => {
 					console.log('error! 페이먼트 정보 불러오기 에러발생');
 					return reject('error');
 				}
 			});
-		})
+		});
+		// p.s. 값이 falsy해도 통신 자체가 성공했다면 resolve()를 사용해야함 / reject()는 통신 성공 or 실패여부에 따라 사용
 		
-		paymentPromise.then(args => {
+		else {
+			console.log();
+			resolve('notAvailable');
+		}
+		
+		
+		// paymentPromise 후처리
+		paymentPromise.then(result => {
+			console.log(result);
+			// 값이 falsy할 경우 알림창 띄우고 새로고침, 취소누르면 괘씸하니까 홈으로 보냄
+			if(!result) {
+				let str = '페이먼트 정보 불러오기 통신에 성공하였으나 result값이 유효하지 않습니다! 페이지를 새로고침합니다.';
+				confirm(str) ? location.reload() : location.href = '/';
+				return false; // return false 생략 안한 이유 : 코드 의도 이해할 수 있도록 & 명시적 프로그램 종료 보장
+			}
+			
 			// 결제 요청
-			console.log(args);
-			// 상품이름 인풋 배열의 0번인덱스 밸류 + '외' + 길이 + '개'
+			// 주문 준비 값 : UID번호, 주문자=로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
+			
+				// 상품이름 인풋 배열의 0번인덱스 밸류 + '외' + 길이 + '개'
 			let productList = $('#pdtName');
 			let name = productList[0].val() + ' 외 ' + productList.length + '개';
 			let amount = $('#orderAmount').val();
