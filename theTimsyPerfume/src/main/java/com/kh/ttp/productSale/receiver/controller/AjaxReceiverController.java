@@ -32,7 +32,7 @@ public class AjaxReceiverController {
 	
 	@GetMapping
 	public ResponseEntity<List<ReceiverVO>> selectReceiver(HttpSession session) {
-		List<ReceiverVO> receiverList = receiverService.selectReceiver(((User)LoginUser.getLoginUser(session)).getUserNo());
+		List<ReceiverVO> receiverList = receiverService.selectReceiver(LoginUser.getLoginUser(session).getUserNo());
 		HttpHeaders header = productUtil.makeHeader("application", "json", "UTF-8");
 		return new ResponseEntity<List<ReceiverVO>>(receiverList, header, HttpStatus.OK);
 	}

@@ -29,7 +29,10 @@
 <header>
 	<c:if test="${not empty alertMsg }">
 		<script>
-			alertify.alert("${alertMsg}");
+			$(() => {
+				alert('${alertMsg}');
+				location.href="loginForm.me";				
+			});
 		</script>
 		<c:remove var="alertMsg"/>
 	</c:if>

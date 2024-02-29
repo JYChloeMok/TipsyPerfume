@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +13,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 	
-	<!--<link rel="stylesheet" href="resources/css/frags/addressEnrollForm.css">-->
+	<link rel="stylesheet" href="resources/css/frags/addressForm.css" />
 	
 	
 	
@@ -20,6 +21,7 @@
 <body>
 
 	<div id="addressContainer">
+	<!-- id..중복 -->
 		<div>
 			<!-- Nav tabs -->
 			<ul class="nav nav-tabs nav-pills nav-justified">
@@ -32,36 +34,51 @@
 			</ul>
 	
 	
-			<!-- Tab panes -->
+			<!-- 탭메뉴 -->
 			<div class="tab-content">
-				
 				<!-- 메뉴1 배송지선택 -->
 				<div id="menu1" class="container tab-pane active">
-					<br>
-					<div>
-						배송지를 선택해주세요
-					</div>
-					<br>
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
-						<label class="form-check-label" for="flexRadioDefault1">
-							기본배송지
-					  	</label>
-						<div>
-							김ㅇㅇ | 서울특별시 중구 ㅇㅇ로 1230호
-						</div>
-					</div>
-					<br>
-					<div class="form-check">
-						<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
-						<label class="form-check-label" for="flexRadioDefault2">
-							배송지 별명
-						</label>
-						<div>
-							김ㅇㅇ | 서울특별시 중구 ㅇㅇ로 1230호
-						</div>
-					</div>
-					<br>
+					<c:choose>
+						<c:when test="${not empty receiverList}">
+							<div>
+								배송지를 선택해주세요
+							</div>
+							<c:forEach var="receiver" items="${receiverList }" varStatus="status">
+								<div class="form-check">
+									<input class="primaryStatus" type="hidden" value="${receiverList.primaryStatus }">
+									<c:choose>
+										<c:when test="${receiver.primaryStatus eq 'Y' }">
+											<input class="form-check-input" type="radio" id="flexRadioDefault${status.index }" checked>
+										</c:when>
+										<c:otherwise>
+											<input class="form-check-input" type="radio" id="flexRadioDefault${status.index }">
+										</c:otherwise>
+									</c:choose>
+									<label class="form-check-label" for="flexRadioDefault${status.index }">
+										${receiver.placeAlias }
+								  	</label>
+									<div>
+										수령인 : ${receiver.receiverName } | 전화번호 : ${receiver.phone }
+									</div>
+									<div>
+										우편번호 : ${receiver.postalCode }
+										주소 : ${receiver.address }
+										상세주소 : ${receiver.addressDetail }
+									</div>
+								</div>
+								<br>
+							</c:forEach>
+							
+							<button  type="button" class="btn btn-secondary" id="addAddressBtn" data-bs-dismiss="modal">닫기</button>
+							<button  type="button" class="btn btn-primary" id="addAddressBtn">저장하기</button>
+						</c:when>
+						<c:otherwise>
+							<div>배송지 정보를 불러올 수 없습니다. 새로운 배송지를 입력하거나 나중에 다시 시도해주세요.</div>
+							<button  type="button" class="btn btn-secondary" id="addAddressBtn" data-bs-dismiss="modal">닫기</button>
+						</c:otherwise>
+					</c:choose>
+					
+					
 				</div>
 				<br><br>
 				
@@ -108,8 +125,8 @@
 						    <label class="custom-control-label" for="primaryStatus">이 배송지를 기본 배송지로 저장하시겠습니까?</label>
 					  	</div>
 						<br><br>
-						<div class="modal-footer">
-							<button  type="submit" class="btn btn-primary" id="addAddressBtn" style="width:100%;">저장</button>
+						<div>
+							<button  type="button" class="btn btn-primary" id="addAddressBtn" style="width:100%;">저장</button>
 						</div>
 					</form>
 				</div>
@@ -120,7 +137,6 @@
 
 	<!-- 다음 주소검색 API -->
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-	
 	<script src="resources/js/frags/addressForm.js"></script>
 
 

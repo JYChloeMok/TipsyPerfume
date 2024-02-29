@@ -18,17 +18,12 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 	
 	<!-- CSS파일 적는곳 -->
-	<!-- <link rel="stylesheet" href="resources/css/productSale/orderMain.css"> -->
+	<link rel="stylesheet" href="resources/css/productSale/orderMain.css">
 	
-	<!-- 포트원 결제 -->
+	<!-- 포트원 결제 v1 -->
 	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
-
-	<style>
-		#orderMainWrap div {
-			border: 1px solid black;
-		}
-	</style>
 </head>
+
 <body>
 
 	<jsp:include page="../common/header.jsp" />
@@ -36,8 +31,8 @@
 	<h1>오더리스트</h1><br>
 	
 	
+	
 	<div id="orderMainWrap" class="container">
-
 		<!-- 상품 출력부 -->
 		<c:choose>
 			<c:when test="${not empty orderMain}">
@@ -53,12 +48,14 @@
 				<c:forEach var="order" items="${orderMain.orderList}">
 					<div class="row order-content-block">
 						<!-- 주문서 전송용 : 카트번호 -->
-						<input type="hidden" value=${order.cart.cartNo }>
+						<input class="cartNo" type="hidden" value=${order.cart.cartNo }>
 						
 						<!-- 상품 이름, 옵션 정보 -->
 						<div class="col-4 ps-5">
-							<span class="order-pdt-name">${order.pdtName}</span>
+							<input id="pdtName" type="hidden" value="${order.pdtName}">
+							<span class="pdt-name">${order.pdtName}</span>
 							&nbsp;
+							<input id="pdtOptionFirst" type="hidden" value="${order.productOption.pdtOptionFirst}">
 							<span>${order.productOption.pdtOptionFirst}</span>
 						</div>
 		
@@ -94,7 +91,42 @@
 					</div>
 				</c:forEach>
 
-				<br/><br/><br/>	
+				<br/>
+				<div>
+					<p>주문자 정보</p>
+					<p>이름 : {loginUser.userName}</p>
+					<p>이메일 : {loginUser.userEmail}</p>
+					<p>전화번호 : {loginUser.phone}</p>
+					<p>주소 : {loginUser.address}</p>
+					<p>우편번호 : {loginUser.postalCode}</p>
+				</div>
+				
+				<div class="row">
+					<div class="col-8">
+						<!-- 현재 배송지 띄워질 영역 -->
+					</div>
+					<div class="col-4">
+						<!-- 배송지 입력 모달창 -->
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderAddrModal">
+							배송지 수정
+						</button>
+					</div>
+				</div>
+				
+				<br/>	
+				<!-- 배송지 입력 모달 시작 -->
+				<div class="modal fade" id="orderAddrModal" tabindex="-1" aria-labelledby="orderAddrModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-body">
+								<jsp:include page="../frags/addressForm.jsp" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 배송지 입력 모달 끝 -->
+				
+				
 				
 				<!-- 체크된 상품 최종 정보  -->
 				<div id="orderSummary" class="row">
@@ -116,17 +148,14 @@
 						<div id="orderMainOrderAmountDiv" class="row ps-5">
 							<!-- 주문 최종 금액 (할인, 배송비 등 전부 계산한 최종 금액) 뜨는곳 @@@@@@@@@@@@@@@@@@@ -->
 							<input id="orderAmount" value="${orderMain.orderAmount }" type="hidden">
-							<fmt:formatNumber value="${orderMain.orderAmount }" pattern="#,###" />원
+							<span>
+								<!-- = 총 x,xxx원 -->
+								&#61;&nbsp;총&nbsp;<fmt:formatNumber value="${orderMain.orderAmount }" pattern="#,###" />원
+							</span>
+							
 						</div>
 					</div>
-					<!-- 
-							// 최종배송비&주문금액  cartMain JS 재활용
-							// => 불가 / id 선택자 사용해서 겹침
-							// => service레이어에서 계산해서 값 가져옴 (장바구니 페이지와 달리 여기는 값update될 일 없으니까)
-							// => class로 설정하거나 차라리 페이지를 전부 ajax로 가져오는게 편할듯
-							// 일단 공통으로 사용하는 Obj종류나 CSS들 가능하면 class로 설정하자
-							// (근데 그럼 아이디는 어디에 씀 의미가??? 공통사용/나중에 확장 될 수도 있다고 생각하면 class를 쓸텐데 뭘까)
-					 -->
+
 					<div class="col-4">
 						<button id="orderMainPayBtn" onclick="requestPay()" type="button" class="btn btn-primary">결제하기</button>
 					</div>
@@ -137,39 +166,162 @@
 			</c:otherwise>
 		</c:choose>
 	</div>
+
+
+
+
+
+	
+
+	
+
 	
 	<script>
+
+	
+	$(() => {
+		$(".modal-dialog").fadeIn();
+		  $("#openModalBtn").click(function(){
+		    
+		  });
+		  
+		  $(".addr-form-close").click(function(){
+		    $("#myModal").fadeOut();
+		  });
+	})
+	
+	
+	
+	
 		// 최종 결제 금액
 		// (디스플레이) 로딩 시 가격 계산해 띄워줌 (물건값 총 합계 / 배송비 / 최종 주문 금액)
 		$(() => {
 			// cartStrUtilObj.makeAllAmountArea();
-			console.log('${orderMain}');
 		});
 		
 	
-		$(() => {
+ 		$(() => {
 			// 배송지 정보
 			$.ajax({
 				url : 'receiver',
 				method : 'GET',
 				success : result => {
+					console.log('배송지 정보 조회 성공!');
 					console.log(result);
-					console.log('배송지 정보 조회 성공!')
 				},
 				error : () => {
 					console.log('배송지 정보 조회 에러발생');
 				}
 			});
 		});
+	</script>
 		
+		
+	<script>
+	// 결제
+	var IMP = window.IMP;
+	IMP.init("impXXXXXXXXX");
+	
+	// 잠시대기
+    function requestPay() {
+		// promise / async / await
+		// 콜백지옥 -> promise / IE 호환성 문제(IE현재 ㅂㅇ)
+		// pending(초기), fulfilled(비동기 동작 성공), rejected(비동기 동작 실패)
+		// then() 메소드로 큐(FIFO)에 추가된 처리기들 호출 (promise의 상태와 상고나없이 처리기 호출됨)
+		// Promise.prototype.then(), Promise.prototype.catch()의 반환값은 새로운 promise, 서로 연결 가능		
+		
+		// 문법 (then인자는 optional)
+		// doSomething()
+		//	.then(function (result) {수행 return result})
+		//	.then(function (newResult {수행 return newResult}))
+		//	.catch(failureCallback);
+		
+		// 반환값이 존재해야함 / 화살표함수 () => x는 () => {return x;}
+		// doSomething()
+		//	.then((result) => doSomethingElse(result))
+		//	.then((newResult) => doThirdThing(newResult))
+		//	.catch(faulureCallback);
+		
+		// 주의 : 체인연결 제대로 안되는 경우 체인이 끊어지거나 두개의 체인이 경쟁하는 등 문제 발생
+		// 병렬로 실행되고 난리남 / 중첩에 주의 / catch로 종료 필수
+		
+		// 비동기작업 성공 시 resolve(), 실패 시 reject()호출
+		let paymentPromise = new Promise((resolve, reject) => {
+			// UID번호, 주문자=로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
+			$.ajax({
+				url : '/payment/prepare',
+				type : 'GET',
+				success : result => {
+					console.log(result);
+					if(result) {
+						resolve(result);						
+					}
+					else {
+						// 값이 falsy해도 통신 자체가 성공했다면 resolve()를 사용해야함 / reject()는 통신 성공 or 실패여부에 따라 사용
+						console.log('notAvailable! 페이먼트 정보 불러오기 통신에 성공하였으나 result값이 유효하지 않습니다');
+						resolve('notAvailable');
+					}
+				},
+				error : () => {
+					console.log('error! 페이먼트 정보 불러오기 에러발생');
+					return reject('error');
+				}
+			});
+		})
+		
+		paymentPromise.then(args => {
+			// 결제 요청
+			console.log(args);
+			// 상품이름 인풋 배열의 0번인덱스 밸류 + '외' + 길이 + '개'
+			let productList = $('#pdtName');
+			let name = productList[0].val() + ' 외 ' + productList.length + '개';
+			let amount = $('#orderAmount').val();
+			let pgName = 'kakaopay'; /* 추후 PG사 추가 시 조건에 따라 초기화 */
+			IMP.request_pay(
+				{
+					pg: pgName + ".상점id",
+					pay_method: "card",
+					merchant_uid: "merchant" + new Date().getTime(), // 서버에서
+					name: name,
+					amount: amount,
+					buyer_email: "Iamport@chai.finance", // 서버에서
+					buyer_name: "포트원 기술지원팀", // 서버에서
+					buyer_tel: "010-1234-5678", // 서버에서
+					buyer_addr: "서울특별시 강남구 삼성동", // 서버에서
+					buyer_postcode: "123-456", // 서버에서
+				},
+			function (result) {
+			// callback
+			//rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+      }
+    );
+			
+		})
+		.then(args => {
+			
+		})
+		.catch(() => {
+			
+		});
+		
+    }
 
-		
-		
+	
 	</script>
 		
 	<br/><br/><br/>
 	<br/><br/><br/>	
 	<br/><br/><br/>	
-
+	<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		// 최종배송비&주문금액  cartMain JS 재활용
+		// => 불가 / id 선택자 사용해서 겹침
+		// => service레이어에서 계산해서 값 가져옴 (장바구니 페이지와 달리 여기는 값update될 일 없으니까)
+		// => class로 설정하거나 차라리 페이지를 전부 ajax로 가져오는게 편할듯
+		// 일단 공통으로 사용하는 Obj종류나 CSS들 가능하면 class로 설정하자
+		// (공통사용/나중에 확장 될 수도 있다고 생각하면 class 아이디는 의미가??? => 이렇게 쓰는게 X?? 공통:클래스/이벤트:아이디)
+		// 태그가 유일해야할 일 많지 X => id 너무 남발한듯
+	 -->
+	 
+	 
 </body>
 </html>

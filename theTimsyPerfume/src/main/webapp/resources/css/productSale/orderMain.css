@@ -23,9 +23,6 @@
 #orderContentBar .col, .col-2, /* 콘텐트바 */
 #orderMainWrap .cart-content-block .col, /* 콘텐트블록 */
 .col-2,
-.cart-extra-info-area,
-.cart-extra-info-area .col-12,
-#orderSummary .col-4, /* 카트 서머리 */
 #orderSummary .summary-col
  { 
 	justify-content: center;

@@ -24,7 +24,7 @@ public class CartController {
 	 */
 	@GetMapping("cartMain.ca")
 	public String cartMain(Model model, HttpSession session) {
-		model.addAttribute("cartList", cartService.cartMain(((User)LoginUser.getLoginUser(session)).getUserNo()));
+		model.addAttribute("cartList", cartService.cartMain(LoginUser.getLoginUser(session).getUserNo()));
 		return "productSale/cartMain";
 	}
 	

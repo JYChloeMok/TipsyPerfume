@@ -10,11 +10,6 @@ import lombok.RequiredArgsConstructor;
 public class AjaxOrderController {
 
 	
-	// 주문하기 테스트
-	@GetMapping("orderMain")
-	public String orderTest() {
-		return "productSale/orderMain";
-	}
 
 
 	

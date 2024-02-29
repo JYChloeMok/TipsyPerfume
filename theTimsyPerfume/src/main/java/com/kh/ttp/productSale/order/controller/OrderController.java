@@ -50,7 +50,7 @@ public class OrderController {
 			}
 		}
 		// 유저넘버 세팅
-		cart.setUserNo(((User)LoginUser.getLoginUser(session)).getUserNo());
+		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
 		
 		model.addAttribute("orderMain", orderService.orderMain(cart));
 		return "productSale/orderMain";

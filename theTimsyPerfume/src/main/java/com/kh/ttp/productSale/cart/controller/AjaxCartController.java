@@ -43,7 +43,7 @@ public class AjaxCartController {
 	public ResponseEntity<String> insertCartAjax(CartVO cart,
 									  					@RequestParam String pdtCteg,
 									  					HttpSession session) {
-		User loginUser = (User)LoginUser.getLoginUser(session);
+		User loginUser = LoginUser.getLoginUser(session);
 		// 카테고리 값이 검증되었고, 카테고리가 "A"(알콜)가 아니거나 유저가 성인일 때(인증상태 "Y")
 		if(productUtil.isPdtCtegValid(pdtCteg) && (!("A".equals(pdtCteg)) || "Y".equals(loginUser.getAdultStatus()))) {
 			cart.setUserNo(loginUser.getUserNo());
@@ -57,7 +57,7 @@ public class AjaxCartController {
 	// 카트 수량 업데이트 (TB_CART에서 변경 가능한건 수량밖에 없음)
 	@PutMapping("quantity/{cartNo}")
 	public ResponseEntity<String> updateCartAjax(CartVO cart, HttpSession session) {
-		cart.setUserNo(((User)LoginUser.getLoginUser(session)).getUserNo());
+		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
 		String result = (cartService.updateCartAjax(cart) != 0) ? "success" : "fail";
 		HttpHeaders header = productUtil.makeHeader("html", "text", "UTF-8");
 		return new ResponseEntity<String>(result, header, HttpStatus.OK);
@@ -66,7 +66,7 @@ public class AjaxCartController {
 	// 카트 아이템 삭제
 	@DeleteMapping("delete/{cartNoArr}")
 	public ResponseEntity<String> deleteCartAjax(CartVO cart, HttpSession session) {
-		cart.setUserNo(((User)LoginUser.getLoginUser(session)).getUserNo());
+		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
 		String result = (cartService.deleteCartAjax(cart) != 0) ? "success" : "fail";
 		HttpHeaders header = productUtil.makeHeader("html", "text", "UTF-8");
 		return new ResponseEntity<String>(result, header, HttpStatus.OK);
