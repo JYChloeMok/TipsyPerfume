@@ -52,7 +52,7 @@
 						
 						<!-- 상품 이름, 옵션 정보 -->
 						<div class="col-4 ps-5">
-							<input id="pdtName" type="hidden" value="${order.pdtName}">
+							<input class="pdtName" type="hidden" value="${order.pdtName}">
 							<span class="pdt-name">${order.pdtName}</span>
 							&nbsp;
 							<input id="pdtOptionFirst" type="hidden" value="${order.productOption.pdtOptionFirst}">
@@ -92,7 +92,7 @@
 				</c:forEach>
 
 				<br/>
-				<div>
+				<div class="row">
 					<p>주문자 정보</p>
 					<p>이름 : ${loginUser.userName}</p>
 					<p>이메일 : ${loginUser.userEmail}</p>
@@ -101,14 +101,41 @@
 					<p>우편번호 : ${loginUser.postalCode}</p>
 				</div>
 				
-				<div class="row">
-					<div class="col-8">
-						<!-- 현재 배송지 띄워질 영역 -->
+				<div class="row order-address">
+					<div class="col-9">
+						<!-- 현재 선택된 배송지 띄워질 영역 -->
+						<div class="row pl-3">현재 배송지</div>
+						<div class="row">
+							<div class="col-4">배송지 별명</div>
+							<div class="col-8 or-recv-alias">집${receiver[0].placeAlias }</div>
+						</div>
+						<div class="row">
+							<div class="col-4">수령인</div>
+							<div class="col-8 or-recv-name">루잉구${receiver[0].receiverName }</div>
+						</div>
+						<div class="row">
+							<div class="col-4">전화번호</div>
+							<div class="col-8 or-recv-phone">010-1234-1423${receiver[0].phone }</div>
+						</div>
+						<div class="row">
+							<div class="col-4">우편번호</div>
+							<div class="col-8 or-recv-postal">130123${receiver[0].postalCode }</div>
+						</div>
+						<div class="row">
+							<div class="col-4">주소</div>
+							<div class="col-8 or-recv-addr">서울특별시 어디구 어짇거이 니ㅡ일 이ㅏㄹ ㅏ291-잋 ㅏ102 ㄷ${receiver[0].address }</div>
+						</div>
+						<div class="row">
+							<div class="col-4">상세주소</div>
+							<div class="col-8 or-recv-addr-detail">100호${receiver[0].addressDetail }</div>
+						</div>
 					</div>
-					<div class="col-4">
+					<div class="col-3">
 						<!-- 배송지 입력 모달창 -->
 						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderAddrModal">
-							배송지 수정
+							배송지
+							<br>
+							수정
 						</button>
 					</div>
 				</div>
@@ -125,7 +152,7 @@
 								<jsp:include page="../frags/addressForm.jsp" />
 							</div>
 							<div>
-								<button type="button" class="btn-close" data-bs-dismiss="modal" area-label="Close"></button>
+								ㅇㅇ
 							</div>
 						</div>
 					</div>
@@ -133,37 +160,41 @@
 				<!-- 배송지 입력 모달 끝 -->
 				
 				
-				
 				<!-- 체크된 상품 최종 정보  -->
 				<div id="orderSummary" class="row">
-					<div class="col">
+					<div class="col-9">
 						<div class="row ps-5">전체금액</div>
-						<div id="123" class="row">
+						<div class="row">
+							<!-- 물건값 총 합계 (전체 상품 금액 총 합) -->
 							<div id="orderMainCartAmountDiv" class="col summary-col">
-								<!-- 물건값 총 합계 (전체 상품 금액 총 합) -->
 								<input id="orderMainCartAmount" value="${orderMain.cartAmount }" type="hidden">
 								<fmt:formatNumber value="${orderMain.cartAmount }" pattern="#,###" />원
 							</div>
-							<div class="col-1 summary-col"> | </div>
+							<div class="col-1 summary-col">
+							&nbsp;|&nbsp;
+							</div>
+							<!-- 배송비 금액 (상품 배송비 중 최소 배송비) 뜨는곳 @@@@@@@@@@@@@@@@@@@ -->
 							<div id="orderMainShippingAmountDiv" class="col summary-col">
-								<!-- 배송비 금액 (상품 배송비 중 최소 배송비) 뜨는곳 @@@@@@@@@@@@@@@@@@@ -->
 								<input id="orderMainShippingAmount" value="${orderMain.orderShipping }" type="hidden">
+								<span>배송비&nbsp;</span>
 								<fmt:formatNumber value="${orderMain.orderShipping }" pattern="#,###" />원 
 							</div>
 						</div>
+						<!-- 최종 결제 금액 (할인, 배송비 등 전부 계산한 최종 금액) 뜨는곳 @@@@@@@@@@@@@@@@@@@ -->
 						<div id="orderMainOrderAmountDiv" class="row ps-5">
-							<!-- 주문 최종 금액 (할인, 배송비 등 전부 계산한 최종 금액) 뜨는곳 @@@@@@@@@@@@@@@@@@@ -->
 							<input id="orderMainOrderAmount" value="${orderMain.orderAmount }" type="hidden">
 							<span>
-								<!-- = 총 x,xxx원 -->
+								<!-- '= 총 x,xxx원' 형식 -->
 								&#61;&nbsp;총&nbsp;<fmt:formatNumber value="${orderMain.orderAmount }" pattern="#,###" />원
 							</span>
 							
 						</div>
 					</div>
 
-					<div class="col-4">
-						<button id="orderMainPayBtn" onclick="requestPay()" type="button" class="btn btn-primary">결제하기</button>
+					<div class="col-3">
+						<button id="orderMainPayBtn" onclick="requestPay()" type="button" class="btn btn-primary">
+							결제하기
+						</button>
 					</div>
 				</div>
 			</c:when>
@@ -202,107 +233,127 @@
 		
 	<script>
 	// 결제
-	var IMP = window.IMP;
-	IMP.init("impXXXXXXXXX");
 	
 	// 잠시대기
+	// promise / async / await
+	// 콜백지옥 -> promise / IE 호환성 문제(IE현재 ㅂㅇ)
+	// pending(초기), fulfilled(비동기 동작 성공), rejected(비동기 동작 실패)
+	// then() 메소드로 큐(FIFO)에 추가된 처리기들 호출 (promise의 상태와 상고나없이 처리기 호출됨)
+	// Promise.prototype.then(), Promise.prototype.catch()의 반환값은 새로운 promise, 서로 연결 가능		
+	
+	// 문법 (then인자는 optional)
+	// doSomething()
+	//	.then(function (result) {수행 return result})
+	//	.then(function (newResult {수행 return newResult}))
+	//	.catch(failureCallback);
+	
+	// 반환값이 존재해야함 / 화살표함수 () => x는 () => {return x;}
+	// doSomething()
+	//	.then((result) => doSomethingElse(result))
+	//	.then((newResult) => doThirdThing(newResult))
+	//	.catch(faulureCallback);
+	
+	// 주의 : 체인연결 제대로 안되는 경우 체인이 끊어지거나 두개의 체인이 경쟁하는 등 문제 발생
+	// 병렬로 실행되고 난리남 / 중첩에 주의 / catch로 종료 필수
+	
+	// 비동기작업 성공 시 resolve(), 실패 시 reject()호출
+	
+	
+	// 결제
     function requestPay() {
-		// promise / async / await
-		// 콜백지옥 -> promise / IE 호환성 문제(IE현재 ㅂㅇ)
-		// pending(초기), fulfilled(비동기 동작 성공), rejected(비동기 동작 실패)
-		// then() 메소드로 큐(FIFO)에 추가된 처리기들 호출 (promise의 상태와 상고나없이 처리기 호출됨)
-		// Promise.prototype.then(), Promise.prototype.catch()의 반환값은 새로운 promise, 서로 연결 가능		
-		
-		// 문법 (then인자는 optional)
-		// doSomething()
-		//	.then(function (result) {수행 return result})
-		//	.then(function (newResult {수행 return newResult}))
-		//	.catch(failureCallback);
-		
-		// 반환값이 존재해야함 / 화살표함수 () => x는 () => {return x;}
-		// doSomething()
-		//	.then((result) => doSomethingElse(result))
-		//	.then((newResult) => doThirdThing(newResult))
-		//	.catch(faulureCallback);
-		
-		// 주의 : 체인연결 제대로 안되는 경우 체인이 끊어지거나 두개의 체인이 경쟁하는 등 문제 발생
-		// 병렬로 실행되고 난리남 / 중첩에 주의 / catch로 종료 필수
-		
-		// 비동기작업 성공 시 resolve(), 실패 시 reject()호출
-		
-		// paymentPromise객체 생성, ajax GET통신(주문에 필요한 값)
+		// 비동기통신으로 주문에 필요한 값 가져오기 (Promise객체 생성)
+		// UID번호, 로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
 		let paymentPromise = new Promise((resolve, reject) => {
 			$.ajax({
-				url : '/payment/prepare',
+				url : 'payment/prepare',
 				type : 'GET',
 				success : result => {
-					console.log('페이먼트 정보 불러오기 성공! ↓');
-					console.log(result);
- 					resolve(result);						
+ 					resolve(result);
 				},
 				error : () => {
-					console.log('error! 페이먼트 정보 불러오기 에러발생');
-					return reject('error');
+					reject('error');
 				}
 			});
 		});
 		/* 코드 복잡해져서 여기서는 그냥 resolve호출하고 result넘기는 로직만 수행, 나머지는 then에서
 		      값이 falsy해도 통신 자체가 성공했다면 resolve()를 사용해야함 / reject()는 통신 성공 or 실패여부에 따라 사용 */
 		
+		// 값이 유효하지 않을 때 사용하는 함수
+		function handleInvalidResult(result) {
+			let str = '페이먼트 정보 불러오기 통신에 성공하였으나 result값이 유효하지 않습니다! 페이지를 새로고침합니다.';
+			confirm(str) ? location.reload() : location.href = '/';
+		};
 		
-		// paymentPromise 후처리 then()호출
-		paymentPromise.then(result => {
-			console.log(result);
-			// falsy값 알림창 띄우고 새로고침, 취소누르면 괘씸하니까 홈으로 보냄
-			
-			/*
-			if(!result) {
-				let str = '페이먼트 정보 불러오기 통신에 성공하였으나 result값이 유효하지 않습니다! 페이지를 새로고침합니다.';
-				confirm(str) ? location.reload() : location.href = '/';
-				return false; // return false 생략 안한 이유 : 코드 의도 이해할 수 있도록 & 명시적 프로그램 종료 보장
-			}
-			
-			// 결제 요청
-			// 주문 준비 값 : UID번호, 주문자=로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
-			
-			let productList = $('#pdtName');
-			// PG사 (추후 사용자 조건에 따라 PG사 초기화)
-			let pgName = 'kakaopay';
-			let merchantUid = result.merchantUid;
+		// 값이 유효할 때 포트원API에 결제요청하는 함수
+		function proceedPayment(result) { // result가 유효한 값 일때만 들어옴
+	 		// 상점 아이디
+	 		let storeId = 'imp77122200';
+			// PG사
+			let pg = 'kakaopay' // 추후 조건에 따라 초기화
+				   + '.'
+				   + 'TC0ONETIME'; // 추후 조건에 따라 초기화
 			// 상품이름 (xx 외 n개)
-			let name = productList[0].val() + ' 외 ' + productList.length + '개';
+			let name = $('.pdtName').eq(0).val()
+					 + ' 외 '
+					 + $('.cartNo').length
+					 + '개';
 			// 최종 결제금액
-			let amount = $('#orderMainOrderAmount').val();
-			
-			IMP.request_pay(
-				{
-					pg: pgName + pgName + ".상점id",
-					pay_method: "card",
-					merchant_uid: merchantUid, // 서버에서
-					name: name,
-					amount: amount,
-					buyer_email: "Iamport@chai.finance", // 서버에서
-					buyer_name: "포트원 기술지원팀", // 서버에서
-					buyer_tel: "010-1234-5678", // 서버에서
-					buyer_addr: "서울특별시 강남구 삼성동", // 서버에서
-					buyer_postcode: "123-456", // 서버에서
-				},
-			function (result) {
-			// callback
-			//rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-				*/
-		}
-    );
-			
-		//});
-		//.then(args => {
-			
-		//})
-		//.catch(() => {
-			
-		//});
-		
-    }
+			let amount = (Number)($('#orderMainOrderAmount').val());
+			// 주문번호
+			let merchantUid = result.merchantUid;
+			// 주문자(로그인 유저) 정보
+			let buyer = result.buyer;
+			let buyerEmail = buyer.userEmail;
+			let buyerName = buyer.userName;
+			let buyerTel = buyer.phone;
+			let buyerAddr = buyer.address
+						  + ' '
+						  + buyer.addressDetail;
+			let buyerPostCode = buyer.postalCode;
+			// 결제 API용 객체 초기화
+			IMP = window.IMP;
+			IMP.init(storeId);
+			// 결제 API 요청 보내기
+			IMP.request_pay({
+				pg: pg,
+				pay_method: "card",
+				merchant_uid: merchantUid, // 서버에서
+				name: name,
+				amount: amount,
+				buyer_email: buyerEmail, // 서버에서
+				buyer_name: buyerName, // 서버에서
+				buyer_tel: buyerTel, // 서버에서
+				buyer_addr: buyerAddr, // 서버에서
+				buyer_postcode: buyerPostCode, // 서버에서
+			},
+			function(rsp) {
+				// callback
+				//rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+				if(rsp.success) {
+					console.log('결제성공ㅇㅇㅇ 이제 res값으로 주문정보를 넣어야함');
+					console.log(rsp);
+				}
+				else {
+					console.log('결제실패ㅐㅐㅐ');
+					console.log(rsp);
+				}
+			});
+		};
+		      
+		// 비동기 통신 이후 흐름 컨트롤하는 then(), catch()함수
+		paymentPromise.then(result => {
+		 	if(!result) {
+				handleInvalidResult(result);
+		 		return false; // return false 생략 안한 이유 : 코드 의도 이해할 수 있도록 & 명시적 프로그램 종료 보장
+			}
+		 	else {
+		 		proceedPayment(result);
+		 	}
+		})
+	    .catch(() => {
+	    	alert('캐치캐치');
+	    });
+    };
 
 	
 	</script>

@@ -59,7 +59,7 @@ public class AjaxCartController {
 	public ResponseEntity<String> updateCartAjax(CartVO cart, HttpSession session) {
 		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
 		String result = (cartService.updateCartAjax(cart) != 0) ? "success" : "fail";
-		HttpHeaders header = productUtil.makeHeader("html", "text", "UTF-8");
+		HttpHeaders header = productUtil.makeHeader("text", "html", "UTF-8");
 		return new ResponseEntity<String>(result, header, HttpStatus.OK);
 	}
 	
@@ -68,7 +68,7 @@ public class AjaxCartController {
 	public ResponseEntity<String> deleteCartAjax(CartVO cart, HttpSession session) {
 		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
 		String result = (cartService.deleteCartAjax(cart) != 0) ? "success" : "fail";
-		HttpHeaders header = productUtil.makeHeader("html", "text", "UTF-8");
+		HttpHeaders header = productUtil.makeHeader("text", "html", "UTF-8");
 		return new ResponseEntity<String>(result, header, HttpStatus.OK);
 	}
 	 

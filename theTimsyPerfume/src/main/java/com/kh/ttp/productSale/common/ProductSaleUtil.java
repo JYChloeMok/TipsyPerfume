@@ -46,6 +46,13 @@ public final class ProductSaleUtil {
 	
 	
 	/***********************************/
+	/**
+	 * ResponseEntity를 위한 헤더 생성
+	 * @param type : text, application 등
+	 * @param subtype : html, json 등
+	 * @param encoding : UTF-8 등
+	 * @return HttpHeaders객체
+	 */
 	public HttpHeaders makeHeader(String type, String subtype, String encoding) {
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(new MediaType(type, subtype, Charset.forName(encoding)));

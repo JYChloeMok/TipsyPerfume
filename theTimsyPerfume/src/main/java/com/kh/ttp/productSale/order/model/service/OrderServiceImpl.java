@@ -28,7 +28,7 @@ public class OrderServiceImpl implements OrderService {
 		
 		// 조회해온 결과로 최종 주문금액, 배송비 계산하는 메소드
 		int cartAmount = calcCartAmount(orderList);
-		int orderShipping = calcCartAmount(orderList);
+		int orderShipping = calcMinShipping(orderList);
 		
 		HashMap orderMain = new HashMap();
 		orderMain.put("orderList", orderList);

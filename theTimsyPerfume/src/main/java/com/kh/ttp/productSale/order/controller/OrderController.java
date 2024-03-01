@@ -30,7 +30,7 @@ public class OrderController {
 							CartVO cart,
 							HttpSession session,
 							@RequestParam(value="cartReq", defaultValue="") String cartReq) {
-		// 빈문자열 제거
+		// 쿼리스트링 값 배열화
 		String[] cartReqList = cartReq.replace(" ", "").split(",");
 		
 		// 빈배열 체크
@@ -38,20 +38,22 @@ public class OrderController {
 			return productUtil.makeErrorMsg(model, "올바른 요청 값이 아닙니다!"); 
 		}
 		
-		// int변환(검증) 및 카트 번호 세팅
+		// cart객체 cartNoArr초기화
 		cart.setCartNoArr(new ArrayList());
-		ArrayList cartArr = (ArrayList)cart.getCartNoArr();
+		ArrayList cartNoArr = (ArrayList)cart.getCartNoArr();
 		for(String cartNo : cartReqList) {
 			try {
-				cartArr.add(Integer.parseInt(cartNo));
+				cartNoArr.add(Integer.parseInt(cartNo));
 			} catch (NumberFormatException e) {
 				e.getStackTrace();
 				return productUtil.makeErrorMsg(model, "올바른 요청 값이 아닙니다!");
 			}
 		}
-		// 유저넘버 세팅
+		
+		// cart객체 유저넘버 세팅
 		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
 		
+		// orderMain용 정보 조회, model객체 addAttribute
 		model.addAttribute("orderMain", orderService.orderMain(cart));
 		return "productSale/orderMain";
 	}
