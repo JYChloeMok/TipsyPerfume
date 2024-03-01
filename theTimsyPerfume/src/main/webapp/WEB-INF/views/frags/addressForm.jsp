@@ -21,9 +21,14 @@
 <body>
 
 	<div id="addressContainer">
-	<!-- id..중복 -->
+		<!-- id속성 중복이 너무 많이 일어남 class로 해결하자 -->		
+		<!--
+			모달창 닫기버튼 필요시
+			<button type="button" class="btn-close" data-bs-dismiss="modal" area-label="Close"></button>
+		-->
+	
 		<div>
-			<!-- Nav tabs -->
+			<!-- 네비 탭 -->
 			<ul class="nav nav-tabs nav-pills nav-justified">
 				<li class="nav-item">
 					<a class="nav-link active" data-toggle="tab" href="#menu1">배송지 선택</a>
@@ -33,10 +38,10 @@
 				</li>
 			</ul>
 	
-	
-			<!-- 탭메뉴 -->
+
+			<!-- 탭 내부 메뉴 -->
 			<div class="tab-content">
-				<!-- 메뉴1 배송지선택 -->
+				<!-- 탭 메뉴1 : 배송지선택 -->
 				<div id="menu1" class="container tab-pane active">
 					<c:choose>
 						<c:when test="${not empty receiverList}">
@@ -69,12 +74,11 @@
 								<br>
 							</c:forEach>
 							
-							<button  type="button" class="btn btn-secondary" id="addAddressBtn" data-bs-dismiss="modal">닫기</button>
 							<button  type="button" class="btn btn-primary" id="addAddressBtn">저장하기</button>
 						</c:when>
 						<c:otherwise>
 							<div>배송지 정보를 불러올 수 없습니다. 새로운 배송지를 입력하거나 나중에 다시 시도해주세요.</div>
-							<button  type="button" class="btn btn-secondary" id="addAddressBtn" data-bs-dismiss="modal">닫기</button>
+							
 						</c:otherwise>
 					</c:choose>
 					
@@ -82,7 +86,7 @@
 				</div>
 				<br><br>
 				
-				<!-- 메뉴2 배송지입력 -->
+				<!-- 탭 메뉴2 : 배송지입력 -->
 				<div id="menu2" class="container tab-pane fade">
 					<form id="receiverForm">
 						<div class="form-group">

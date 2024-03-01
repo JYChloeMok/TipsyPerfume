@@ -94,11 +94,11 @@
 				<br/>
 				<div>
 					<p>주문자 정보</p>
-					<p>이름 : {loginUser.userName}</p>
-					<p>이메일 : {loginUser.userEmail}</p>
-					<p>전화번호 : {loginUser.phone}</p>
-					<p>주소 : {loginUser.address}</p>
-					<p>우편번호 : {loginUser.postalCode}</p>
+					<p>이름 : ${loginUser.userName}</p>
+					<p>이메일 : ${loginUser.userEmail}</p>
+					<p>전화번호 : ${loginUser.phone}</p>
+					<p>주소 : ${loginUser.address}</p>
+					<p>우편번호 : ${loginUser.postalCode}</p>
 				</div>
 				
 				<div class="row">
@@ -116,10 +116,16 @@
 				<br/>	
 				<!-- 배송지 입력 모달 시작 -->
 				<div class="modal fade" id="orderAddrModal" tabindex="-1" aria-labelledby="orderAddrModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
+					<div class="modal-dialog modal-dialog-scrollable">
 						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="btn-close" data-bs-dismiss="modal" area-label="Close"></button>
+							</div>
 							<div class="modal-body">
 								<jsp:include page="../frags/addressForm.jsp" />
+							</div>
+							<div>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" area-label="Close"></button>
 							</div>
 						</div>
 					</div>
@@ -135,19 +141,19 @@
 						<div id="123" class="row">
 							<div id="orderMainCartAmountDiv" class="col summary-col">
 								<!-- 물건값 총 합계 (전체 상품 금액 총 합) -->
-								<input id="orderAmount" value="${orderMain.cartAmount }" type="hidden">
+								<input id="orderMainCartAmount" value="${orderMain.cartAmount }" type="hidden">
 								<fmt:formatNumber value="${orderMain.cartAmount }" pattern="#,###" />원
 							</div>
 							<div class="col-1 summary-col"> | </div>
 							<div id="orderMainShippingAmountDiv" class="col summary-col">
 								<!-- 배송비 금액 (상품 배송비 중 최소 배송비) 뜨는곳 @@@@@@@@@@@@@@@@@@@ -->
-								<input id="orderAmount" value="${orderMain.orderShipping }" type="hidden">
+								<input id="orderMainShippingAmount" value="${orderMain.orderShipping }" type="hidden">
 								<fmt:formatNumber value="${orderMain.orderShipping }" pattern="#,###" />원 
 							</div>
 						</div>
 						<div id="orderMainOrderAmountDiv" class="row ps-5">
 							<!-- 주문 최종 금액 (할인, 배송비 등 전부 계산한 최종 금액) 뜨는곳 @@@@@@@@@@@@@@@@@@@ -->
-							<input id="orderAmount" value="${orderMain.orderAmount }" type="hidden">
+							<input id="orderMainOrderAmount" value="${orderMain.orderAmount }" type="hidden">
 							<span>
 								<!-- = 총 x,xxx원 -->
 								&#61;&nbsp;총&nbsp;<fmt:formatNumber value="${orderMain.orderAmount }" pattern="#,###" />원
@@ -177,31 +183,8 @@
 
 	
 	<script>
-
-	
-	$(() => {
-		$(".modal-dialog").fadeIn();
-		  $("#openModalBtn").click(function(){
-		    
-		  });
-		  
-		  $(".addr-form-close").click(function(){
-		    $("#myModal").fadeOut();
-		  });
-	})
-	
-	
-	
-	
-		// 최종 결제 금액
-		// (디스플레이) 로딩 시 가격 계산해 띄워줌 (물건값 총 합계 / 배송비 / 최종 주문 금액)
-		$(() => {
-			// cartStrUtilObj.makeAllAmountArea();
-		});
-		
-	
+		// 로딩 시 배송지 정보 불러옴
  		$(() => {
-			// 배송지 정보
 			$.ajax({
 				url : 'receiver',
 				method : 'GET',
@@ -246,15 +229,15 @@
 		// 병렬로 실행되고 난리남 / 중첩에 주의 / catch로 종료 필수
 		
 		// 비동기작업 성공 시 resolve(), 실패 시 reject()호출
+		
+		// paymentPromise객체 생성, ajax GET통신(주문에 필요한 값)
 		let paymentPromise = new Promise((resolve, reject) => {
-			// 주문 준비 값 Get요청 : UID번호, 주문자=로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
 			$.ajax({
 				url : '/payment/prepare',
 				type : 'GET',
 				success : result => {
 					console.log('페이먼트 정보 불러오기 성공! ↓');
 					console.log(result);
-					// 코드 복잡해져서 여기서는 그냥 resolve호출하고 result넘기는 로직만 수행, 나머지는 then에서
  					resolve(result);						
 				},
 				error : () => {
@@ -263,18 +246,16 @@
 				}
 			});
 		});
-		// p.s. 값이 falsy해도 통신 자체가 성공했다면 resolve()를 사용해야함 / reject()는 통신 성공 or 실패여부에 따라 사용
-		
-		else {
-			console.log();
-			resolve('notAvailable');
-		}
+		/* 코드 복잡해져서 여기서는 그냥 resolve호출하고 result넘기는 로직만 수행, 나머지는 then에서
+		      값이 falsy해도 통신 자체가 성공했다면 resolve()를 사용해야함 / reject()는 통신 성공 or 실패여부에 따라 사용 */
 		
 		
-		// paymentPromise 후처리
+		// paymentPromise 후처리 then()호출
 		paymentPromise.then(result => {
 			console.log(result);
-			// 값이 falsy할 경우 알림창 띄우고 새로고침, 취소누르면 괘씸하니까 홈으로 보냄
+			// falsy값 알림창 띄우고 새로고침, 취소누르면 괘씸하니까 홈으로 보냄
+			
+			/*
 			if(!result) {
 				let str = '페이먼트 정보 불러오기 통신에 성공하였으나 result값이 유효하지 않습니다! 페이지를 새로고침합니다.';
 				confirm(str) ? location.reload() : location.href = '/';
@@ -284,16 +265,20 @@
 			// 결제 요청
 			// 주문 준비 값 : UID번호, 주문자=로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
 			
-				// 상품이름 인풋 배열의 0번인덱스 밸류 + '외' + 길이 + '개'
 			let productList = $('#pdtName');
+			// PG사 (추후 사용자 조건에 따라 PG사 초기화)
+			let pgName = 'kakaopay';
+			let merchantUid = result.merchantUid;
+			// 상품이름 (xx 외 n개)
 			let name = productList[0].val() + ' 외 ' + productList.length + '개';
-			let amount = $('#orderAmount').val();
-			let pgName = 'kakaopay'; /* 추후 PG사 추가 시 조건에 따라 초기화 */
+			// 최종 결제금액
+			let amount = $('#orderMainOrderAmount').val();
+			
 			IMP.request_pay(
 				{
-					pg: pgName + ".상점id",
+					pg: pgName + pgName + ".상점id",
 					pay_method: "card",
-					merchant_uid: "merchant" + new Date().getTime(), // 서버에서
+					merchant_uid: merchantUid, // 서버에서
 					name: name,
 					amount: amount,
 					buyer_email: "Iamport@chai.finance", // 서버에서
@@ -305,16 +290,17 @@
 			function (result) {
 			// callback
 			//rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-      }
+				*/
+		}
     );
 			
-		})
-		.then(args => {
+		//});
+		//.then(args => {
 			
-		})
-		.catch(() => {
+		//})
+		//.catch(() => {
 			
-		});
+		//});
 		
     }
 
