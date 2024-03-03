@@ -229,6 +229,48 @@
 			});
 		});
 	</script>
+	
+	
+	
+	<script>
+		// 통신 결과 값이 유효하지 않을 때 사용하는 함수
+		function handleInvalidResult(result) {
+			let str = '페이먼트 정보 불러오기 통신에 성공하였으나 result값이 유효하지 않습니다! 페이지를 새로고침합니다.';
+			confirm(str) ? location.reload() : location.href = '/';
+		};
+		
+		// 포트원 결제 요청에 필요한 parameter들
+		function preparePortOneParam(result) { // 추후 PG사 추가 시 Param 추가
+			let buyer = result.buyer;
+			return {
+				// 상점 아이디
+		 		storeId : 'imp77122200',
+				// PG사 (추후 조건에 따라 초기화)
+				pg : 'kakaopay'
+				     + '.'
+				     + 'TC0ONETIME',
+				// 상품이름 (xx 외 n개 / 16바이트 잘리는 것 신경 안씀)
+				name : $('.pdtName').eq(0).val()
+					   + ' 외 '
+					   + $('.cartNo').length
+					   + '개',
+				// 최종 결제금액
+				amount : (Number)($('#orderMainOrderAmount').val()),
+				// 주문번호
+				lmerchantUid : result.merchantUid,
+				// 주문자(로그인 유저) 정보
+				buyerName : buyer.userName,
+				buyerTel : buyer.phone,
+				buyerEmail : buyer.userEmail,
+				buyerAddr : buyer.address
+						    + ' '
+						    + buyer.addressDetail,
+				buyerPostCode : buyer.postalCode
+			}
+		};
+	</script>
+		
+		
 		
 		
 	<script>
@@ -261,13 +303,14 @@
 	
 	// 결제
     function requestPay() {
-		// 비동기통신으로 주문에 필요한 값 가져오기 (Promise객체 생성)
-		// UID번호, 로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
+		
+		// Promise 객체 생성 / ajax 비동기통신으로 주문에 필요한 값 조회
 		let paymentPromise = new Promise((resolve, reject) => {
 			$.ajax({
 				url : 'payment/prepare',
 				type : 'GET',
 				success : result => {
+					// result는 UID번호, 로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
  					resolve(result);
 				},
 				error : () => {
@@ -275,18 +318,14 @@
 				}
 			});
 		});
-		/* 코드 복잡해져서 여기서는 그냥 resolve호출하고 result넘기는 로직만 수행, 나머지는 then에서
+		/* 코드 복잡해져서 여기서는 그냥 resolve호출하고 result넘기는 로직만 수행
+		      나머지는 then, catch에서 처리
 		      값이 falsy해도 통신 자체가 성공했다면 resolve()를 사용해야함 / reject()는 통신 성공 or 실패여부에 따라 사용 */
 		
-		// 값이 유효하지 않을 때 사용하는 함수
-		function handleInvalidResult(result) {
-			let str = '페이먼트 정보 불러오기 통신에 성공하였으나 result값이 유효하지 않습니다! 페이지를 새로고침합니다.';
-			confirm(str) ? location.reload() : location.href = '/';
-		};
 		
-		// 값이 유효할 때 포트원API에 결제요청하는 함수
-		function proceedPayment(result) { // result가 유효한 값 일때만 들어옴
-	 		// 상점 아이디
+		// 통신 결과 값이 유효할 때 사용하는 함수 (포트원API에 결제요청)
+		function proceedPayment(result) { // result는 결제에 필요한 정보
+/* 	 		// 상점 아이디
 	 		let storeId = 'imp77122200';
 			// PG사
 			let pg = 'kakaopay' // 추후 조건에 따라 초기화
@@ -309,24 +348,28 @@
 			let buyerAddr = buyer.address
 						  + ' '
 						  + buyer.addressDetail;
-			let buyerPostCode = buyer.postalCode;
+			let buyerPostCode = buyer.postalCode; */
+			let payParam = preparePortOneParam(result);
+			
 			// 결제 API용 객체 초기화
 			IMP = window.IMP;
-			IMP.init(storeId);
+			IMP.init(payParam.storeId);
+			console.log(payParam)
 			// 결제 API 요청 보내기
 			IMP.request_pay({
-				pg: pg,
-				pay_method: "card",
-				merchant_uid: merchantUid, // 서버에서
-				name: name,
-				amount: amount,
-				buyer_email: buyerEmail, // 서버에서
-				buyer_name: buyerName, // 서버에서
-				buyer_tel: buyerTel, // 서버에서
-				buyer_addr: buyerAddr, // 서버에서
-				buyer_postcode: buyerPostCode, // 서버에서
+				pg : payParam.pg,
+				pay_method : "card",
+				name : payParam.name,
+				amount : payParam.amount,
+				merchant_uid : payParam.merchantUid, // 서버에서
+				buyer_name : payParam.buyerName, // 서버에서
+				buyer_tel : payParam.buyerTel, // 서버에서
+				buyer_email : payParam.buyerEmail, // 서버에서
+				buyer_addr: payParam.buyerAddr, // 서버에서
+				buyer_postcode: payParam.buyerPostCode, // 서버에서
 			},
 			function(rsp) {
+				console.log('음')
 				// callback
 				//rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
 				if(rsp.success) {
@@ -340,18 +383,15 @@
 			});
 		};
 		      
-		// 비동기 통신 이후 흐름 컨트롤하는 then(), catch()함수
+		// 결제 이후 흐름 컨트롤하는 then(), catch()함수
 		paymentPromise.then(result => {
-		 	if(!result) {
-				handleInvalidResult(result);
-		 		return false; // return false 생략 안한 이유 : 코드 의도 이해할 수 있도록 & 명시적 프로그램 종료 보장
-			}
-		 	else {
-		 		proceedPayment(result);
-		 	}
+		 	(!result) ? handleInvalidResult(result) : proceedPayment(result);
+		 	/* return false 생략 안한 이유 : 코드 의도 이해할 수 있도록 & 명시적 프로그램 종료 보장
+		 	   => 가독성을 위해 삼항연산자로 변경함 */
 		})
-	    .catch(() => {
-	    	alert('캐치캐치');
+	    .catch(result => {
+	    	console.log('캐치캐치');
+	    	console.log(result);
 	    });
     };
 
