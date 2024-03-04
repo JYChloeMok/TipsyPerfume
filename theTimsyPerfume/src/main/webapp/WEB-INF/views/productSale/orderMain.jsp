@@ -220,15 +220,13 @@
 				}
 			});
 		});
-	</script>
-	
-	
-	
-	<script>
-		// 버튼 클릭 시 결제요청
+
+		
+		
+		// 결제 로직
 	 	function requestPayment() {
-			// 주문준비 ajax통신 / Promise 객체 생성
-			let paymentPromise = new Promise((resolve, reject) => {
+			// 결제준비 ajax통신 / Promise 객체 생성
+			var paymentPromise = new Promise((resolve, reject) => {
 				$.ajax({
 					url : 'payment/prepare',
 					type : 'GET',
@@ -244,8 +242,9 @@
 				      값이 falsy해도 통신 자체가 성공했다면 resolve()를 사용해야함 / reject()는 통신 성공 or 실패여부에 따라 사용 */
 			})
 	 		.then(paymentParam => {
-	 			// 주문준비 ajax 결과가 유효한 값일 경우 proceedPortOnePayment
-			 	(!paymentParam) ? paymentPreparationFail(paymentParam) : proceedPortOnePayment(paymentParam);
+	 			// 결제준비 ajax통신 결과 falsy값일 경우 장바구니 메인으로
+	 			// 그 외 결제진행
+			 	(!paymentParam) ? orderMain.sendCartMain() : orderMain.proceedPayment(paymentParam);
 			 	/* return false 생략 안한 이유 : 코드 의도 이해할 수 있도록 & 명시적 프로그램 종료 보장
 			 	   => 가독성을 위해 삼항연산자로 변경함 */
 			})
@@ -256,150 +255,169 @@
 		};
 	</script>
 	
-	
-	
 	<script>
-		// 포트원API 요청용 파라미터(객체)
-		function preparePortOneParam(paymentParam) {
-			// 주문자(로그인유저)
-			let buyer = paymentParam.buyer;
-			// 결제에 필요한 parameter 객체로 리턴
-			return {
-				// 상점 아이디
-		 		storeId : 'imp77122200',
-				// PG사 (카카오 -> 이니시스 변경)
-				/* pg :  'kakaopay.TC0ONETIME', */
-				pg : 'html5_inicis.INIpayTest',
-				payMethod : 'card',
-				// 상품이름 (xx 외 n개 / 16바이트 잘리는 것 신경 안씀)
-				name : $('.pdtName').eq(0).val()
-					   + ' 외 '
-					   + $('.cartNo').length
-					   + '개',
-				// 최종 결제금액
-				amount : (Number)($('#orderMainOrderAmount').val()),
-				// 주문번호
-				merchantUid : paymentParam.merchantUid,
-				// 주문자(로그인 유저) 정보
-				buyerName : buyer.userName,
-				buyerTel : buyer.phone,
-				buyerEmail : buyer.userEmail,
-				buyerAddr : buyer.address
-						    + ' '
-						    + buyer.addressDetail,
-				buyerPostCode : buyer.postalCode
-			}
-		};
-		
-		
-		// result(주문준비 ajax통신 결과값)가 falsy할 때 페이지 새로고침 혹은 홈화면으로
-		function paymentPreparationFail(paymentParam) {
-			console.log('proceedPortOnePayment에러, paymentPreparationFail수행');
-			console.log(paymentParam);
-			let str = '결제 정보 불러오기 통신에 성공하였으나 result값이 유효하지 않습니다! 페이지를 새로고침합니다.';
-			confirm(str) ? location.reload() : location.href = '/';
-		};
-		
-		
-		// 결제 성공 시 : 주문 생성(INSERT)
 		/*
-		function insertOrder(paymentResult) {
-			$.ajax({
-				url : 'order',
-				method : 'POST',
-				data : {},
-				success : result => {
-					
-				},
-				error => {
-					
-				}
-			});
-		};
+		** 결제요청
+		requestPayment()
+			=> 준비 비동기요청 실패하면 장바구니 메인화면으로 이동
+			paymentPreparationFail(paymentParam)
+			=> 준비 비동기요청 성공하면 포트원 결제진행
+			proceedPayment(paymentParam) (prepareParam(paymentParam) ajax통신 결과로 객체만들어줌)
+	        	=> 포트원 결제 성공하면
+	        	insertOrder(rsp)
+		            => 주문생성 성공하면
+		            orderSucess(rsp)
+		            => 주문생성 실패하면
+		            cancelPayment(rsp)
+		        => 포트원 결제 실패하면
+		        paymentFailResult(rsp)
+		*/
+	
+		/*
+		if(prepare) 	   ? proceedPayment : prepareFail; // prepareParam
+		if(proceedPayment) ? insertOrder    : paymentFail;
+		if(insertOrder)    ? orderSuccess   : cancelPayment;
+		
+			paymentObj
+				.prepareFail
+				
+				.payment.prepareParam
+				.payment.fail
+				.payment.proceed
+				
+				.order.insertOrder
+				.order.orderSuccess
+				.order.cancelPayment
 		*/
 		
-		// 결제 실패시 : 결제 실패 알림
-		function paymentFailResult(rsp) {
-			console.log('결제실패ㅐㅐㅐ');
-			console.log(rsp);
-		};
 		
-		
-		// 주문 생성 성공 시 : 성공여부 알림
-		function orderSuccess(paymentResult) {
-			
-		};
-		
-		
-		// 주문 생성 실패 시 : 결제 취소(UPDATE / 디버깅용 취소내역 저장위해 오류 사유 저장)
-		function cancelPayment(paymentResult) {
-			
-		};
-
-		
-		// 포트원API 결제요청
-		// result(주문준비 ajax통신 결과값) 이용
-		function proceedPortOnePayment(paymentParam) {
-			// API 요청용 파라미터(객체)
-			let portOneParam = preparePortOneParam(paymentParam);
-			// 결제 API용 객체 초기화
-			var IMP = window.IMP;
-			IMP.init(portOneParam.storeId);
-			
-			console.log('proceedPortOnePayment수행, portOneParam은 : ');
-			console.log(portOneParam);
-			
-			// 결제 API 요청 보내기
-			IMP.request_pay({
-				pg : portOneParam.pg,
-				pay_method : portOneParam.payMethod,
-				name : portOneParam.name,
-				amount : portOneParam.amount,
-				merchant_uid : portOneParam.merchantUid, // 서버에서
-				buyer_name : portOneParam.buyerName, // 서버에서
-				buyer_tel : portOneParam.buyerTel, // 서버에서
-				buyer_email : portOneParam.buyerEmail, // 서버에서
-				buyer_addr: portOneParam.buyerAddr, // 서버에서
-				buyer_postcode: portOneParam.buyerPostCode, // 서버에서
+		let orderMain = {
+			// 카트 메인페이지로 보내기 (결제준비 ajax통신 실패 시)
+			sendCartMain : function() {
+				console.log('sendCartMain수행');
+				let second = 5000;
+				let str = '결제 정보 불러오기 통신에 성공하였으나 결과값이 유효하지 않습니다!'
+						+ second
+						+ '초 후 장바구니 화면으로 이동합니다.';
+				// n초 후 장바구니 메인으로
+				setTimeout("location.href='cartMain.ca'", second);
+				// 알림창 띄움
+				alert(str);
 			},
-			function(rsp) {
-				// callback
-				//rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-				if(rsp.success) {
-					// @여기부터
-					console.log('결제성공ㅇㅇㅇ 이제 res값으로 주문정보를 넣어야함');
-					console.log(rsp);
-					console.log(rsp.success);
-					return false;
-					let insertOrderResult = insertOrder(rsp.sucess);
-					console.log('insertOrderResult결과');
-					console.log(insertOrderResult);
+			// 결제요청 파라미터 준비
+			prepareParam : function(paymentParam) {
+				// 주문자(로그인유저)
+				let buyer = paymentParam.buyer;
+				return {
+					// 상점 아이디
+			 		storeId : 'imp77122200',
+			 		/* PG사 (카카오 -> 이니시스 변경)
+					   pg :  'kakaopay.TC0ONETIME', */
+					pg : 'html5_inicis.INIpayTest',
+					payMethod : 'card',
+					// 상품이름 (xx 외 n개 / 16바이트 잘리는 것 신경 안씀)
+					name : $('.pdtName').eq(0).val()
+						   + ' 외 '
+						   + $('.cartNo').length
+						   + '개',
+					// 최종 결제금액
+					amount : (Number)($('#orderMainOrderAmount').val()),
+					// 주문번호
+					merchantUid : paymentParam.merchantUid,
+					// 주문자(로그인 유저) 정보
+					buyerName : buyer.userName,
+					buyerTel : buyer.phone,
+					buyerEmail : buyer.userEmail,
+					buyerAddr : buyer.address
+							    + ' '
+							    + buyer.addressDetail,
+					buyerPostCode : buyer.postalCode
+				}
+			},
+			// 결제 요청
+			proceedPayment : function(paymentParam) {
+				// API 요청용 파라미터(객체)
+				let self = this;
+				let portOneParam = self.prepareParam(paymentParam);
+				console.log('proceedPayment수행, portOneParam은 : ');
+				console.log(portOneParam);
+				
+				// 결제 API용 객체 초기화
+				var IMP = window.IMP;
+				IMP.init(portOneParam.storeId);
+				
+				// 결제 API 요청 보내기
+				IMP.request_pay({
+					pg : portOneParam.pg,
+					pay_method : portOneParam.payMethod,
+					name : portOneParam.name,
+					amount : portOneParam.amount,
+					merchant_uid : portOneParam.merchantUid, // 서버에서
+					buyer_name : portOneParam.buyerName, // 서버에서
+					buyer_tel : portOneParam.buyerTel, // 서버에서
+					buyer_email : portOneParam.buyerEmail, // 서버에서
+					buyer_addr: portOneParam.buyerAddr, // 서버에서
+					buyer_postcode: portOneParam.buyerPostCode, // 서버에서
+				},
+				function(rsp) {
 					
-					if(insertOrderResult > 1) {
-					 let orderSucessResult = orderSucess(rsp.sucess)
-					 console.log('orderSucessResult결과');
-					 console.log(orderSucessResult);
+					rsp.success ? (self.createOrder(rsp) ? self.orderSuccess(rsp) : self.cancelPayment(rsp)) : self.paymentFail(rsp);
+					/*
+					if(rsp.success) {
+						if(self.createOrder(rsp)) {
+							self.orderSuccess(rsp)
+						}
+						else {
+							self.cancelPayment(rsp)
+						}
 					}
-					
 					else {
-						let cancelPayment = cancelPayment(rsp.success);
-						console.log('cancelPayment결과');
-						console.log(cancelPayment);
+						self.paymentFail(rsp)
 					}
-					// @여기까지 아래 1줄 test
-					// (insertOrder(rsp.sucess) > 1) ? orderSuccess(rsp.success) : cancelPayment(rsp.success);
-				}
-				else {
-					paymentFailResult(rsp);
-				}
-			});
-		};
-		
-		 
-
-	</script>
-
-		
+					*/
+					// 결제 성공 시
+					if(result.success) {
+						// self.createOrder(rsp) ? self.orderSuccess(rsp) : self.cancelPayment(rsp);
+					}
+					else {
+						self.paymentFail(result);
+					}
+				});
+			},
+			// 결제 실패 알림 (결제 실패 시)
+			paymentFail : paymentFail(paymentResult) {
+				console.log('결제실패ㅐㅐㅐ');
+				console.log(paymentResult);
+			},
+			// 주문 생성하기 INSERT (결제 성공 시)
+			insertOrder : function(paymentResult) {
+				console.log('결제성공ㅇㅇㅇ 이제 res값으로 주문정보를 넣어야함');
+				console.log(paymentResult);
+				/*
+				$.ajax({
+					url : 'order',
+					method : 'POST',
+					data : {},
+					success : result => {
+						
+					},
+					error => {
+						
+					}
+				});
+				*/
+				// true false 리턴
+			},
+			// 주문 성공 알림 (주문 생성 성공 시)
+			orderSuccess : orderSuccess(paymentResult) {
+				
+			}
+			// 결제 취소 UPDATE (주문 생성 실패 시 / 디버깅용 취소내역 저장위해 오류 사유 저장)
+			cancelPayment : {
+				
+			}
+		}
+    </script>
 		
 	<br/><br/><br/>
 	<br/><br/><br/>	
