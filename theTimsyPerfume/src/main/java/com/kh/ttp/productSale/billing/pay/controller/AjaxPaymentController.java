@@ -1,4 +1,4 @@
-package com.kh.ttp.pay.controller;
+package com.kh.ttp.productSale.billing.pay.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.ttp.common.util.LoginUser;
-import com.kh.ttp.pay.model.service.PaymentServiceImpl;
+import com.kh.ttp.productSale.billing.pay.model.service.PaymentServiceImpl;
 import com.kh.ttp.productSale.common.ProductSaleUtil;
 import com.kh.ttp.user.model.vo.User;
 
@@ -30,8 +30,16 @@ public class AjaxPaymentController {
 	private final ProductSaleUtil productUtil;
 	private final PaymentServiceImpl paymentService;
 	
+	/**
+	 * 외부 결제API 요청 파라미터 준비 메소드
+	 * @param session
+	 * @return : ResponseEntity로 HashMap 반환<br />
+	 * 키 buyer : 주문자(로그인 유저) 정보<br />
+	 * 키 merchantUid : 주문 번호<br />
+	 */
 	@GetMapping("prepare")
 	public ResponseEntity<Map<String, Object>> preparePaymentAjax(HttpSession session) {
+		// 주문자(로그인유저) 정보
 		User loginUser = LoginUser.getLoginUser(session);
 		User buyer = User.builder()
 						 .userEmail(loginUser.getUserEmail())
@@ -42,17 +50,18 @@ public class AjaxPaymentController {
 						 .postalCode(loginUser.getPostalCode())
 						 .build();
 		
-		// 스트링 빌더
+		// 스트링 빌더, 캘린더, 포매팅 객체 (주문번호 만들기 준비)
 		StringBuilder sb = new StringBuilder();
-		// 캘린더
 		Calendar calendar = Calendar.getInstance();
-		// 포맷
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-		// 주문번호 만들기 (or randomUUID)<Map<String, Object>>
+		
+		// 주문번호 만들기 날짜8자리 + 난수 12자리 / (or randomUUID)
 		sb.append(formatter.format(calendar.getTime()));
 		for(int i = 0; i < 12; i++) {
 			sb.append((int)(Math.random() * 10));
 		}
+		
+		// 주문번호
 		String merchantUid = sb.toString();
 		
 		// 반환할 맵 객체

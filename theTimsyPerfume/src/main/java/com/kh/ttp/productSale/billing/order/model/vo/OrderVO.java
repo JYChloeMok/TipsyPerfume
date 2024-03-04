@@ -1,4 +1,4 @@
-package com.kh.ttp.productSale.order.model.vo;
+package com.kh.ttp.productSale.billing.order.model.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

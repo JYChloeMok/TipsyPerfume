@@ -1,6 +1,7 @@
-package com.kh.ttp.pay.model.vo;
+package com.kh.ttp.productSale.billing.pay.model.vo;
 
-import com.kh.ttp.productSale.order.model.vo.OrderDetailVO;
+
+import com.kh.ttp.productSale.billing.order.model.vo.OrderDetailVO;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

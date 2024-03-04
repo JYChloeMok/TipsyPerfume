@@ -6,13 +6,13 @@ import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.kh.ttp.pay.model.vo.PayVO;
+import com.kh.ttp.productSale.billing.order.model.vo.OrderDetailVO;
+import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
+import com.kh.ttp.productSale.billing.pay.model.vo.PayVO;
 import com.kh.ttp.productSale.cart.model.vo.CartSelectVO;
 import com.kh.ttp.productSale.cart.model.vo.CartVO;
 import com.kh.ttp.productSale.funding.model.vo.FundingSelectVO;
 import com.kh.ttp.productSale.funding.model.vo.FundingVO;
-import com.kh.ttp.productSale.order.model.vo.OrderDetailVO;
-import com.kh.ttp.productSale.order.model.vo.OrderVO;
 import com.kh.ttp.productSale.product.model.vo.ProductVO;
 
 @Repository

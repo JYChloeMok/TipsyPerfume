@@ -1,4 +1,4 @@
-package com.kh.ttp.productSale.order.controller;
+package com.kh.ttp.productSale.billing.order.controller;
 
 
 import java.util.ArrayList;
@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.ttp.common.util.LoginUser;
+import com.kh.ttp.productSale.billing.order.model.service.OrderService;
 import com.kh.ttp.productSale.cart.model.vo.CartVO;
 import com.kh.ttp.productSale.common.ProductSaleUtil;
-import com.kh.ttp.productSale.order.model.service.OrderService;
-import com.kh.ttp.user.model.vo.User;
 
 import lombok.RequiredArgsConstructor;
 

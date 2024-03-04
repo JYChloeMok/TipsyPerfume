@@ -1,7 +1,6 @@
-package com.kh.ttp.productSale.order.model.dao;
+package com.kh.ttp.productSale.billing.order.model.dao;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;

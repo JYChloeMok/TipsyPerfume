@@ -9,14 +9,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.ttp.common.model.vo.PageInfo;
-import com.kh.ttp.pay.model.vo.PayVO;
+import com.kh.ttp.productSale.billing.order.model.vo.OrderDetailVO;
+import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
+import com.kh.ttp.productSale.billing.pay.model.vo.PayVO;
 import com.kh.ttp.productSale.cart.model.vo.CartSelectVO;
 import com.kh.ttp.productSale.cart.model.vo.CartVO;
 import com.kh.ttp.productSale.funding.model.dao.FundingDao;
 import com.kh.ttp.productSale.funding.model.vo.FundingSelectVO;
 import com.kh.ttp.productSale.funding.model.vo.FundingVO;
-import com.kh.ttp.productSale.order.model.vo.OrderDetailVO;
-import com.kh.ttp.productSale.order.model.vo.OrderVO;
 import com.kh.ttp.productSale.product.model.vo.ProductVO;
 import com.kh.ttp.productSale.productInfo.model.dao.ProductCategoryDao;
 import com.kh.ttp.productSale.productInfo.model.dao.ProductFileDao;

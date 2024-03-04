@@ -192,7 +192,7 @@
 					</div>
 
 					<div class="col-3">
-						<button id="orderMainPayBtn" onclick="requestPay()" type="button" class="btn btn-primary">
+						<button id="orderMainPayBtn" onclick="requestPayment()" type="button" class="btn btn-primary">
 							결제하기
 						</button>
 					</div>
@@ -203,14 +203,6 @@
 			</c:otherwise>
 		</c:choose>
 	</div>
-
-
-
-
-
-	
-
-	
 
 	
 	<script>
@@ -233,22 +225,52 @@
 	
 	
 	<script>
-		// 통신 결과 값이 유효하지 않을 때 사용하는 함수
-		function handleInvalidResult(result) {
-			let str = '페이먼트 정보 불러오기 통신에 성공하였으나 result값이 유효하지 않습니다! 페이지를 새로고침합니다.';
-			confirm(str) ? location.reload() : location.href = '/';
+		// 버튼 클릭 시 결제요청
+	 	function requestPayment() {
+			// 주문준비 ajax통신 / Promise 객체 생성
+			let paymentPromise = new Promise((resolve, reject) => {
+				$.ajax({
+					url : 'payment/prepare',
+					type : 'GET',
+					success : paymentParam => { // result는 UID번호, 로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
+	 					resolve(paymentParam);
+					},
+					error : () => {
+						reject('error');
+					}
+				});
+				/* 코드 복잡해져서 여기서는 그냥 resolve호출하고 result넘기는 로직만 수행
+				      나머지는 then, catch에서 처리
+				      값이 falsy해도 통신 자체가 성공했다면 resolve()를 사용해야함 / reject()는 통신 성공 or 실패여부에 따라 사용 */
+			})
+	 		.then(paymentParam => {
+	 			// 주문준비 ajax 결과가 유효한 값일 경우 proceedPortOnePayment
+			 	(!paymentParam) ? paymentPreparationFail(paymentParam) : proceedPortOnePayment(paymentParam);
+			 	/* return false 생략 안한 이유 : 코드 의도 이해할 수 있도록 & 명시적 프로그램 종료 보장
+			 	   => 가독성을 위해 삼항연산자로 변경함 */
+			})
+			.catch(result => {
+		    	console.log('캐치캐치 requestPayment캐치캐치');
+		    	console.log(result);
+		    });
 		};
-		
-		// 포트원 결제 요청에 필요한 parameter들
-		function preparePortOneParam(result) { // 추후 PG사 추가 시 Param 추가
-			let buyer = result.buyer;
+	</script>
+	
+	
+	
+	<script>
+		// 포트원API 요청용 파라미터(객체)
+		function preparePortOneParam(paymentParam) {
+			// 주문자(로그인유저)
+			let buyer = paymentParam.buyer;
+			// 결제에 필요한 parameter 객체로 리턴
 			return {
 				// 상점 아이디
 		 		storeId : 'imp77122200',
-				// PG사 (추후 조건에 따라 초기화)
-				pg : 'kakaopay'
-				     + '.'
-				     + 'TC0ONETIME',
+				// PG사 (카카오 -> 이니시스 변경)
+				/* pg :  'kakaopay.TC0ONETIME', */
+				pg : 'html5_inicis.INIpayTest',
+				payMethod : 'card',
 				// 상품이름 (xx 외 n개 / 16바이트 잘리는 것 신경 안씀)
 				name : $('.pdtName').eq(0).val()
 					   + ' 외 '
@@ -257,7 +279,7 @@
 				// 최종 결제금액
 				amount : (Number)($('#orderMainOrderAmount').val()),
 				// 주문번호
-				lmerchantUid : result.merchantUid,
+				merchantUid : paymentParam.merchantUid,
 				// 주문자(로그인 유저) 정보
 				buyerName : buyer.userName,
 				buyerTel : buyer.phone,
@@ -268,139 +290,145 @@
 				buyerPostCode : buyer.postalCode
 			}
 		};
-	</script>
 		
 		
+		// result(주문준비 ajax통신 결과값)가 falsy할 때 페이지 새로고침 혹은 홈화면으로
+		function paymentPreparationFail(paymentParam) {
+			console.log('proceedPortOnePayment에러, paymentPreparationFail수행');
+			console.log(paymentParam);
+			let str = '결제 정보 불러오기 통신에 성공하였으나 result값이 유효하지 않습니다! 페이지를 새로고침합니다.';
+			confirm(str) ? location.reload() : location.href = '/';
+		};
 		
 		
-	<script>
-	// 결제
-	
-	// 잠시대기
-	// promise / async / await
-	// 콜백지옥 -> promise / IE 호환성 문제(IE현재 ㅂㅇ)
-	// pending(초기), fulfilled(비동기 동작 성공), rejected(비동기 동작 실패)
-	// then() 메소드로 큐(FIFO)에 추가된 처리기들 호출 (promise의 상태와 상고나없이 처리기 호출됨)
-	// Promise.prototype.then(), Promise.prototype.catch()의 반환값은 새로운 promise, 서로 연결 가능		
-	
-	// 문법 (then인자는 optional)
-	// doSomething()
-	//	.then(function (result) {수행 return result})
-	//	.then(function (newResult {수행 return newResult}))
-	//	.catch(failureCallback);
-	
-	// 반환값이 존재해야함 / 화살표함수 () => x는 () => {return x;}
-	// doSomething()
-	//	.then((result) => doSomethingElse(result))
-	//	.then((newResult) => doThirdThing(newResult))
-	//	.catch(faulureCallback);
-	
-	// 주의 : 체인연결 제대로 안되는 경우 체인이 끊어지거나 두개의 체인이 경쟁하는 등 문제 발생
-	// 병렬로 실행되고 난리남 / 중첩에 주의 / catch로 종료 필수
-	
-	// 비동기작업 성공 시 resolve(), 실패 시 reject()호출
-	
-	
-	// 결제
-    function requestPay() {
-		
-		// Promise 객체 생성 / ajax 비동기통신으로 주문에 필요한 값 조회
-		let paymentPromise = new Promise((resolve, reject) => {
+		// 결제 성공 시 : 주문 생성(INSERT)
+		/*
+		function insertOrder(paymentResult) {
 			$.ajax({
-				url : 'payment/prepare',
-				type : 'GET',
+				url : 'order',
+				method : 'POST',
+				data : {},
 				success : result => {
-					// result는 UID번호, 로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
- 					resolve(result);
+					
 				},
-				error : () => {
-					reject('error');
-				}
-			});
-		});
-		/* 코드 복잡해져서 여기서는 그냥 resolve호출하고 result넘기는 로직만 수행
-		      나머지는 then, catch에서 처리
-		      값이 falsy해도 통신 자체가 성공했다면 resolve()를 사용해야함 / reject()는 통신 성공 or 실패여부에 따라 사용 */
-		
-		
-		// 통신 결과 값이 유효할 때 사용하는 함수 (포트원API에 결제요청)
-		function proceedPayment(result) { // result는 결제에 필요한 정보
-/* 	 		// 상점 아이디
-	 		let storeId = 'imp77122200';
-			// PG사
-			let pg = 'kakaopay' // 추후 조건에 따라 초기화
-				   + '.'
-				   + 'TC0ONETIME'; // 추후 조건에 따라 초기화
-			// 상품이름 (xx 외 n개)
-			let name = $('.pdtName').eq(0).val()
-					 + ' 외 '
-					 + $('.cartNo').length
-					 + '개';
-			// 최종 결제금액
-			let amount = (Number)($('#orderMainOrderAmount').val());
-			// 주문번호
-			let merchantUid = result.merchantUid;
-			// 주문자(로그인 유저) 정보
-			let buyer = result.buyer;
-			let buyerEmail = buyer.userEmail;
-			let buyerName = buyer.userName;
-			let buyerTel = buyer.phone;
-			let buyerAddr = buyer.address
-						  + ' '
-						  + buyer.addressDetail;
-			let buyerPostCode = buyer.postalCode; */
-			let payParam = preparePortOneParam(result);
-			
-			// 결제 API용 객체 초기화
-			IMP = window.IMP;
-			IMP.init(payParam.storeId);
-			console.log(payParam)
-			// 결제 API 요청 보내기
-			IMP.request_pay({
-				pg : payParam.pg,
-				pay_method : "card",
-				name : payParam.name,
-				amount : payParam.amount,
-				merchant_uid : payParam.merchantUid, // 서버에서
-				buyer_name : payParam.buyerName, // 서버에서
-				buyer_tel : payParam.buyerTel, // 서버에서
-				buyer_email : payParam.buyerEmail, // 서버에서
-				buyer_addr: payParam.buyerAddr, // 서버에서
-				buyer_postcode: payParam.buyerPostCode, // 서버에서
-			},
-			function(rsp) {
-				console.log('음')
-				// callback
-				//rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-				if(rsp.success) {
-					console.log('결제성공ㅇㅇㅇ 이제 res값으로 주문정보를 넣어야함');
-					console.log(rsp);
-				}
-				else {
-					console.log('결제실패ㅐㅐㅐ');
-					console.log(rsp);
+				error => {
+					
 				}
 			});
 		};
-		      
-		// 결제 이후 흐름 컨트롤하는 then(), catch()함수
-		paymentPromise.then(result => {
-		 	(!result) ? handleInvalidResult(result) : proceedPayment(result);
-		 	/* return false 생략 안한 이유 : 코드 의도 이해할 수 있도록 & 명시적 프로그램 종료 보장
-		 	   => 가독성을 위해 삼항연산자로 변경함 */
-		})
-	    .catch(result => {
-	    	console.log('캐치캐치');
-	    	console.log(result);
-	    });
-    };
+		*/
+		
+		// 결제 실패시 : 결제 실패 알림
+		function paymentFailResult(rsp) {
+			console.log('결제실패ㅐㅐㅐ');
+			console.log(rsp);
+		};
+		
+		
+		// 주문 생성 성공 시 : 성공여부 알림
+		function orderSuccess(paymentResult) {
+			
+		};
+		
+		
+		// 주문 생성 실패 시 : 결제 취소(UPDATE / 디버깅용 취소내역 저장위해 오류 사유 저장)
+		function cancelPayment(paymentResult) {
+			
+		};
 
-	
+		
+		// 포트원API 결제요청
+		// result(주문준비 ajax통신 결과값) 이용
+		function proceedPortOnePayment(paymentParam) {
+			// API 요청용 파라미터(객체)
+			let portOneParam = preparePortOneParam(paymentParam);
+			// 결제 API용 객체 초기화
+			var IMP = window.IMP;
+			IMP.init(portOneParam.storeId);
+			
+			console.log('proceedPortOnePayment수행, portOneParam은 : ');
+			console.log(portOneParam);
+			
+			// 결제 API 요청 보내기
+			IMP.request_pay({
+				pg : portOneParam.pg,
+				pay_method : portOneParam.payMethod,
+				name : portOneParam.name,
+				amount : portOneParam.amount,
+				merchant_uid : portOneParam.merchantUid, // 서버에서
+				buyer_name : portOneParam.buyerName, // 서버에서
+				buyer_tel : portOneParam.buyerTel, // 서버에서
+				buyer_email : portOneParam.buyerEmail, // 서버에서
+				buyer_addr: portOneParam.buyerAddr, // 서버에서
+				buyer_postcode: portOneParam.buyerPostCode, // 서버에서
+			},
+			function(rsp) {
+				// callback
+				//rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+				if(rsp.success) {
+					// @여기부터
+					console.log('결제성공ㅇㅇㅇ 이제 res값으로 주문정보를 넣어야함');
+					console.log(rsp);
+					console.log(rsp.success);
+					return false;
+					let insertOrderResult = insertOrder(rsp.sucess);
+					console.log('insertOrderResult결과');
+					console.log(insertOrderResult);
+					
+					if(insertOrderResult > 1) {
+					 let orderSucessResult = orderSucess(rsp.sucess)
+					 console.log('orderSucessResult결과');
+					 console.log(orderSucessResult);
+					}
+					
+					else {
+						let cancelPayment = cancelPayment(rsp.success);
+						console.log('cancelPayment결과');
+						console.log(cancelPayment);
+					}
+					// @여기까지 아래 1줄 test
+					// (insertOrder(rsp.sucess) > 1) ? orderSuccess(rsp.success) : cancelPayment(rsp.success);
+				}
+				else {
+					paymentFailResult(rsp);
+				}
+			});
+		};
+		
+		 
+
 	</script>
+
+		
 		
 	<br/><br/><br/>
 	<br/><br/><br/>	
-	<br/><br/><br/>	
+	<br/><br/><br/>
+	<script>
+		// 결제 잠시대기
+		// promise / async / await
+		// 콜백지옥 -> promise / IE 호환성 문제(IE현재 ㅂㅇ)
+		// pending(초기), fulfilled(비동기 동작 성공), rejected(비동기 동작 실패)
+		// then() 메소드로 큐(FIFO)에 추가된 처리기들 호출 (promise의 상태와 상고나없이 처리기 호출됨)
+		// Promise.prototype.then(), Promise.prototype.catch()의 반환값은 새로운 promise, 서로 연결 가능		
+		
+		// 문법 (then인자는 optional)
+		// doSomething()
+		//	.then(function (result) {수행 return result})
+		//	.then(function (newResult {수행 return newResult}))
+		//	.catch(failureCallback);
+		
+		// 반환값이 존재해야함 / 화살표함수 () => x는 () => {return x;}
+		// doSomething()
+		//	.then((result) => doSomethingElse(result))
+		//	.then((newResult) => doThirdThing(newResult))
+		//	.catch(faulureCallback);
+		
+		// 주의 : 체인연결 제대로 안되는 경우 체인이 끊어지거나 두개의 체인이 경쟁하는 등 문제 발생
+		// 병렬로 실행되고 난리남 / 중첩에 주의 / catch로 종료 필수
+		
+		// 비동기작업 성공 시 resolve(), 실패 시 reject()호출
+	</script>
 	<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		// 최종배송비&주문금액  cartMain JS 재활용
 		// => 불가 / id 선택자 사용해서 겹침
@@ -410,7 +438,6 @@
 		// (공통사용/나중에 확장 될 수도 있다고 생각하면 class 아이디는 의미가??? => 이렇게 쓰는게 X?? 공통:클래스/이벤트:아이디)
 		// 태그가 유일해야할 일 많지 X => id 너무 남발한듯
 	 -->
-	 
-	 
+
 </body>
 </html>

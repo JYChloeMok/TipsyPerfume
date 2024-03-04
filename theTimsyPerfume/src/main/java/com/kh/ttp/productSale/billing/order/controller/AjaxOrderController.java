@@ -1,21 +1,26 @@
-package com.kh.ttp.productSale.order.controller;
+package com.kh.ttp.productSale.billing.order.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.kh.ttp.productSale.billing.order.model.service.OrderService;
 
 import lombok.RequiredArgsConstructor;
 
-@Controller
+@RestController
+@CrossOrigin("*")
+@RequestMapping("/order/")
 @RequiredArgsConstructor
 public class AjaxOrderController {
-
 	
-
-
+	private final OrderService orderService;
 	
-	
-	
-	
+	// 주문 생성
+	//@PostMapping("/")
+	//public ResponseEntity<String> insertOrder() {
+		
+	//}
 	
 	
 	// 주문페이지에서 결제버튼 클릭 시 가맹점 주문번호 MERCHANT_UID 생성

@@ -1,4 +1,4 @@
-package com.kh.ttp.productSale.order.model.service;
+package com.kh.ttp.productSale.billing.order.model.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,9 +6,9 @@ import java.util.HashMap;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
+import com.kh.ttp.productSale.billing.order.model.dao.OrderDao;
 import com.kh.ttp.productSale.cart.model.vo.CartMainVO;
 import com.kh.ttp.productSale.cart.model.vo.CartVO;
-import com.kh.ttp.productSale.order.model.dao.OrderDao;
 
 import lombok.RequiredArgsConstructor;
 
