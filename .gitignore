@@ -136,3 +136,8 @@ theTipsyPerfume/target/m2e-wtp/web-resources/META-INF/maven/com.kh/ttp/pom.prope
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,java,eclipse
 
+theTipsyPerfume/src/test/*
+theTipsyPerfume/src/main/webapp/WEB-INF/web.xml
+theTipsyPerfume/src/main/webapp/WEB-INF/spring/appServlet/servlet-context.xml
+theTipsyPerfume/src/main/webapp/WEB-INF/spring/root-context.xml
+theTipsyPerfume/src/main/webapp/WEB-INF/spring/spring-security.xml
