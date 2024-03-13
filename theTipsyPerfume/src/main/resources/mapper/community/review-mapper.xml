@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="reviewMapper">
+
+<resultMap type="review" id="reviewResultSet">
+	<result column="review_no" property="reviewNo"/>
+	<result column="nickname" property="userNo"/>
+	<result column="review_score" property="reviewScore"/>
+	<result column="review_content" property="reviewContent"/>
+	<result column="create_date" property="reviewCreateDate"/>
+	<result column="review_modify_date" property="reviewModifyDate"/>
+	<result column="review_state" property="reviewState"/>
+	<result column="PDT_NAME" property="pdtNo"/>
+	
+	<result column="USER_PROFILE" property="userProfile"/>
+	<result column="thumbnail_path" property="thumbnail"/>
+	<result column="product_path" property="productImg"/>
+	<result column="PDT_PRICE" property="productPrice"/>
+</resultMap>
+
+<select id="countReviewList" resultType="_int">
+select
+	count(*)
+from
+	tb_review
+where
+	review_state = 'Y'
+</select>
+<select id="countFundingReview" resultType="_int">
+	SELECT
+		COUNT(*)
+	FROM
+		TB_REVIEW
+	WHERE
+		REVIEW_STATE = 'Y' AND PDT_OPTION_NO=#{pdtOptionNo}
+</select>
+<select id="seletcReviewList" parameterType="review" resultMap="reviewResultSet">
+SELECT
+    REVIEW_NO,
+    NICKNAME,
+    REVIEW_SCORE,
+    REVIEW_CONTENT,
+    TO_CHAR(REVIEW_CREATE_DATE,'YYYY-MM-dd HH24:mm') "CREATE_DATE",
+    REVIEW_MODIFY_DATE,
+    PDT_NAME,
+    USER_PROFILE,
+    REVIEW_FILE_PATH||'/'||REVIEW_FILE_UPLOAD "thumbnail_path",
+    PDT_FILE_PATH||'/'||PDT_FILE_UPLOAD "product_path",
+    TO_CHAR(PDT_OPTION_PRICE,'L999,999,999') "PDT_PRICE"
+FROM TB_REVIEW
+    JOIN TB_USER USING(USER_NO)
+    JOIN TB_PRODUCT_OPTION USING(PDT_OPTION_NO)
+    JOIN TB_PRODUCT USING(PDT_NO)
+    JOIN TB_PRODUCT_FILE USING(PDT_NO)
+    JOIN TB_REVIEW_FILE USING(REVIEW_NO)
+WHERE
+	REVIEW_FILE_INDEX = 0
+AND
+	PDT_FILE_INDEX = 0
+ORDER BY REVIEW_CREATE_DATE DESC
+</select>
+<select id="selectReviewFunding" parameterType="_int" resultMap="reviewResultSet">
+	SELECT
+		REVIEW_NO,
+		REVIEW_SCORE,
+		REVIEW_CONTENT,
+		NICKNAME,
+		REVIEW_FILE_PATH||'/'||REVIEW_FILE_UPLOAD "thumbnail_path"
+	FROM
+	 	TB_REVIEW
+	 	JOIN TB_REVIEW_FILE USING(REVIEW_NO)
+	 	JOIN TB_USER USING(USER_NO)
+	 WHERE
+	 	PDT_OPTION_NO = #{pdtNo}
+	 AND
+	 	REVIEW_FILE_INDEX=0
+	 ORDER BY REVIEW_CREATE_DATE DESC
+	
+</select>
+<select id="selectReviewDetail" parameterType="_int" resultMap="reviewResultSet">
+SELECT
+    REVIEW_NO,
+    NICKNAME,
+    REVIEW_SCORE,
+    REVIEW_CONTENT,
+    TO_CHAR(REVIEW_CREATE_DATE,'YYYY-MM-dd HH24:mm') "CREATE_DATE",
+    REVIEW_MODIFY_DATE,
+    PDT_NAME,
+    USER_PROFILE,
+    PDT_FILE_PATH||'/'||PDT_FILE_UPLOAD "product_path",
+    TO_CHAR(PDT_OPTION_PRICE,'L999,999,999') "PDT_PRICE"
+FROM TB_REVIEW
+    JOIN TB_USER USING(USER_NO)
+    JOIN TB_PRODUCT_OPTION USING(PDT_OPTION_NO)
+    JOIN TB_PRODUCT USING(PDT_NO)
+    JOIN TB_PRODUCT_FILE USING(PDT_NO)
+WHERE
+	REVIEW_NO = #{reviewNo}
+AND
+	PDT_FILE_INDEX = 0
+</select>
+<select id="selectReviewImage" parameterType="_int" resultType="string">
+SELECT
+    REVIEW_FILE_PATH||'/'||REVIEW_FILE_UPLOAD "image_path"
+FROM
+    TB_REVIEW_FILE
+WHERE
+    REVIEW_NO = #{reviewNo}
+</select>
+<select id="selectRecommend" parameterType="recommend" resultType="string">
+SELECT
+    REVIEW_LIKE_FLAG
+FROM TB_REVIEW_LIKE
+WHERE
+    USER_NO = #{userNo}
+AND
+    REVIEW_NO = #{contentNo}
+</select>
+<update id="updateRecommend" parameterType="recommend">
+UPDATE
+    TB_REVIEW_LIKE
+SET REVIEW_LIKE_FLAG = #{likeFlag}
+WHERE
+    USER_NO = #{userNo}
+AND
+    REVIEW_NO = #{contentNo}
+</update>
+<insert id="insertRecommend" parameterType="recommend">
+INSERT INTO TB_REVIEW_LIKE(
+    USER_NO,
+    REVIEW_NO,
+    REVIEW_LIKE_FLAG
+) VALUES (
+	#{userNo},
+	#{contentNo},
+	#{likeFlag}
+)
+</insert>
+<select id="countRecommend" parameterType="_int" resultType="recommend">
+SELECT
+    TO_CHAR(COUNT(CASE WHEN REVIEW_LIKE_FLAG='L' THEN 1 END),'FM999,999,999') likeCount,
+    TO_CHAR(COUNT(CASE WHEN REVIEW_LIKE_FLAG='D' THEN 1 END),'FM999,999,999') dislikeCount
+FROM TB_REVIEW_LIKE
+WHERE
+    REVIEW_NO = #{contentNo}
+</select>
+<insert id="insertReview">
+INSERT INTO TB_REVIEW(
+	REVIEW_NO,
+	USER_NO,
+	REVIEW_SCORE,
+	REVIEW_CONTENT,
+	PDT_OPTION_NO
+) VALUES (
+    SEQ_REVIEW.NEXTVAL,
+    #{userNo},
+    #{reviewScore},
+    #{reviewContent},
+    #{pdtNo}
+)
+</insert>
+<insert id="insertReviewFile">
+INSERT INTO TB_REVIEW_FILE(
+	REVIEW_FILE_NO,
+	REVIEW_NO,
+	REVIEW_FILE_ORIGIN,
+	REVIEW_FILE_UPLOAD,
+	REVIEW_FILE_PATH,
+	REVIEW_FILE_INDEX
+)
+SELECT
+    SEQ_REVIEW_FILE.NEXTVAL,
+    SEQ_REVIEW.CURRVAL,
+	A.REVIEW_FILE_ORIGIN,
+	A.REVIEW_FILE_UPLOAD,
+	A.REVIEW_FILE_PATH,
+	A.REVIEW_FILE_INDEX
+FROM(
+<foreach collection="list" item="item" separator=" UNION ALL ">
+SELECT
+    #{item.reviewFileOrigin} "REVIEW_FILE_ORIGIN",#{item.reviewFileUpload} "REVIEW_FILE_UPLOAD",
+    #{item.reviewFilePath} "REVIEW_FILE_PATH",#{item.reviewFileIndex} "REVIEW_FILE_INDEX" FROM DUAL
+</foreach>
+) A
+</insert>
+</mapper>

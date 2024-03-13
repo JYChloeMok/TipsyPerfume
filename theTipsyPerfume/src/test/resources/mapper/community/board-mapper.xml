@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boardMapper">
+
+<resultMap type="board" id="boardResultSet">
+	<result column="BOARD_NO" property="boardNo"/>
+	<result column="USER_NO" property="boardWriterNo"/>
+	<result column="NICKNAME" property="boardWriter"/>
+	<result column="BOARD_TITLE" property="boardTitle"/>
+	<result column="BOARD_CONTENT" property="boardContent"/>
+	<result column="CREATE_DATE" property="boardCreateDate"/>
+	<result column="MODIFY_DATE" property="boardModifyDate"/>
+	<result column="BOARD_CTGY_CODE" property="boardCtgyCode"/>
+	<result column="BOARD_CTGY_NAME" property="boardCtgyName"/>
+	<result column="BOARD_STATE" property="boardState"/>
+	<result column="BOARD_COUNT" property="boardCount"/>
+	<result column="COMMENT_COUNT" property="commentCount"/>
+	<result column="LIKECOUNT" property="likeCount"/>
+	<result column="DISLIKECOUNT" property="dislikeCount"/>
+</resultMap>
+
+<select id="countBoardList" parameterType="string" resultType="_int">
+SELECT
+    COUNT(*)
+FROM TB_BOARD
+WHERE
+    BOARD_STATE='Y'
+AND
+    BOARD_CTGY_CODE=#{boardCtgy}
+</select>
+<select id="selectBoardList" parameterType="string" resultMap="boardResultSet">
+SELECT
+    BOARD_NO,
+    NICKNAME,
+    BOARD_TITLE,
+    TO_CHAR(BOARD_CREATE_DATE,'YYYY-MM-dd') "CREATE_DATE",
+    TO_CHAR(BOARD_MODIFY_DATE,'YYYY-MM-dd') "MODIFY_DATE",
+    BOARD_CTGY_CODE,
+    BOARD_STATE,
+    TO_CHAR(BOARD_COUNT,'FM999,999,999') "BOARD_COUNT",
+    TO_CHAR(COMMENT_COUNT,'FM999,999,999') "COMMENT_COUNT",
+    NVL(TO_CHAR(LIKECOUNT,'FM999,999,999'),0) "LIKECOUNT",
+    NVL(TO_CHAR(DISLIKECOUNT,'FM999,999,999'),0) "DISLIKECOUNT"
+FROM TB_BOARD
+JOIN TB_USER USING(USER_NO)
+LEFT JOIN (
+    SELECT
+        BOARD_NO,COUNT(*) "COMMENT_COUNT"
+    FROM TB_COMMENT
+    GROUP BY BOARD_NO
+    HAVING BOARD_NO IS NOT NULL) USING(BOARD_NO)
+LEFT JOIN (
+    SELECT
+        BOARD_NO,
+        TO_CHAR(COUNT(CASE WHEN BOARD_LIKE_FLAG='L' THEN 1 END),'FM999,999,999') "LIKECOUNT",
+        TO_CHAR(COUNT(CASE WHEN BOARD_LIKE_FLAG='D' THEN 1 END),'FM999,999,999') "DISLIKECOUNT"
+    FROM TB_BOARD_LIKE
+    JOIN TB_BOARD USING(BOARD_NO)
+    GROUP BY BOARD_NO) USING(BOARD_NO)
+WHERE
+    BOARD_STATE='Y'
+AND
+    BOARD_CTGY_CODE=#{boardCtgy}
+ORDER BY BOARD_NO DESC
+</select>
+<update id="increaseBoardCount" parameterType="_int">
+UPDATE TB_BOARD SET BOARD_COUNT=BOARD_COUNT+1 WHERE BOARD_NO=#{boardNo}
+</update>
+<select id="selectBoard" parameterType="_int" resultMap="boardResultSet">
+SELECT
+    BOARD_NO,
+    USER_NO,
+    NICKNAME,
+    BOARD_TITLE,
+    BOARD_CONTENT,
+    TO_CHAR(BOARD_CREATE_DATE,'YYYY-MM-dd HH24:mm') "CREATE_DATE",
+    TO_CHAR(BOARD_MODIFY_DATE,'YYYY-MM-dd') "MODIFY_DATE",
+    BOARD_CTGY_CODE,
+    BOARD_CTGY_NAME,
+    TO_CHAR(BOARD_COUNT,'FM999,999,999') "BOARD_COUNT"
+FROM TB_BOARD
+JOIN TB_USER USING(USER_NO)
+JOIN TB_BOARD_CTGY USING(BOARD_CTGY_CODE)
+WHERE
+    BOARD_STATE='Y'
+AND
+    BOARD_NO=#{boardNo}
+</select>
+
+<select id="selectRecommend" parameterType="recommend" resultType="string">
+SELECT
+    BOARD_LIKE_FLAG
+FROM TB_BOARD_LIKE
+WHERE
+    USER_NO = #{userNo}
+AND
+    BOARD_NO = #{contentNo}
+</select>
+<update id="updateRecommend" parameterType="recommend">
+UPDATE
+    TB_BOARD_LIKE
+SET BOARD_LIKE_FLAG = #{likeFlag}
+WHERE
+    USER_NO = #{userNo}
+AND
+    BOARD_NO = #{contentNo}
+</update>
+<insert id="insertRecommend" parameterType="recommend">
+INSERT INTO TB_BOARD_LIKE(
+    USER_NO,
+    BOARD_NO,
+    BOARD_LIKE_FLAG
+) VALUES (
+	#{userNo},
+	#{contentNo},
+	#{likeFlag}
+)
+</insert>
+<select id="countRecommend" parameterType="_int" resultType="recommend">
+SELECT
+    TO_CHAR(COUNT(CASE WHEN BOARD_LIKE_FLAG='L' THEN 1 END),'FM999,999,999') likeCount,
+    TO_CHAR(COUNT(CASE WHEN BOARD_LIKE_FLAG='D' THEN 1 END),'FM999,999,999') dislikeCount
+FROM TB_BOARD_LIKE
+WHERE
+    BOARD_NO = #{contentNo}
+</select>
+<select id="selectCtgyName" parameterType="string" resultType="string">
+SELECT
+	BOARD_CTGY_NAME
+FROM
+	TB_BOARD_CTGY
+WHERE
+	BOARD_CTGY_CODE=#{boardCtgy}
+</select>
+
+<insert id="insertBoard" parameterType="board">
+INSERT INTO TB_BOARD(
+    BOARD_NO,
+    USER_NO,
+    BOARD_TITLE,
+    BOARD_CONTENT,
+    BOARD_CTGY_CODE
+) VALUES (
+    SEQ_BOARD.NEXTVAL,
+    #{boardWriterNo},
+    #{boardTitle},
+    #{boardContent},
+    #{boardCtgyCode}
+)
+</insert>
+<update id="updateBoard" parameterType="board">
+UPDATE TB_BOARD
+SET
+	BOARD_TITLE=#{boardTitle},
+    BOARD_CONTENT=#{boardContent},
+    BOARD_MODIFY_DATE=SYSDATE
+WHERE
+    BOARD_STATE='Y'
+AND
+	BOARD_NO=#{boardNo}
+</update>
+<update id="deleteBoard" parameterType="_int">
+UPDATE TB_BOARD SET BOARD_STATE='N' WHERE BOARD_NO=#{boardNo}
+</update>
+<insert id="insertBoardFile" parameterType="java.util.ArrayList">
+INSERT INTO TB_BOARD_FILE(
+	BOARD_FILE_NO,
+	BOARD_NO,
+	BOARD_FILE_ORIGIN,
+	BOARD_FILE_UPLOAD,
+	BOARD_FILE_PATH,
+	BOARD_FILE_INDEX
+)
+SELECT
+    SEQ_BOARD_FILE.NEXTVAL,
+    SEQ_BOARD.CURRVAL,
+	A.BOARD_FILE_ORIGIN,
+	A.BOARD_FILE_UPLOAD,
+	A.BOARD_FILE_PATH,
+	A.BOARD_FILE_INDEX
+FROM(
+<foreach collection="list" item="item" separator=" UNION ALL ">
+SELECT
+    #{item.boardFileOrigin} "BOARD_FILE_ORIGIN",#{item.boardFileUpload} "BOARD_FILE_UPLOAD",
+    #{item.boardFilePath} "BOARD_FILE_PATH",#{item.boardFileIndex} "BOARD_FILE_INDEX" FROM DUAL
+</foreach>
+) A
+</insert>
+<select id="selectDetailBoardList" parameterType="map" resultMap="boardResultSet">
+SELECT
+    BOARD_NO,
+    NICKNAME,
+    BOARD_TITLE,
+    TO_CHAR(BOARD_CREATE_DATE,'YYYY-MM-dd') "CREATE_DATE",
+    TO_CHAR(BOARD_MODIFY_DATE,'YYYY-MM-dd') "MODIFY_DATE",
+    BOARD_CTGY_CODE,
+    BOARD_STATE,
+    TO_CHAR(BOARD_COUNT,'FM999,999,999') "BOARD_COUNT",
+    TO_CHAR(COMMENT_COUNT,'FM999,999,999') "COMMENT_COUNT",
+    NVL(TO_CHAR(LIKECOUNT,'FM999,999,999'),0) "LIKECOUNT",
+    NVL(TO_CHAR(DISLIKECOUNT,'FM999,999,999'),0) "DISLIKECOUNT"
+FROM TB_BOARD
+JOIN TB_USER USING(USER_NO)
+LEFT JOIN (
+    SELECT
+        BOARD_NO,COUNT(*) "COMMENT_COUNT"
+    FROM TB_COMMENT
+    GROUP BY BOARD_NO
+    HAVING BOARD_NO IS NOT NULL) USING(BOARD_NO)
+LEFT JOIN (
+    SELECT
+        BOARD_NO,
+        TO_CHAR(COUNT(CASE WHEN BOARD_LIKE_FLAG='L' THEN 1 END),'FM999,999,999') "LIKECOUNT",
+        TO_CHAR(COUNT(CASE WHEN BOARD_LIKE_FLAG='D' THEN 1 END),'FM999,999,999') "DISLIKECOUNT"
+    FROM TB_BOARD_LIKE
+    JOIN TB_BOARD USING(BOARD_NO)
+    GROUP BY BOARD_NO) USING(BOARD_NO)
+WHERE
+    BOARD_STATE='Y'
+AND
+	#{boardNo} > BOARD_NO
+AND
+    BOARD_CTGY_CODE=#{boardCtgy}
+ORDER BY BOARD_NO DESC
+</select>
+</mapper>

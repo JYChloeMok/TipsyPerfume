@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="productMapperPR">
+	
+	<resultMap id="productResultSet" type="product">
+		<result column="PDT_NO" property="pdtNo" />
+		<result column="PDT_CATEG_NO" property="pdtCategNo" />
+		<result column="PDT_NAME" property="pdtName" />
+		<result column="PDT_DATE" property="pdtDate" />
+		<result column="PDT_INTRO" property="pdtIntro" />
+		<result column="PDT_DESCRIPTION" property="pdtDescription" />
+		<result column="PDT_INGREDIENT" property="pdtIngredient" />
+		<result column="PDT_SHIPPING" property="pdtShipping" />
+		<result column="PDT_COUNT" property="pdtCount" />
+		<result column="PDT_STATUS" property="pdtStatus" />
+	</resultMap>
+	
+	<resultMap id="productSelectResultSet" type="productSelect">
+		<result column="PDT_NO" property="pdtNo" />
+		<result column="PDT_NAME" property="pdtName" />
+		<result column="PDT_INTRO" property="pdtIntro" />
+		<result column="PDT_DESCRIPTION" property="pdtDescription" />
+		<result column="PDT_SHIPPING" property="pdtShipping" />
+		<result column="PDT_COUNT" property="pdtCount" />
+		<result column="PDT_CATEG_NO" property="pdtCategNo" />
+		<result column="PDT_CTEG" property="pdtCteg" />
+		<result column="PDT_MANUFAC" property="pdtManufac" />
+		<result column="PDT_GROUP" property="pdtGroup" />
+		<result column="PDT_FILE_NO" property="pdtFileNo" />
+		<result column="PDT_FILE_INDEX" property="pdtFileIndex" />
+		<result column="PDT_IMG_SRC" property="pdtImgSrc" />
+		<result column="REVIEW_AVG" property="reviewAvg" />
+	</resultMap>
+	
+	<resultMap id="cartResultSet" type="cart">
+		<result column="CART_NO" property="cartNo" />
+		<result column="USER_NO" property="userNo" />
+		<result column="PDT_NO" property="pdtNo" />
+		<result column="PDT_OPTION_NO" property="pdtOptionNo" />
+		<result column="CART_QUANTITY" property="cartQuantity" />
+
+	</resultMap>
+	
+	<resultMap id="productOptionResultSet" type="productOption">
+		<result column="PDT_OPTION_NO" property="pdtOptionNo" />
+		<result column="PDT_NO" property="pdtNo" />
+		<result column="PDT_OPTION_FIRST" property="pdtOptionFirst" />
+		<result column="PDT_OPTION_PRICE" property="pdtOptionPrice" />
+		<result column="PDT_OPTION_STOCK" property="pdtOptionStock" />
+	</resultMap>
+	
+	<resultMap id="cartMain" type="cartMain">
+		<result column="PDT_NAME" property="pdtName" />
+		<result column="PDT_SHIPPING" property="pdtShipping" />
+		<result column="TOTAL_PRICE" property="totalPrice" />
+		<association resultMap="cartResultSet" property="cart"></association>
+		<association resultMap="productOptionResultSet" property="productOption"></association>
+	</resultMap>
+	
+	
+	
+	<!-- SELECT -->
+	<!-- 전체상품 COUNT / 브랜드 주류 or 향수(판매중 상태Y)의 전체 개수 -->
+	<select id="selectProductCount" parameterType="string" resultType="_int">
+		SELECT
+			   COUNT(1) "RESULT"
+		  FROM
+		  	   TB_PRODUCT
+		  JOIN
+		  	   TB_PRODUCT_CATEGORY USING(PDT_CATEG_NO)
+		 WHERE
+		 	   PDT_CTEG = #{pdtCteg}
+		   AND
+		   	   PDT_FAMILY = 'B'
+		   AND
+		   	   PDT_STATUS = 'Y'
+	</select>
+	
+	
+
+	
+	<!-- 위시리스트 COUNT / 특정 유저가 한 상품에 위시리스트 추가한 내역이 있는지 조회 -->
+	<select id="countWishOne" parameterType="wishlist" resultType="_int">
+		SELECT
+			   COUNT(1) "RESULT"
+		  FROM
+		  	   TB_WISHLIST
+		 WHERE
+		  	   PDT_NO = #{pdtNo}
+		   AND
+		  	   USER_NO = #{userNo}
+	</select>
+	
+	
+	<!-- 장바구니 등록여부COUNT / 특정 유저가 한 상품을 장바구니에 추가한 내역이 있는지 조회 -->
+	<select id="countCartOne" parameterType="cart" resultType="_int">
+		SELECT
+			   COUNT(1) "RESULT"
+		  FROM
+		  	   TB_CART
+		 WHERE
+			   USER_NO = #{userNo}
+		   AND
+		   	   PDT_NO = #{pdtNo}
+		   AND
+		       PDT_OPTION_NO = #{pdtOptionNo}
+	</select>
+	
+	<!-- 1개 상품(특정 옵션)의 재고 개수 조회 -->
+	<select id="selectStockWithOption" parameterType="_int" resultType="_int">
+		SELECT
+			   NVL(PDT_OPTION_STOCK, 0) "PDT_OPTION_STOCK"
+		  FROM
+		  	   TB_PRODUCT
+		  JOIN
+			   TB_PRODUCT_OPTION USING(PDT_NO)
+	 	 WHERE
+			   PDT_NO = #{pdtNo}
+		   AND
+		  	   PDT_OPTION_NO = #{pdtOptionNo}
+		   AND
+		  	   PDT_STATUS = 'Y'
+		   AND
+		       PDT_OPTION_STATUS = 'Y'
+	</select>
+	
+	<!-- if로 쓴 이유 -> otherwise에 쓸 내용 없고, 이 경우 if를 쓰든 choose-when-otherwise를 쓰든 성능차이 크지 않을것, 가독성 좋은방향이 더 낫다 생각함 -->
+	
+	<!-- 브랜드 주류/향수 상품 메인보기(6개조회) & 전체보기(12개조회)를 위한 쿼리문 -->
+	<select id="productSelectList" parameterType="map" resultMap="productSelectResultSet">
+		SELECT
+			   PDT_NO,
+			   PDT_NAME,
+			   PDT_INTRO,
+			   PDT_DESCRIPTION,
+			   PDT_MANUFAC,
+			   PDT_FILE_PATH || '/' || PDT_FILE_UPLOAD "PDT_IMG_SRC",
+			   REVIEW_AVG
+		  FROM
+		  	   TB_PRODUCT
+		  JOIN
+		  	   TB_PRODUCT_CATEGORY USING(PDT_CATEG_NO)
+  		  JOIN
+  		  	   TB_PRODUCT_FILE USING(PDT_NO)
+  		  LEFT
+  		  JOIN
+  		  	   (
+  		  	   SELECT 
+  		  	   		  PDT_NO,
+  		  	   		  TO_CHAR(NVL(AVG(REVIEW_SCORE),0), 'FM0.0') "REVIEW_AVG"
+  		  	   		  <if test="sort eq 'BestSeller'">
+  		  	   		  ,
+  		  	   		  NVL(SUM(ORDER_QUANTITY), 0) "TOTAL_SALES",
+      				  TRUNC(AVG(NVL(PAY_TOTAL, 0) + NVL(PAY_ADJUST, 0))) "SALES_AVG"
+  		  	   		  </if>
+  		  			  <if test="sort eq 'Popular'">
+  		  	   		  ,
+  		  	   		  NVL(SUM(W.USER_NO), 0) "TOTAL_WISH"
+  		  	   		  </if>
+				 FROM
+				 	  TB_PRODUCT
+				 JOIN
+				 	  TB_PRODUCT_OPTION USING(PDT_NO)
+				 LEFT
+				 JOIN
+				 	  TB_REVIEW USING(PDT_OPTION_NO)
+				 <if test="sort eq 'BestSeller'">
+				 LEFT
+				 JOIN
+				 	  TB_ORDER_PRODUCT USING(PDT_OPTION_NO)
+				 LEFT
+				 JOIN
+                 	  TB_ORDER_DETAIL USING(ORDER_DETAIL_NO)
+				 LEFT
+				 JOIN
+                 	  TB_PAY USING(PAY_NO)
+				 </if>
+				 <if test="sort eq 'Popular'">
+				 LEFT
+ 				 JOIN
+ 				 	  TB_WISHLIST W USING(PDT_NO)
+				 </if>
+				WHERE
+				<if test="sort eq 'BestSeller'">
+				 	  PAY_STATUS = 'Y'
+				   OR
+      				  PAY_STATUS IS NULL
+               	  AND
+				</if>
+					  REVIEW_STATE = 'Y'
+				   OR
+				   	  REVIEW_STATE IS NULL
+				GROUP
+				   BY
+				   	  PDT_NO
+			   ) USING(PDT_NO)
+		 WHERE
+			   PDT_CTEG = #{pdtCteg}
+		   AND
+		   	   PDT_FAMILY = 'B'
+   		   AND
+   		   	   PDT_STATUS = 'Y'
+   		   AND
+   		   	   PDT_FILE_INDEX = 0
+		 ORDER
+		    BY
+			   <if test="sort eq 'BestSeller'">
+			   TOTAL_SALES DESC,
+			   SALES_AVG DESC,
+			   </if>
+			   <if test="sort eq 'Popular'">
+			   TOTAL_WISH DESC,
+			   </if>
+			   PDT_NO DESC
+	</select>
+	
+	
+	
+	
+	
+	<!-- 상품 디테일 조회 -->
+	<select id="productDetail" parameterType="map" resultMap="productSelectResultSet">
+		SELECT
+			   PDT_NO,
+			   PDT_NAME,
+			   PDT_INTRO,
+			   PDT_DESCRIPTION,
+			   PDT_SHIPPING,
+			   PDT_COUNT,
+			   PDT_CATEG_NO,
+			   PDT_CTEG,
+			   PDT_MANUFAC,
+			   PDT_GROUP,
+			   PDT_FILE_NO,
+			   PDT_FILE_INDEX,
+			   PDT_FILE_PATH || '/' || PDT_FILE_UPLOAD "PDT_IMG_SRC",
+			   TO_CHAR(REVIEW_AVG, 'FM0.0') "REVIEW_AVG"
+		  FROM
+			   TB_PRODUCT
+		  JOIN
+			   TB_PRODUCT_CATEGORY USING(PDT_CATEG_NO)
+		  JOIN
+			   TB_PRODUCT_FILE USING(PDT_NO)
+		  LEFT
+		  JOIN
+		  	   (
+			   SELECT
+					  PDT_NO,
+					  NVL(TRUNC(AVG(REVIEW_SCORE), 2),0) "REVIEW_AVG"
+			     FROM
+					  TB_REVIEW
+                 JOIN
+                      TB_PRODUCT_OPTION USING(PDT_OPTION_NO)					  
+			    WHERE
+					  PDT_NO = #{pdtNo}
+			    GROUP
+			       BY
+					  PDT_NO
+			   		  ) USING(PDT_NO)
+		 WHERE
+			   PDT_NO = #{pdtNo}
+		   AND
+			   PDT_STATUS = 'Y'
+		   AND
+		   	   PDT_CTEG = #{pdtCteg}
+		   AND
+			   PDT_FAMILY = 'B'
+	</select>
+	<!-- PDT_CTEG, PDT_FAMILY = 'B'는 최소한의 조건체크 -->
+
+	
+	
+	<!-- 상품 번호로 상품의 옵션 정보 조회 -->	
+	<select id="selectPdtOptionOne" parameterType="_int" resultMap="productOptionResultSet">
+		SELECT
+		       PDT_OPTION_NO,
+		       PDT_NO,
+		       PDT_OPTION_FIRST,
+		       PDT_OPTION_SECOND,
+		       PDT_OPTION_PRICE,
+		       PDT_OPTION_STOCK
+		  FROM
+		       TB_PRODUCT_OPTION
+		 WHERE
+		       PDT_NO = #{pdtNo}
+		   AND
+		   	   PDT_OPTION_STOCK > 0
+		 ORDER
+            BY
+               TO_NUMBER(REGEXP_REPLACE(PDT_OPTION_FIRST, '[^0-9]'))
+	</select>
+	
+	<!-- 상품에 달린 리뷰 조회 -->
+	<select id="selectRecentReviewWithRownum" parameterType="map" resultType="review">
+		SELECT
+			   REVIEW_NO reviewNo,
+			   REVIEW_SCORE reviewScore,
+			   REVIEW_CONTENT reviewContent,
+			   THUMBNAIL thumbnail
+		  FROM
+		  	   (
+			   SELECT
+			   		  REVIEW_NO,
+			   		  REVIEW_SCORE,
+			   		  REVIEW_CONTENT,
+			   		  NVL2(REVIEW_FILE_UPLOAD, REVIEW_FILE_PATH || '/' || REVIEW_FILE_UPLOAD, 'NOIMAGE') "THUMBNAIL"
+				 FROM
+			   		  TB_REVIEW
+			   	 JOIN
+			   		  TB_REVIEW_FILE USING(REVIEW_NO)
+			    WHERE
+			   		  PDT_NO = #{pdtNo}
+			   	  AND
+			   		  REVIEW_FILE_INDEX = 0
+			   	  AND
+			   		  REVIEW_STATE = 'Y'
+			   	ORDER
+			   	   BY
+			   		  REVIEW_NO DESC
+		  	   )
+		 WHERE
+		 	   ROWNUM <![CDATA[ <= ]]> #{rowNum}
+	</select>
+	
+	<!-- 장바구니 전체조회 -->
+	<select id="cartMain" parameterType="_int" resultMap="cartMain">
+		SELECT
+			   CART_NO,
+			   USER_NO,
+			   C.PDT_NO "PDT_NO",
+			   PDT_OPTION_NO,
+			   PDT_NAME,
+			   PDT_OPTION_FIRST,
+			   CART_QUANTITY,
+			   PDT_OPTION_PRICE,
+			   (PDT_OPTION_PRICE * CART_QUANTITY) + PDT_SHIPPING "TOTAL_PRICE",
+			   PDT_OPTION_STOCK,
+			   PDT_SHIPPING
+		  FROM
+			   TB_CART "C"
+	  	  JOIN
+			   TB_PRODUCT_OPTION USING(PDT_OPTION_NO)
+	  	  JOIN
+			   TB_PRODUCT "P" ON (C.PDT_NO = P.PDT_NO)
+		 WHERE
+			   USER_NO = #{userNo}
+	   	   AND
+			   PDT_OPTION_STATUS = 'Y'
+	   	   AND
+			   PDT_STATUS = 'Y'     	   
+	</select>
+
+	
+	<!-- 위시리스트 INSERT구문 -->
+	<insert id="insertWishOne" parameterType="wishlist">
+		INSERT
+		  INTO
+		  	   TB_WISHLIST
+		  	   (
+		  	   PDT_NO,
+		  	   USER_NO
+		  	   )
+		VALUES
+			   	(
+			   	#{pdtNo},
+			   	#{userNo}
+			   	)
+	</insert>
+	
+	<!-- 위시리스트 DELETE구문 -->
+	<delete id="deleteWishOne" parameterType="wishlist">
+		DELETE
+			   TB_WISHLIST
+		 WHERE
+			   PDT_NO = #{pdtNo}
+		   AND
+			   USER_NO = #{userNo}
+	</delete>
+	
+	<!-- 장바구니 INSERT구문 -->
+	<insert id="insertCartOne" parameterType="cart">
+		INSERT
+		  INTO
+		  	   TB_CART
+		  	   (
+		  	   CART_NO,
+		  	   USER_NO,
+		  	   PDT_NO,
+		  	   PDT_OPTION_NO,
+		  	   CART_QUANTITY
+		  	   )
+		VALUES
+			   (
+			   SEQ_CART.NEXTVAL,
+			   #{userNo},
+			   #{pdtNo},
+			   #{pdtOptionNo},
+			   #{cartAddingQuantity}
+			   )
+	</insert>
+	
+	
+
+	
+	<!-- 장바구니 수량 기존수량에 추가 UPDATE구문 -->
+	<update id="updateCartAddUpOne" parameterType="cart">
+		UPDATE
+			   TB_CART
+		   SET
+		   	   CART_QUANTITY = CART_QUANTITY + #{cartAddingQuantity}
+		 WHERE
+		 	   USER_NO = #{userNo}
+		   AND
+		 	   PDT_NO = #{pdtNo}
+		   AND
+		 	   PDT_OPTION_NO = #{pdtOptionNo}
+	</update>
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

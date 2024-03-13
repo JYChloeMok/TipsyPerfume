@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="adminMapper">
+  
+  <resultMap id="adminResultSet" type="admin">
+  	<result column="PDT_OPTION_NO" property="pdtNo" />
+  	<result column="PDT_NAME" property="pdtName" />
+  	<result column="PDT_PRICE" property="pdtPrice" />
+  	<result column="PDT_DATE" property="pdtDate" />
+  	<result column="PDT_COUNT" property="pdtCount" />
+  </resultMap>
+  
+  <!--  -->
+  <select id="selectListCount" resultType="_int">
+  SELECT
+  	COUNT(*)
+  FROM
+  	TB_PRODUCT
+  WHERE
+  	PDT_STATUS = 'Y'
+  </select>
+  
+  
+  
+	<select id="selectList" resultMap="adminResultSet">
+	SELECT
+  		   PDT_OPTION_NO,
+		   PDT_NAME,
+		   PDT_OPTION_PRICE,
+  		   TO_CHAR(PDT_DATE, 'YYYY-MM-DD') as "PDT_DATE",
+  		   PDT_COUNT
+      FROM
+		   TB_PRODUCT
+	  JOIN
+		   TB_PRODUCT_OPTION USING(PDT_NO)
+	 WHERE
+		   PDT_STATUS = 'Y'
+	 ORDER
+		BY
+		   PDT_OPTION_NO DESC
+  </select>
+  
+  
+  
+  
+  
+  
+  <!--  
+  <insert id="insertAlcohol" parameterType="adminVo">
+  INSERT
+  INTO
+  	TB_PRODUCT(
+             PDT_OPTION_NO,
+             PDT_CATEG_NO,
+             PDT_NAME,
+             PDT_PRICE,
+             PDT_STOCK,
+             PDT_INTRO,
+             PDT_DESCRIPTION,
+             PDT_INGREDIENT,
+             PDT_SHIPPING
+            )
+    VALUES(
+            SEQ_PRODUCT.NEXTVAL,
+            SEQ_PRODUCT_CATEGORY.CURRVAL,
+			#{pdtName},
+			#{pdtPrice},
+			#{pdtStock},
+			#{pdtIntro},
+			#{pdtDescription},
+			#{pdtIngredient},
+			#{pdtShipping}
+            )
+  </insert>
+  -->
+  
+  
+  
+  
+  </mapper>

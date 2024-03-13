@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="userMapper">
+
+
+	<!-- 로그인용 쿼리문 -->
+	<select id="loginUser" parameterType="user" resultType="user">
+		SELECT
+			USER_NO userNo,
+            USER_EMAIL userEmail,
+            NICKNAME nickName,
+            USER_PWD userPwd,
+            USER_NAME userName,
+            STATUS status,
+            MEMBER_TYPE memberType,
+            CASE
+		        WHEN extract(YEAR FROM SYSDATE)-extract(YEAR FROM BIRTH_DATE) >= 19 THEN 'Y'
+		        ELSE 'N'
+		    END adultStatus,
+            BIRTH_DATE birthDate,
+            ENROLL_DATE enrollDate,
+            USER_PROFILE userProfile,
+			PHONE phone,
+			ADDRESS address,
+			ADDRESS_DETAIL addressDetail,
+			POSTAL_CODE postalCode
+		FROM
+			TB_USER
+		left JOIN
+			TB_RECEIVER USING(USER_NO)
+		WHERE
+			USER_EMAIL = #{userEmail}
+		AND
+			STATUS='Y'
+	</select>
+	  
+	
+
+
+	<!-- 회원가입용 쿼리문1 -->
+	<insert id="insertUser" parameterType="user">
+	   INSERT
+	     INTO 
+	           TB_USER(
+		       USER_NO,
+		       USER_EMAIL,
+		       NICKNAME,
+		       USER_PWD,
+		       USER_NAME,
+		       BIRTH_DATE,
+		       MEMBER_TYPE
+		      )
+	  VALUES (
+		       SEQ_USER.NEXTVAL,
+		       #{userEmail},
+		       #{nickName},
+		       #{userPwd},
+		       #{userName},
+		       #{birthDate},
+		       #{memberType}
+		     )
+	</insert>
+	
+	
+		<!-- 회원가입용 쿼리문2 -->
+		<insert id="insertUser2" parameterType="user">
+		INSERT
+		  INTO
+			  TB_RECEIVER(
+			  RECEIVER_NO,
+			  USER_NO,
+			  RECEIVER_NAME,
+			  PHONE,
+			  ADDRESS,
+			  ADDRESS_DETAIL,
+			  POSTAL_CODE
+			  )
+		VALUES
+			  (
+			  SEQ_RECEIVER.NEXTVAL,
+			  SEQ_USER.CURRVAL,
+			  #{receiverName},
+			  #{phone},
+			  #{address},
+			  #{addressDetail},
+			  #{postalCode}
+			  )
+		</insert>
+
+
+	<select id="emailCheck" parameterType="string" resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_USER
+		WHERE
+			USER_EMAIL = #{checkEmail}
+	</select>
+
+	
+	
+	
+<!-- 	<select id="selectReceiver" parameterType="_int" resultMap="ReceiverResultSet">
+	SELECT
+		
+		RECEIVER_NAME,
+		PHONE,
+		ADDRESS,
+		ADDRESS_DETAIL,
+		POSTAL_CODE 
+	FROM
+		TB_RECEIVER
+	WHERE
+		USER_NO = #{userNo}
+	</select> -->
+	
+	
+	<!-- 성인인증 여부 확인용 SQL문 -->
+	<select id="isUserAdult" parameterType="_int" resultType="_int">
+		SELECT
+			   COUNT(1)
+		  FROM
+		  	   TB_USER
+		 WHERE
+		 	   USER_NO = #{userNo}
+		   AND
+		 	   ADULT_STATUS = 'Y'
+	</select>
+
+	<update id="updateUser" parameterType="user">
+	UPDATE
+		TB_USER
+	SET
+		MEMBER_TYPE = #{memberType},
+		USER_EMAIL = #{userEmail},
+		NICKNAME = #{nickName}
+	WHERE	
+		USER_EMAIL = #{userEmail}
+	</update>
+
+
+	<update id="deleteUser" parameterType="string">
+	UPDATE
+		TB_USER
+	SET
+		STATUS='N'
+	WHERE
+		USER_EMAIL = #{userEmail}
+	</update>
+
+
+
+
+
+
+
+
+
+
+	<insert id="insertSecret" parameterType="com.kh.ttp.user.model.vo.AuthVO">
+		INSERT
+		INTO
+			TB_AUTH
+			(
+				AUTH_EMAIL,
+			 	AUTH_CODE,
+			 	AUTH_DATE
+			 )
+		VALUES
+			(
+			#{authEmail}, 
+			#{authCode},
+			sysdate
+			
+			)
+	</insert>
+
+
+
+	<select
+		id="validate"
+		parameterType="com.kh.ttp.user.model.vo.AuthVO"
+		resultType="com.kh.ttp.user.model.vo.AuthVO">
+	SELECT
+		AUTH_EMAIL,
+		AUTH_CODE,
+		AUTH_DATE
+	FROM
+		TB_AUTH
+	WHERE
+		AUTH_EMAIL = #{authEmail}
+	AND
+		AUTH_CODE = #{authCode}
+	AND
+		AUTH_DATE BETWEEN SYSDATE - 3/24/60 AND SYSDATE 
+	</select>
+
+
+	<delete id="deleteAuth" parameterType="com.kh.ttp.user.model.vo.AuthVO">
+	delete 
+		TB_AUTH 
+	where 
+		AUTH_EMAIL = #{authEmail} 
+	and 
+		AUTH_CODE = #{authCode}
+	</delete>
+
+</mapper>
