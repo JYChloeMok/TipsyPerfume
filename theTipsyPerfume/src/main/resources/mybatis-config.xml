@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration 
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+	"https://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<settings>		
+			<setting name="jdbcTypeForNull" value="NULL"/>		
+	</settings>
+	
+	  <typeAliases>
+		<typeAlias type="com.kh.ttp.user.model.vo.User" alias="user"/>
+		<typeAlias type="com.kh.ttp.adminManage.model.vo.AdminVo" alias="admin"/>
+				
+		<typeAlias type="com.kh.ttp.community.review.model.vo.ReviewVO" alias="review"/>
+		<typeAlias type="com.kh.ttp.community.notice.model.vo.NoticeVO" alias="notice"/>
+		<typeAlias type="com.kh.ttp.community.board.model.vo.BoardVO" alias="board"/>
+		<typeAlias type="com.kh.ttp.community.board.model.vo.BoardFileVO" alias="boardFile"/>
+		<typeAlias type="com.kh.ttp.community.pedia.model.vo.PediaVO" alias="pedia"/>
+		<typeAlias type="com.kh.ttp.community.common.model.vo.CommentVO" alias="comment"/>
+		<typeAlias type="com.kh.ttp.community.common.model.vo.RecommendVO" alias="recommend"/>
+		
+		<typeAlias type="com.kh.ttp.productSale.product.model.vo.ProductVO" alias="product"/>
+		<typeAlias type="com.kh.ttp.productSale.product.model.vo.ProductSelectVO" alias="productSelect" />
+		
+		<typeAlias type="com.kh.ttp.productSale.productInfo.model.vo.ProductCategoryVO" alias="productCategory"/>
+		<typeAlias type="com.kh.ttp.productSale.productInfo.model.vo.ProductOptionVO" alias="productOption"/>
+		<typeAlias type="com.kh.ttp.productSale.productInfo.model.vo.ProductFileVO" alias="productFile"/>
+		
+		<typeAlias type="com.kh.ttp.productSale.funding.model.vo.FundingVO" alias="funding"/>
+		<typeAlias type="com.kh.ttp.productSale.funding.model.vo.FundingSelectVO" alias="fundingSelect"/>
+		
+		<typeAlias type="com.kh.ttp.productSale.wishlist.model.vo.WishlistVO" alias="wishlist"/>
+		
+		<typeAlias type="com.kh.ttp.productSale.cart.model.vo.CartVO" alias="cart" />
+		<typeAlias type="com.kh.ttp.productSale.cart.model.vo.CartSelectVO" alias="cartSelect"/>
+		<typeAlias type="com.kh.ttp.productSale.cart.model.vo.CartMainVO" alias="cartMain" />
+      
+		<typeAlias type="com.kh.ttp.productSale.receiver.model.vo.ReceiverVO" alias="receiver"/>
+		
+		<typeAlias type="com.kh.ttp.productSale.billing.order.model.vo.OrderVO" alias="order"/>
+		<typeAlias type="com.kh.ttp.productSale.billing.order.model.vo.OrderDetailVO" alias="orderDetail"/>
+		<typeAlias type="com.kh.ttp.productSale.billing.order.model.vo.OrderProductVO" alias="orderProduct"/>
+		
+		<typeAlias type="com.kh.ttp.productSale.billing.pay.model.vo.PayVO" alias="pay"/>
+		<!-- <typeAlias type="com.kh.ttp.pay.model.vo.prepay.PayKakaoReadyVO" alias="payKakaoReady"/> -->
+		<!-- <typeAlias type="com.kh.ttp.pay.model.vo.prepay.PayKakaoVO" alias="payKakao" /> -->
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="/mapper/member-mapper.xml"/>
+		<mapper resource="/mapper/community/review-mapper.xml"/>
+		<mapper resource="/mapper/community/notice-mapper.xml"/>
+		<mapper resource="/mapper/community/board-mapper.xml"/>
+		<mapper resource="/mapper/community/pedia-mapper.xml"/>
+		<mapper resource="/mapper/community/comment-mapper.xml"/>
+		<mapper resource="/mapper/funding-mapper.xml"/>
+		<mapper resource="/mapper/product-mapper.xml" />
+		<!-- <mapper resource="/mapper/pay-kakao-mapper.xml" /> -->
+		<mapper resource="/mapper/receiver-mapper.xml" />
+		<mapper resource="/mapper/admin-mapper.xml" />
+	</mappers>
+</configuration>
