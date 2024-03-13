@@ -360,32 +360,18 @@
 					buyer_postcode: portOneParam.buyerPostCode, // 서버에서
 				},
 				function(rsp) {
-					
-					rsp.success ? (self.createOrder(rsp) ? self.orderSuccess(rsp) : self.cancelPayment(rsp)) : self.paymentFail(rsp);
-					/*
-					if(rsp.success) {
-						if(self.createOrder(rsp)) {
-							self.orderSuccess(rsp)
-						}
-						else {
-							self.cancelPayment(rsp)
-						}
-					}
-					else {
-						self.paymentFail(rsp)
-					}
-					*/
+					// rsp.success ? (self.createOrder(rsp) ? self.orderSuccess(rsp) : self.cancelPayment(rsp)) : self.paymentFail(rsp);
 					// 결제 성공 시
-					if(result.success) {
-						// self.createOrder(rsp) ? self.orderSuccess(rsp) : self.cancelPayment(rsp);
+					if(rsp.success) {
+						self.createOrder(rsp) ? self.orderSuccess(rsp) : self.cancelPayment(rsp);
 					}
 					else {
-						self.paymentFail(result);
+						self.paymentFail(rsp);
 					}
 				});
 			},
 			// 결제 실패 알림 (결제 실패 시)
-			paymentFail : paymentFail(paymentResult) {
+			paymentFail : function(paymentResult) {
 				console.log('결제실패ㅐㅐㅐ');
 				console.log(paymentResult);
 			},
@@ -397,7 +383,9 @@
 				$.ajax({
 					url : 'order',
 					method : 'POST',
-					data : {},
+					data : {
+						paymentResult : paymentResult
+					},
 					success : result => {
 						
 					},
@@ -413,7 +401,7 @@
 				
 			}
 			// 결제 취소 UPDATE (주문 생성 실패 시 / 디버깅용 취소내역 저장위해 오류 사유 저장)
-			cancelPayment : {
+			cancelPayment : function(paymentResult) {
 				
 			}
 		}
