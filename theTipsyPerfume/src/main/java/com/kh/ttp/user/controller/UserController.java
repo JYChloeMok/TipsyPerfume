@@ -4,7 +4,6 @@ import java.text.DecimalFormat;
 import java.text.Format;
 import java.util.Random;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,10 +21,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.ttp.productSale.receiver.model.service.ReceiverService;
-import com.kh.ttp.productSale.receiver.model.vo.ReceiverVO;
 import com.kh.ttp.user.model.service.UserService;
 import com.kh.ttp.user.model.vo.AuthVO;
 import com.kh.ttp.user.model.vo.User;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,8 +35,8 @@ public class UserController {
 	private final UserService userService;
 	
 	private final BCryptPasswordEncoder bcrypt;
- 
-	private final JavaMailSender sender;
+
+	//private final JavaMailSender sender;
 	
 	private final ReceiverService receiverService;
 	
