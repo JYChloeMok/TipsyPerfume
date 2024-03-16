@@ -232,7 +232,7 @@
 		
 		<!-- 6. 이메일 관련 -->
 		<!-- spring-context-support, java mail-api, javax.mail -->
-		<dependency>
+		<!-- <dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-context-support</artifactId>
 		    <version>${org.springframework-version}</version>
@@ -246,7 +246,7 @@
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
 			<version>1.6.2</version>
-		</dependency>
+		</dependency> -->
 		
 		<!-- jstl --> 
 		<dependency> 
