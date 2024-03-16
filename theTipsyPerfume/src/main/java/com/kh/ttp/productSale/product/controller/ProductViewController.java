@@ -17,15 +17,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductViewController {
 
-	
-	private ProductSaleUtil productUtil;
-	
+	// 생성자 주입
+	private final ProductSaleUtil productUtil;
 	private final ProductService productService;
 	
 	
 	/**
-	 * 상품 메인 조회 기능   : 상품 분류, 정렬 식별자에 따라 상품을 조회한 후</br>
-	 * 정렬 기준 별 조회결과ArrayList들을 HashMap에 담아 반환
+	 * 상품 메인 조회 기능<br>
+	 * 상품 분류(주류, 향수)와 정렬 식별자(여러 정렬 기준)에 따라 상품을 조회함<br>
+	 * 이후 조회결과를 정렬 기준별로 ArrayList에 담은 후 HashMap에 담아 반환
 	 * @param mv	  : ModelAndView객체
 	 * @param pdtCteg : 상품 카테고리 구분용 식별자 ("A" 주류 / "F" 향수)
 	 * @param sort    : 정렬 기준 ("New" 최신순 / "BestSeller" 베스트셀러순 / "Popular" 위시리스트순
@@ -35,11 +35,11 @@ public class ProductViewController {
 	public ModelAndView productMain(ModelAndView mv,
 									String pdtCteg,
 									@RequestParam(value="sort", defaultValue="New") String sort) {
-		
+		// 주류식별자 A거나 향수식별자 F일 때
 		if("A".equals(pdtCteg) || "F".equals(pdtCteg)) {
 			mv.addObject("sort", sort)
 			  .addObject("pdtCteg", pdtCteg)
-			  .addObject("pMap", productService.productMain(pdtCteg))
+			  .addObject("pMap", productService.productMain(pdtCteg)) // 조회 결과
 			  .setViewName("productSale/productMain");
 		} else {
 			productUtil.makeErrorMsg(mv, "상품 메인화면 이동 실패...");
@@ -49,7 +49,8 @@ public class ProductViewController {
 	
 
 	/**
-	 * 향수 리스트 조회 기능        : 조회 요청하는 페이지의 향수 상품을 조회해 ArrayList를 반환 
+	 * 향수 리스트 조회 기능<br>
+	 * 조회 요청하는 페이지의 향수 상품을 조회해 ArrayList를 반환 
 	 * @param mv    	  : ModelAndView객체
 	 * @param sort        : 상품 정렬 기준
 	 * @param currentPage : 현재 페이지
@@ -57,8 +58,8 @@ public class ProductViewController {
 	 */
 	@GetMapping("perfumeList.pr")
 	public ModelAndView perfumeList(ModelAndView mv,
-									   @RequestParam(value="sort", defaultValue="New") String sort,
-									   @RequestParam(value="currentPage", defaultValue="1") int currentPage) {
+									@RequestParam(value="sort", defaultValue="New") String sort,
+									@RequestParam(value="currentPage", defaultValue="1") int currentPage) {
 		
 		int listCount = productService.productCount("F");
 		PageInfo pi = Pagination.getPageInfo(listCount, currentPage, 12, 10);
@@ -72,7 +73,8 @@ public class ProductViewController {
 	
 	
 	/**
-	 * 주류 리스트 조회 기능        : 조회 요청하는 페이지의 주류 상품을 조회해 ArrayList를 반환</br>
+	 * 주류 리스트 조회 기능<br>
+	 * 조회 요청하는 페이지의 주류 상품을 조회해 ArrayList를 반환<br>
 	 * 로그인한 성인유저인지 검증하는 인터셉터(AdultValidationInterceptor)를 통과해야 이용 가능
 	 * @param mv    	  : ModelAndView객체
 	 * @param sort        : 상품 정렬 기준
@@ -114,7 +116,7 @@ public class ProductViewController {
 	
 	
 	/**
-	 * 주류 디테일 조회   : 특정 주류상품 1개의 정보를 조회하는 메소드</br>
+	 * 주류 디테일 조회   : 특정 주류상품 1개의 정보를 조회하는 메소드<br>
 	 * 로그인한 성인유저인지 검증하는 인터셉터(AdultValidationInterceptor)를 통과해야 이용 가능
 	 * @param mv	: ModelAndView객체
 	 * @param pdtNo : 상품의 번호(DB의 Primary Key)

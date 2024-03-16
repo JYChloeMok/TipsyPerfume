@@ -50,6 +50,7 @@ public interface ProductService {
 	ProductSelectVO alcoholDetail(int pdtNo);
 	
 	
+	
 	/***************** ajax 요청 *****************/
 	
 	/**

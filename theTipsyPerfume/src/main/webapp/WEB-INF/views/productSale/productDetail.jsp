@@ -36,7 +36,7 @@
 						<img src="${pdtDetail.pdtImgSrc}">
 					</div>
 					
-					<!-- 리뷰 미리보기 영역 ajax -->
+					<!-- 리뷰 미리보기 영역 ajax로 생성 -->
 					<div id="pdtDetailReviewArea">
 					</div>
 
@@ -123,15 +123,12 @@
 	
 	
 	<script>
-		// 주문하기는 ㅈ아바구니랑 똑같은데 카카오결제 실패하면 장바구니에서 사라짐
-		// 장바구니는 실패해도 유지
-		
-
-		// ajax요청으로 리뷰 조회 후
-		/*
+		// ajax요청으로 리뷰 조회 후 리뷰 보여줄 영역 생성
 		$(() => {
 			$.ajax({
 				//url : 'ajaxSelectRecentTwoReview.pr/' + $('#pdtNoDetail').val(),
+				// rowNum 최대 10개
+				url : 'product/reviews/' + $('#pdtNoDetail').val() + '/row-num' + '/10',
 				type : 'GET',
 				success : result => {
 					let reviewValue = '';

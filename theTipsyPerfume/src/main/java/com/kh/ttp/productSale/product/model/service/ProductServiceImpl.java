@@ -22,7 +22,6 @@ public class ProductServiceImpl implements ProductService {
 	
 	
 	private final ProductDao productDao;
-	
 	private final SqlSessionTemplate sqlSession;
 	
 	
