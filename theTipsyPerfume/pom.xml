@@ -232,6 +232,7 @@
 		
 		<!-- 6. 이메일 관련 -->
 		<!-- spring-context-support, java mail-api, javax.mail -->
+
 		<!-- <dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-context-support</artifactId>
