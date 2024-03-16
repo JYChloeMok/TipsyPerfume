@@ -8,52 +8,40 @@
 <title>The Tipsy Perfume</title>
 <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
 <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+	<!-- 슬라이드 스와이퍼 -->
+	<link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+	<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
 
 	<!-- 술 펀딩용 -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-
-
-<style>
-#alcohol{
+	<style>
+		#alcohol{
 			border-radius: 50%;
 			margin:10px;
 		}
-		
-.category1{
+	
+		.category1{
 			border-radius: 50%;
-			
-}
-
-
-.3_1_1{
-	margin:30px;
-}
-
-
-
-
-
-
-
-
-
-
-
-</style>
-
-
+					
+		}
+		
+		.3_1_1{
+			margin:30px;
+		}
+	</style>
+	
 </head>
-<body>
 
-	
-	
+
+<body>
+	<!-- 액션태그 이용해 헤더 Include -->
 	<jsp:include page="common/header.jsp" />
 	
 	<div style="width: 1200px; height: 1600px; margin: auto; text-align: center;">
-		
 		
 		<div id="content_1">
 			<!-- Slider main container -->
@@ -110,48 +98,31 @@
 					포르투갈 북서부에 자리한 빈티지스러운 도시 포르토(Porto)에서 온,<br> 세상 달콤하고 높은 알콜 도수를 가진 두 얼굴의 와인, <br>포르투, 포트, 포르토 와인입니다.
 					</h5>
 				</div>
-			
-				
-				
-				
-				
-				
-				
-				
-				
-				
-			
-		
 		</div>
-		
-		
-		
-		
-		
-		
-	
-	​
-		
 	</div><!-- 제일 겉 div -->
+	
+	
 	<script>
-			// 슬라이더 동작 정의
-			const swiper = new Swiper('.swiper', {
-				autoplay : {
-					delay : 3000 // 3초마다 이미지 변경
-				},
-				loop : true, //반복 재생 여부
-				slidesPerView : 1, // 이전, 이후 사진 미리보기 갯수
-				pagination: { // 페이징 버튼 클릭 시 이미지 이동 가능
-					el: '.swiper-pagination',
-					clickable: true
-				},
-				navigation: { // 화살표 버튼 클릭 시 이미지 이동 가능
-					prevEl: '.swiper-button-prev',
-					nextEl: '.swiper-button-next'
-				}
-			}); 
-		</script>
-		<!--  <script type="text/javascript" src="resources/scripts/index/indexScript.js"></script>-->
+		// 슬라이더 동작 정의
+		const swiper = new Swiper('.swiper', {
+			autoplay : {
+				delay : 3000 // 3초마다 이미지 변경
+			},
+			loop : true, //반복 재생 여부
+			slidesPerView : 1, // 이전, 이후 사진 미리보기 갯수
+			pagination: { // 페이징 버튼 클릭 시 이미지 이동 가능
+				el: '.swiper-pagination',
+				clickable: true
+			},
+			navigation: { // 화살표 버튼 클릭 시 이미지 이동 가능
+				prevEl: '.swiper-button-prev',
+				nextEl: '.swiper-button-next'
+			}
+		}); 
+	</script>
+	
+	<!--  <script type="text/javascript" src="resources/scripts/index/indexScript.js"></script>-->
+	<!-- 액션태그로 푸터 Include -->
 	<jsp:include page="common/footer.jsp" />
 	
 
