@@ -1,15 +1,8 @@
 package com.kh.ttp.user.controller;
 
-import java.text.DecimalFormat;
-import java.text.Format;
-import java.util.Random;
-
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +17,6 @@ import com.kh.ttp.productSale.receiver.model.service.ReceiverService;
 import com.kh.ttp.user.model.service.UserService;
 import com.kh.ttp.user.model.vo.AuthVO;
 import com.kh.ttp.user.model.vo.User;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -171,7 +163,7 @@ public class UserController {
 		}
 		
 		
-		
+		/*
 		//이메일 발송
 		@PostMapping(value="mail", produces="text/html; charset=UTF-8")
 		@ResponseBody
@@ -197,7 +189,8 @@ public class UserController {
 					
 					return Integer.toString(userService.sendMail(authVo));
 		}
-		
+		*/
+		// 잠시 OFF
 		
 		
 		

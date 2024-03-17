@@ -44,10 +44,18 @@
 					<div id="pdtDetailReviewEnd" class="row detail-bg">
 						<div class="col-3 pdt-dt-align-center">조회수 ${pdtDetail.pdtCount}</div>
 						<div class="col-4 pdt-dt-align-center">평점 ★${pdtDetail.reviewAvg}/5</div>
-						<div class="col-5 pdt-dt-align-center">리뷰 더보기 &gt;&gt;</div>
+						<div class="col-5 pdt-dt-align-center">
+						<button onclick="return confirm('이동합니까?')">리뷰 더보기 &gt;&gt;</button>
+						</div>
 					</div>
 				</div>
-		
+				
+				
+				<script>
+					function showMoreReview() {
+						confirm("리뷰 게시판으로 이동하시겠습니까?")
+					}
+				</script>
 				<div id="pdtDetailRight" class="container pdt-detail-container">
 				
 					<div class="row pdt-section-tl pdt-dtl-mg-top-30">
@@ -103,14 +111,6 @@
 						</div><!--  -->
 						
 					</div>
-					
-					<script>
-					
-					
-
-					
-					
-					</script>
 		
 				</div>
 			</c:when>
@@ -131,10 +131,11 @@
 				url : 'reviews/' + $('#pdtNoDetail').val() + '/row-num' + '/2',
 				type : 'GET',
 				success : result => {
-					let reviewValue = '';
+					console.log(result)
+ 					let reviewValue = '';
 					console.log('리뷰 통신성공');
 					console.log(typeof(result));
-					
+					// 리뷰 미리보기 영역 생성용 문자열
 					for(let i in result) {
 						reviewValue += '<div class="row pdt-dt-rv-row pdt-dtl-mg-top-30">'
 									 + '<div class="col-3">'
@@ -145,22 +146,16 @@
 									 + '</div>'
 									 + '</div>'
 					}
+					// 리뷰 미리보기 영역 생성
 					$('#pdtDetailReviewArea').html(reviewValue);
-					
-					
-					//for(let i in result){
-					//	$('#reviewImg' + i).attr('src', result[i].thumbnail);
-					//	$('#reviewContent' + i).html(result[i].reviewContent);
-					//}
 				},
 				error : () => {
 					console.log('리뷰 조회 에러발생')
 				}
 			})
 		});
-		*/
 		// 옵션선택, 수량선택 변화가 일어날 시
-		// 1. 수량선택 요소 포워딩 당시 stock개수로 제한 (실시간 재고 반영은 주문결제 시 & stock만 조회하는 ajax요청 인터벌 15분정도 줘도 좋을듯)
+		// 1. 수량선택 요소 포워딩 당시 stock개수로 제한 (실시간 재고 반영은 주문결제 시 & stock만 조회하는 ajax요청 인터벌 15분정도 줘도 좋을듯 => 필요할까)
 		// 2. 옵션별 가격 * 선택한 개수 = 상품금액 계산 업데이트 
 		$('#pdtDetailQuanInput, #pdtDetailSelectInput').on('change', () => {
 			console.log('체인지~');

@@ -195,16 +195,26 @@ SELECT
 		  FROM
 		  	   (
 			   SELECT
-			   		  REVIEW_NO,
-			   		  REVIEW_SCORE,
-			   		  REVIEW_CONTENT,
+			   		  RV.REVIEW_NO,
+			   		  RV.REVIEW_SCORE,
+			   		  RV.REVIEW_CONTENT,
 			   		  NVL2(REVIEW_FILE_UPLOAD, REVIEW_FILE_PATH || '/' || REVIEW_FILE_UPLOAD, 'NOIMAGE') "THUMBNAIL"
 				 FROM
-			   		  TB_REVIEW
+			   		  TB_REVIEW RV
+                 JOIN
+                      TB_PRODUCT_OPTION OPT
+                   ON
+                   	  RV.PDT_OPTION_NO = OPT.PDT_OPTION_NO
+                 JOIN
+                      TB_PRODUCT PDT
+                   ON
+                   	  OPT.PDT_NO = PDT.PDT_NO
 			   	 JOIN
-			   		  TB_REVIEW_FILE USING(REVIEW_NO)
+			   		  TB_REVIEW_FILE FL
+			   	   ON
+			   	   	  RV.REVIEW_NO = FL.REVIEW_NO
 			    WHERE
-			   		  PDT_NO = #{pdtNo}
+			   		  PDT.PDT_NO = #{pdtNo}
 			   	  AND
 			   		  REVIEW_FILE_INDEX = 0
 			   	  AND
