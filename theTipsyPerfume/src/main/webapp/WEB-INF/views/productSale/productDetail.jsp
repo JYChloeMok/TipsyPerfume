@@ -44,16 +44,16 @@
 					<div id="pdtDetailReviewEnd" class="row detail-bg">
 						<div class="col-3 pdt-dt-align-center">조회수 ${pdtDetail.pdtCount}</div>
 						<div class="col-4 pdt-dt-align-center">평점 ★${pdtDetail.reviewAvg}/5</div>
-						<div class="col-5 pdt-dt-align-center">
-						<button onclick="return confirm('이동합니까?')">리뷰 더보기 &gt;&gt;</button>
-						</div>
+						<button class="col-5 pdt-dt-align-center" onclick="showMoreReview()">리뷰 더보기 &gt;&gt;</button>
 					</div>
 				</div>
 				
 				
 				<script>
 					function showMoreReview() {
-						confirm("리뷰 게시판으로 이동하시겠습니까?")
+						if(confirm("리뷰 게시판으로 이동하시겠습니까?")) {
+							location.href="review";
+						}
 					}
 				</script>
 				<div id="pdtDetailRight" class="container pdt-detail-container">
@@ -182,15 +182,6 @@
 		});
 
 	</script>
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	<!-- 푸터 -->

@@ -5,6 +5,7 @@ footer{
 	width: 100%;
     background-color: rgb(85, 85, 85);
     color: rgb(255, 255, 255);
+    margin-top: 50px;
 }
 footer div {
     /*border: 1px solid black;*/

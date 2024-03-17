@@ -49,9 +49,10 @@
 				<!-- Additional required wrapper -->
 				<div class="swiper-wrapper">
 					<!-- Slides -->
-					<div class="swiper-slide"><img src="resources/image/common/main.jpg" width="1200" height="600" id="main"></div>
-					<div class="swiper-slide"><img src="resources/image/common/main1.jpg" width="1200" height="600" id="main"></div>
-					<div class="swiper-slide"><img src="resources/image/common/main2.jpg" width="1200" height="600" id="main"></div>
+					<!-- <div class="swiper-slide"><img src="경로" width="1200" height="600" id="main" @@@@@뭘까 일단 주석></div> -->
+					<div class="swiper-slide"><img src="resources/image/common/main.jpg" width="1200" height="600"></div>
+					<div class="swiper-slide"><img src="resources/image/common/main1.jpg" width="1200" height="600"></div>
+					<div class="swiper-slide"><img src="resources/image/common/main2.jpg" width="1200" height="600"></div>
 				</div>
 			
 				<!-- If we need pagination -->
