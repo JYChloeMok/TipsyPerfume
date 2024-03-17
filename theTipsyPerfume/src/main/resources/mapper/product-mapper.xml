@@ -152,7 +152,7 @@
   		  	   		  <if test="sort eq 'BestSeller'">
   		  	   		  ,
   		  	   		  NVL(SUM(ORDER_QUANTITY), 0) "TOTAL_SALES",
-      				  TRUNC(AVG(NVL(PAY_TOTAL, 0) + NVL(PAY_ADJUST, 0))) "SALES_AVG"
+      				  TRUNC(AVG(NVL(PAID_AMOUNT, 0))) "SALES_AVG"
   		  	   		  </if>
   		  			  <if test="sort eq 'Popular'">
   		  	   		  ,
@@ -171,10 +171,10 @@
 				 	  TB_ORDER_PRODUCT USING(PDT_OPTION_NO)
 				 LEFT
 				 JOIN
-                 	  TB_ORDER_DETAIL USING(ORDER_DETAIL_NO)
+                 	  TB_ORDER USING(ORDER_NO)
 				 LEFT
 				 JOIN
-                 	  TB_PAY USING(PAY_NO)
+                 	  TB_PAYMENT USING(TB_PAYMENT_NO)
 				 </if>
 				 <if test="sort eq 'Popular'">
 				 LEFT
