@@ -73,33 +73,31 @@ public class AjaxReviewController {
 	@GetMapping("reviews/{pdtNo}/row-num/{rowNum}")
 	public ResponseEntity ajaxSelectRecentReviewTop(@PathVariable(name="pdtNo") int pdtNo,
 													@PathVariable(name="rowNum") int rowNum) {
+		// 잘못된 요청 리턴 (DB접촉비용 발생하지 않도록)
 		if(pdtNo < 1) {
 			return productUtil.makeAjaxErrorResult("pdtNo는 1 이상이어야 합니다");
 		}
 		if(10 < rowNum || rowNum < 1) {
 			return productUtil.makeAjaxErrorResult("rowNum은 1이상 10이하의 숫자만 설정 가능합니다");
 		}
+		
+		// pdtNo(상품번호), rowNum(탑N개 추출용 로우넘버)
 		HashMap<String, Integer> pMap = new HashMap();
 		pMap.put("pdtNo", pdtNo);
 		pMap.put("rowNum", rowNum);
-		return ResponseEntity.<List<ReviewVO>>ok() // 200ok코드와 함께 빌더객체 반환 (빌더객체 제네릭으로 ResponseEntity타입 지정 가능)
+		
+		// 최신순 리뷰 rowNum개 리턴
+		return ResponseEntity.<List<ReviewVO>>ok()
 							 .headers(productUtil.makeHeader("application", "json", "UTF-8"))
 							 .body(reviewService.selectRecentReviewWithRownum(pMap));
 	}
-	// 빌더사용 : 코드 가독성, 잘못된 코드번호 전달로 인한 런타임오류 방지, ResponseBody보다 많은 표현 가능하며 요구사항 변경에도 더 유연함
 	/*
+	// 빌더사용 : 코드 가독성, 잘못된 코드번호 전달로 인한 런타임오류 방지, ResponseBody보다 많은 표현 가능하며 요구사항 변경에도 더 유연함
 	return ResponseEntity.<List<ReviewVO>>ok() // 200ok코드와 함께 빌더객체 반환 (빌더객체 제네릭으로 ResponseEntity타입 지정 가능)
 						 .headers(productUtil.makeHeader("application", "json", "UTF-8"))
 						 .body(reviewService.selectRecentReviewWithRownum(pMap));
 	*/
-	/*
-		return new ResponseEntity<List<ReviewVO>>(reviewService.selectRecentReviewWithRownum(pMap),
-												  productUtil.makeHeader("application", "json", "UTF-8"),
-												  HttpStatus.OK);
-	 */
-	/*
-	 * return ResponseEntity.<String>badRequest()
-	 * .headers(productUtil.makeHeader("text", "html", "UTF-8"))
-	 * .body("ERROR, rowNum은 10까지 설정 가능합니다");
-	 */
+	
+	
+	
 }
