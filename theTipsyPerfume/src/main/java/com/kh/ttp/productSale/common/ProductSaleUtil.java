@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,9 +29,12 @@ public final class ProductSaleUtil {
 	
 	
 	/**
-	 * 에러 발생 시 사용되는 ModelAndView객체를 설정하는 메소드
+	 * 에러 발생 시 사용되는 ModelAndView객체를 반환하는 메소드
+	 * @param mv : 에러메세지와 errorPage경로를 담은 ModelAndView객체
 	 * @param errorMsg : 에러 시 출력할 메세지
-	 * @return ModelAndView : 에러 메세지(Model)와 에러 페이지의 경로(View) 정보를 담음
+	 * @return 만들어진 ModelAndView객체 반환<br>
+	 * 에러메세지의 키값은 "errorMsg"<br>
+	 * view는 에러 시 보여줄 페이지 경로로 미리 지정되어있음
 	 */
 	public ModelAndView makeErrorMsg(ModelAndView mv, String errorMsg) {
 		mv.addObject("errorMsg", errorMsg)
@@ -39,10 +43,18 @@ public final class ProductSaleUtil {
 	}
 	
 	
+	/**
+	 * 에러 발생 시 사용될 Model객체를 설정하고 에러페이지 경로 문자열을 반환하는 메소드
+	 * @param m : 에러메세지를 담은 Model객체
+	 * @param errorMsg : 에러 시 출력할 메세지
+	 * @return 에러 시 보여줄 페이지 경로 String을 반환<br>
+	 * Model에 설정해준 에러메세지의 키값은 "errorMsg"<br>
+	 */
 	public String makeErrorMsg(Model m, String errorMsg) {
 		m.addAttribute("errorMsg", errorMsg);
 		return "common/errorPage";
 	}
+	//????이거뭐징
 	
 	
 	/***********************************/
@@ -58,13 +70,46 @@ public final class ProductSaleUtil {
 		header.setContentType(new MediaType(type, subtype, Charset.forName(encoding)));
 		return header;
 	}
+	
+	
 	/**********************************OK말고 다른거 해야하는데(코드 종류가 많음) */
+	/**
+	 * @return : badRequest 400코드, "ERROR"문자열과 함께 ResponseEntity객체 반환 
+	 */
 	public ResponseEntity<String> makeAjaxErrorResult() {
-		return new ResponseEntity<String>("ERROR", makeHeader("text", "html", "UTF-8"), HttpStatus.OK);
+		return ResponseEntity.badRequest() // HTTP 상태 코드가 BadRequest(400)인 ResponseEntity / 제네릭 Object상태, 리턴 시 String
+							 .headers(makeHeader("text", "html", "UTF-8"))
+							 .body("ERROR");
+		//return new ResponseEntity<String>("ERROR", makeHeader("text", "html", "UTF-8"), HttpStatus.OK);
 	}
 	
+	
+	/**
+	 * @param errorMsg : 상세 에러메세지
+	 * @return : badRequest 400코드, 상세 에러메세지 문자열과 함께 ResponseEntity객체 반환<br>
+	 * 상세 에러 메세지는 ("ERROR," + errorMsg)형태로 구성됨
+	 */
 	public ResponseEntity<String> makeAjaxErrorResult(String errorMsg) {
-		return new ResponseEntity<String>(errorMsg, makeHeader("text", "html", "UTF-8"), HttpStatus.OK);
+		return ResponseEntity.badRequest()
+				 			 .headers(makeHeader("text", "html", "UTF-8"))
+				 			 .body("ERROR," + errorMsg);
+		//return new ResponseEntity<String>(errorMsg, makeHeader("text", "html", "UTF-8"), HttpStatus.OK);
+	}
+	
+	
+	/**
+	 * @param status : HttpStatus코드 (ex. HttpStatus.BAD_REQUEST 등)
+	 * @param header : HttpHeaders, ProductUtil의 makeHeader() 메소드와 함께 사용
+	 * @param resultObj : 반환할 값<br>
+	 * 사용예)<br>
+	 * makeAjaxResult(HttpStatus.BAD_REQUEST, makeHeader("text", "html", "UTF-8"), returnValue); 
+	 * @return
+	 * ResponseEntity객체 (제네릭 미설정)
+	 */
+	public ResponseEntity makeAjaxResult(HttpStatus status, HttpHeaders header, Object resultObj) {
+		return ResponseEntity.status(status) // 파라미터로 받은 HttpStatus로 빌더객체 반환
+				 			 .headers(header)
+				 			 .body(resultObj);
 	}
 	
 

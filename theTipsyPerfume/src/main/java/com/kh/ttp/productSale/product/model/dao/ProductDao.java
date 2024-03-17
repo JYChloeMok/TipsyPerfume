@@ -27,13 +27,6 @@ public class ProductDao {
 	public int productCount(SqlSessionTemplate sqlSession, String pdtCteg) {
 		return sqlSession.selectOne("productMapper.productCount", pdtCteg);
 	}
-
-
-	
-
-	
-
-
 	
 	
 	/**
@@ -77,30 +70,13 @@ public class ProductDao {
 	public ProductSelectVO alcoholPdtDetail(SqlSessionTemplate sqlSession, Map<String, Object> pMap) {
 		return sqlSession.selectOne("productMapper.productDetail", pMap);
 	}
-	
-	
 
 	
-
-
-
-
-
-
-
-
-
-
-
-
 	public List<ProductOptionVO> selectPdtOptionOne(SqlSessionTemplate sqlSession, int pdtNo) {
 		return (ArrayList)sqlSession.selectList("productMapper.selectPdtOptionOne", pdtNo);
 	}
 	
-	// 최근 N개 리뷰 조회 (pdtNo, Rownum)
-	public ArrayList<ReviewVO> selectRecentReviewWithRownum(SqlSessionTemplate sqlSession, HashMap<String, Integer> pMap) {
-		return (ArrayList)sqlSession.selectList("productMapper.selectRecentReviewWithRownum", pMap);
-	}
+
 
 
 

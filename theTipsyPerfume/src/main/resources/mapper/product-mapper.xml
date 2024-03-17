@@ -286,42 +286,6 @@
             BY
                TO_NUMBER(REGEXP_REPLACE(PDT_OPTION_FIRST, '[^0-9]'))
 	</select>
-	
-	
-	<!-- 상품에 달린 리뷰 조회 -->
-	<select id="selectRecentReviewWithRownum" parameterType="map" resultType="review">
-		SELECT
-			   REVIEW_NO reviewNo,
-			   REVIEW_SCORE reviewScore,
-			   REVIEW_CONTENT reviewContent,
-			   THUMBNAIL thumbnail
-		  FROM
-		  	   (
-			   SELECT
-			   		  REVIEW_NO,
-			   		  REVIEW_SCORE,
-			   		  REVIEW_CONTENT,
-			   		  NVL2(REVIEW_FILE_UPLOAD, REVIEW_FILE_PATH || '/' || REVIEW_FILE_UPLOAD, 'NOIMAGE') "THUMBNAIL"
-				 FROM
-			   		  TB_REVIEW
-			   	 JOIN
-			   		  TB_REVIEW_FILE USING(REVIEW_NO)
-			    WHERE
-			   		  PDT_NO = #{pdtNo}
-			   	  AND
-			   		  REVIEW_FILE_INDEX = 0
-			   	  AND
-			   		  REVIEW_STATE = 'Y'
-			   	ORDER
-			   	   BY
-			   		  REVIEW_NO DESC
-		  	   )
-		 WHERE
-		 	   ROWNUM <![CDATA[ <= ]]> #{rowNum}
-	</select>
-	
-	
-
 
 	
 	<!-- 위시리스트 INSERT구문 -->

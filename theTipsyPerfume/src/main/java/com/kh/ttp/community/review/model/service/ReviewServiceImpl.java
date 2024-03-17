@@ -1,6 +1,7 @@
 package com.kh.ttp.community.review.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -82,5 +83,11 @@ public class ReviewServiceImpl implements ReviewService {
 		int offset = (pi.getCurrentPage()-1)*pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
 		return reviewDao.selectReviewFunding(sqlSession,rowBounds,pdtNo);
+	}
+	
+	
+	@Override
+	public ArrayList<ReviewVO> selectRecentReviewWithRownum(HashMap<String, Integer> pMap) {
+		return reviewDao.selectRecentReviewWithRownum(sqlSession, pMap);
 	}
 }

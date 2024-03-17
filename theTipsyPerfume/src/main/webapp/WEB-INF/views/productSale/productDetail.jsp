@@ -127,8 +127,8 @@
 		$(() => {
 			$.ajax({
 				//url : 'ajaxSelectRecentTwoReview.pr/' + $('#pdtNoDetail').val(),
-				// rowNum 최대 10개
-				url : 'product/reviews/' + $('#pdtNoDetail').val() + '/row-num' + '/10',
+				// 최신 작성순 탑 2개 리뷰 조회 (rowNum은 최대 10까지 가능)
+				url : 'reviews/' + $('#pdtNoDetail').val() + '/row-num' + '/2',
 				type : 'GET',
 				success : result => {
 					let reviewValue = '';

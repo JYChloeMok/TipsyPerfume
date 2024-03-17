@@ -1,6 +1,7 @@
 package com.kh.ttp.community.review.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -59,6 +60,16 @@ public class ReviewDAO {
 
 	public ArrayList<ReviewVO> selectReviewFunding(SqlSessionTemplate sqlSession, RowBounds rowBounds, int pdtNo) {
 		return (ArrayList)sqlSession.selectList("reviewMapper.selectReviewFunding",pdtNo,rowBounds);
+	}
+	
+	
+	/**
+	 * 상품 번호(pdtNo), rowNum(rowNum)을 이용해<br>
+	 * pdtNo번 상품의 최신 작성순 리뷰 탑 rowNum개를 조회하는 메소드<br>
+	 * rowNum은 최대 10까지 가능
+	 */
+	public ArrayList<ReviewVO> selectRecentReviewWithRownum(SqlSessionTemplate sqlSession, HashMap<String, Integer> pMap) {
+		return (ArrayList)sqlSession.selectList("reviewMapper.selectRecentReviewWithRownum", pMap);
 	}
 
 

@@ -61,11 +61,5 @@ public interface ProductService {
 	 */
 	List<ProductOptionVO> ajaxProductOption(int pdtNo);
 	
-	/**
-	 * 상품 번호, 숫자N을 받아 최근순 리뷰 Top N개를 조회하는 메소드
-	 * @param pMap : pdtNo, rowNum
-	 * @return
-	 */
-	ArrayList<ReviewVO> selectRecentReviewWithRownum(HashMap<String, Integer> pMap);
 
 }

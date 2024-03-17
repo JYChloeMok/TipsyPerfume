@@ -43,24 +43,7 @@ public class AjaxProductController {
 	}
 	
 	
-	/**
-	 * 상품 번호, rowNum(여기서는 2)로 최신순 리뷰 2개를 조회하는 메소드
-	 * @param pdtNo : 상품 번호
-	 * @return
-	 */
-	@GetMapping("reviews/{pdtNo}/row-num/{rowNum}")
-	public ResponseEntity ajaxSelectRecentTwoReview(@PathVariable(name="pdtNo") int pdtNo,
-													@PathVariable(name="rowNum") int rowNum) {
-		if(pdtNo > 0 && rowNum < 11) {
-			HashMap<String, Integer> pMap = new HashMap();
-			pMap.put("pdtNo", pdtNo);
-			pMap.put("rowNum", rowNum);
-			return new ResponseEntity<List<ReviewVO>>(productService.selectRecentReviewWithRownum(pMap),
-													  productUtil.makeHeader("application", "json", "UTF-8"),
-													  HttpStatus.OK);
-		}
-		return productUtil.makeAjaxErrorResult();
-	}
+
 	
 	
 

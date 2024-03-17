@@ -108,15 +108,5 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 
-	@Override
-	public ArrayList<ReviewVO> selectRecentReviewWithRownum(HashMap<String, Integer> pMap) {
-		return productDao.selectRecentReviewWithRownum(sqlSession, pMap);
-	}
-	
-	
-	
-	
-	
-
 
 }
