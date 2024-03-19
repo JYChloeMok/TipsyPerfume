@@ -174,7 +174,7 @@
                  	  TB_ORDER USING(ORDER_NO)
 				 LEFT
 				 JOIN
-                 	  TB_PAYMENT USING(TB_PAYMENT_NO)
+                 	  TB_PAYMENT USING(PAYMENT_NO)
 				 </if>
 				 <if test="sort eq 'Popular'">
 				 LEFT
@@ -183,7 +183,7 @@
 				 </if>
 				WHERE
 				<if test="sort eq 'BestSeller'">
-				 	  PAY_STATUS = 'Y'
+				 	  PAY_STATUS = 'paid'
 				   OR
       				  PAY_STATUS IS NULL
                	  AND

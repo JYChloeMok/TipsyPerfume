@@ -41,7 +41,7 @@
 		<typeAlias type="com.kh.ttp.productSale.billing.order.model.vo.OrderDetailVO" alias="orderDetail"/>
 		<typeAlias type="com.kh.ttp.productSale.billing.order.model.vo.OrderProductVO" alias="orderProduct"/>
 		
-		<typeAlias type="com.kh.ttp.productSale.billing.pay.model.vo.PayVO" alias="pay"/>
+		<typeAlias type="com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO" alias="payment"/>
 		<!-- <typeAlias type="com.kh.ttp.pay.model.vo.prepay.PayKakaoReadyVO" alias="payKakaoReady"/> -->
 		<!-- <typeAlias type="com.kh.ttp.pay.model.vo.prepay.PayKakaoVO" alias="payKakao" /> -->
 	</typeAliases>

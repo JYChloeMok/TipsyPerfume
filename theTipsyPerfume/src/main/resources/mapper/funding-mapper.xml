@@ -456,7 +456,7 @@ VALUES(
 		WHERE
 			PDT_NO = #{pdtNo}
 	</update>
-	<insert id="confirmFundingPV" parameterType="pay">
+	<insert id="confirmFundingPV" parameterType="payment">
 		INSERT
 			INTO
 		   TB_PAY
