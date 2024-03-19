@@ -391,19 +391,19 @@
 						console.log('주문서 생성 성공');
 						console.log(result);
 					},
-					error => {
+					error : () => {
 						console.log('주문서 생성 실패');
 					}
 				});
 				// true false 리턴
 			},
 			// 주문 성공 알림 (주문 생성 성공 시)
-			orderSuccess : orderSuccess(paymentResult) {
-				
-			}
+			orderSuccess : function(paymentResult) {
+				console.log('주문성공알림');
+			},
 			// 결제 취소 UPDATE (주문 생성 실패 시 / 디버깅용 취소내역 저장위해 오류 사유 저장)
 			cancelPayment : function(paymentResult) {
-				
+				console.log('결제취소알림');
 			}
 		}
     </script>

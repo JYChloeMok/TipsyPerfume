@@ -134,7 +134,6 @@ const cartStrUtilObj = {
 	// 최종 주문 금액용 문자열 (상품금액 + 배송비)
 	getOrderAmountStr : function() {
 		let orderAmount = (cartItemObj.getCartAmount() + cartItemObj.getShippingFee());
-		console.log(cartItemObj.getShippingFee())
 		let str = '<input id="orderAmount" type="hidden" value="'
 				+ orderAmount +'">'
 				+ '= 총 '

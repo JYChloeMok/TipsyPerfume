@@ -7,8 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AjaxCartController {
 
-	
+
 	private final ProductSaleUtil productUtil;
 	
 	private final CartService cartService;
@@ -55,8 +57,9 @@ public class AjaxCartController {
 	}
 	
 	// 카트 수량 업데이트 (TB_CART에서 변경 가능한건 수량밖에 없음)
-	@PutMapping("quantity/{cartNo}")
-	public ResponseEntity<String> updateCartAjax(CartVO cart, HttpSession session) {
+	@PutMapping("{cartNo}/quantity") // 식별자 URL, 데이터는 본문
+	public ResponseEntity<String> updateCartAjax(@PathVariable int cartNo, @RequestBody CartVO cart, HttpSession session) {
+		cart.setCartNo(cartNo);
 		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
 		String result = (cartService.updateCartAjax(cart) != 0) ? "success" : "fail";
 		HttpHeaders header = productUtil.makeHeader("text", "html", "UTF-8");

@@ -4,6 +4,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,10 +14,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.ttp.productSale.billing.order.controller.AjaxOrderController;
+
 @Component
 public final class ProductSaleUtil {
 
 	
+	public Logger log = LoggerFactory.getLogger(AjaxOrderController.class);
+
+
 	/**
 	 * 매개변수로 들어온 pdtCteg(상품 카테고리)에 대한 값 체크
 	 * 값에대한 null체크 먼저 수행 / "F"(향수) 혹은 "A"(주류)가 맞는지 체크함 

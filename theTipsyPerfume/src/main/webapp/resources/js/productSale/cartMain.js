@@ -27,6 +27,7 @@ $(() => {
 /* 시작 (ajax 요청부)*************************************************************** */
 // 카트 수량 변경(UPDATE) ajax 요청
 $('.cart-quantity').on('change', e => {
+
 	// 수량 인풋의 부모 div (요소 선택용)
 	let $tempParentDiv = $(e.target).closest('.cart-content-block');
 	// 카트 번호
@@ -35,20 +36,23 @@ $('.cart-quantity').on('change', e => {
 	let $itemPrice = $tempParentDiv.find('.cart-pdt-option-price').val();
 	// 수량
 	let $cartQuantity = $(e.target).val();
-	
+
 	// 해당 아이템의 카트 번호 / 수량이 정수 외 입력값이라면 오류 alert
-	if(!(isInteger($cartNo)) || !(isInteger($cartQuantity))) {
+	if(!(isInteger($cartNo)) || !(isInteger($cartQuantity)) || $cartQuantity < 1) {
 		alert('올바른 값이 아닙니다! 페이지를 새로고침 해주세요.');
 		return false;
 	}
-
+	
 	// 그 외 올바른 정수값이라면 수량 update 요청
 	$.ajax({
-		url : 'cart/quantity/' + $cartNo,
+		url : 'cart/' + $cartNo + '/quantity',
 		method : 'PUT',
-		data : { cartQuantity : $cartQuantity },
+		data : JSON.stringify({
+			cartQuantity : $cartQuantity
+		}),
+		contentType : 'application/json',
 		success : result => {
-			console.log('카트 수량 변경 성공');
+			console.log('카트 수량 변경 통신 완료');
 			if(result === 'success') {
 				// 수량 변경 후 아이템 토탈
 				let amount = ($itemPrice * $cartQuantity);
@@ -91,6 +95,9 @@ function deleteCart() {
 	$.ajax({
 		url : 'cart/delete/' + cartNoArr,
 		method : 'DELETE',
+		data : JSON.stringify({
+			cartNoArr : cartNoArr
+			}),
 		success : result => {
 			console.log('아이템 삭제 통신 성공!');
 			if(result === 'success') {
