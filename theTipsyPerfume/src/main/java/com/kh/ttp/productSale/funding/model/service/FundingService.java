@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import com.kh.ttp.common.model.vo.PageInfo;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderDetailVO;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
-import com.kh.ttp.productSale.billing.pay.model.vo.PayVO;
+import com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO;
 import com.kh.ttp.productSale.cart.model.vo.CartSelectVO;
 import com.kh.ttp.productSale.cart.model.vo.CartVO;
 import com.kh.ttp.productSale.funding.model.vo.FundingSelectVO;
@@ -43,7 +43,7 @@ public interface FundingService {
 
 	public int deleteDrinkFunding(int pdtNo);
 
-	public int confirmFundingDrink(OrderDetailVO od, OrderVO o, User u, ProductVO p, PayVO pv,FundingVO f,ReceiverVO r);
+	//public int confirmFundingDrink(OrderDetailVO od, OrderVO o, User u, ProductVO p, PaymentVO pv,FundingVO f,ReceiverVO r);
 
 	public int insertReceiver(ReceiverVO r);
 

@@ -1,9 +1,9 @@
-package com.kh.ttp.productSale.billing.pay.model.service;
+package com.kh.ttp.productSale.billing.payment.model.service;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
-import com.kh.ttp.productSale.billing.pay.model.dao.PaymentDao;
+import com.kh.ttp.productSale.billing.payment.model.dao.PaymentDao;
 
 import lombok.RequiredArgsConstructor;
 

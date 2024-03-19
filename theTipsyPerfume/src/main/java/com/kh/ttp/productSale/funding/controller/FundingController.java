@@ -21,7 +21,7 @@ import com.kh.ttp.community.review.model.service.ReviewService;
 import com.kh.ttp.community.review.model.vo.ReviewVO;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderDetailVO;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
-import com.kh.ttp.productSale.billing.pay.model.vo.PayVO;
+import com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO;
 import com.kh.ttp.productSale.cart.model.vo.CartSelectVO;
 import com.kh.ttp.productSale.cart.model.vo.CartVO;
 import com.kh.ttp.productSale.funding.model.service.FundingService;
@@ -185,9 +185,9 @@ public class FundingController {
 		
 	}
 	
-	
+	/*
 	@RequestMapping("funding.fd")
-	public String confirmFundingDrink(HttpSession session,OrderDetailVO orderDetail,OrderVO order,User user,ProductVO product,PayVO pay,ProductOptionVO productOption,
+	public String confirmFundingDrink(HttpSession session,OrderDetailVO orderDetail,OrderVO order,User user,ProductVO product,PaymentVO pay,ProductOptionVO productOption,
 			FundingVO funding,ReceiverVO receiver,int selectAddress) {
 		
 		int orderPrice =  (productOption.getPdtOptionPrice()*product.getOrderQuantity())+funding.getFundingFee();//(상품가격 *상품개수)+후원비
@@ -205,7 +205,7 @@ public class FundingController {
 			return "common/errorPage";
 		}
 	}
-	
+	*/
 	
 	@PostMapping("fundingBasket.insert")
 	public String insertFundingBasket(CartVO cart,Model model) {

@@ -1,4 +1,4 @@
-package com.kh.ttp.productSale.billing.pay.model.vo;
+package com.kh.ttp.productSale.billing.payment.model.vo;
 
 public class PortOnePaymentVO {
 	

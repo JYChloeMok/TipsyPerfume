@@ -1,12 +1,13 @@
 package com.kh.ttp.productSale.common;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
@@ -26,6 +27,41 @@ public final class ProductSaleUtil {
 		}
 		return false;
 	}
+	
+	
+	private String[] shapeIntoStrArr(String str) {
+		// [1, 2, 3,]형태 문자열 String[] 배열화
+		return str.replace(" ", "")
+				  .replace("[", "")
+				  .replace("]", "")
+				  .split(",");
+	}
+	
+	public List<Integer> transIntoIntegerArr(String str) {
+		
+		// 문자열 형태 다듬기
+		String[] strArr = shapeIntoStrArr(str);
+		// strArr가 유효하지 않으면 null리턴
+		if(strArr.length < 1) {
+			return null;
+		}
+		// 숫자형태 배열로 변환
+		ArrayList<Integer> integerArr = new ArrayList<Integer>();
+		for(String strValue : strArr) {
+			try {
+				// 숫자형태 아닐 경우 exception
+				integerArr.add(Integer.parseInt(strValue));
+			} catch (NumberFormatException e) {
+				e.getStackTrace();
+				return null;
+			}
+		}
+		return integerArr;
+	}
+	
+	
+	
+	
 	
 	
 	/**
@@ -54,7 +90,6 @@ public final class ProductSaleUtil {
 		m.addAttribute("errorMsg", errorMsg);
 		return "common/errorPage";
 	}
-	//????이거뭐징
 	
 	
 	/***********************************/
@@ -68,6 +103,18 @@ public final class ProductSaleUtil {
 	public HttpHeaders makeHeader(String type, String subtype, String encoding) {
 		HttpHeaders header = new HttpHeaders();
 		header.setContentType(new MediaType(type, subtype, Charset.forName(encoding)));
+		return header;
+	}
+	
+	public HttpHeaders makeTextHtmlHeader() {
+		HttpHeaders header = new HttpHeaders();
+		header.setContentType(new MediaType("text", "html", Charset.forName("UTF-8")));
+		return header;
+	}
+	
+	public HttpHeaders makeApplicationJsonHeader() {
+		HttpHeaders header = new HttpHeaders();
+		header.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 		return header;
 	}
 	
@@ -113,4 +160,9 @@ public final class ProductSaleUtil {
 	}
 	// 이건 쓸까?
 
+	
+	
+	
+	
+	
 }

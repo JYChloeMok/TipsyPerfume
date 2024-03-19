@@ -223,7 +223,7 @@
 
 		
 		
-		// 결제 로직
+		// 결제, 주문서 작성 로직
 	 	function requestPayment() {
 			// 결제준비 ajax통신 / Promise 객체 생성
 			var paymentPromise = new Promise((resolve, reject) => {
@@ -336,8 +336,8 @@
 			},
 			// 결제 요청
 			proceedPayment : function(paymentParam) {
-				// API 요청용 파라미터(객체)
 				let self = this;
+				// API 요청용 파라미터(객체화)
 				let portOneParam = self.prepareParam(paymentParam);
 				console.log('proceedPayment수행, portOneParam은 : ');
 				console.log(portOneParam);
@@ -351,7 +351,7 @@
 					pg : portOneParam.pg,
 					pay_method : portOneParam.payMethod,
 					name : portOneParam.name,
-					amount : portOneParam.amount,
+					amount : portOneParam.amount, // @@@@@ 나중에 검증 API double check
 					merchant_uid : portOneParam.merchantUid, // 서버에서
 					buyer_name : portOneParam.buyerName, // 서버에서
 					buyer_tel : portOneParam.buyerTel, // 서버에서
@@ -361,11 +361,13 @@
 				},
 				function(rsp) {
 					// rsp.success ? (self.createOrder(rsp) ? self.orderSuccess(rsp) : self.cancelPayment(rsp)) : self.paymentFail(rsp);
-					// 결제 성공 시
 					if(rsp.success) {
+						// 결제 성공 시
+						// 주문서 생성 => 주문서 생성 성공 알림 or 주문서 생성 실패 시 결제 취소
 						self.createOrder(rsp) ? self.orderSuccess(rsp) : self.cancelPayment(rsp);
 					}
 					else {
+						// 결제 실패 시 결제 실패 알림
 						self.paymentFail(rsp);
 					}
 				});
@@ -376,10 +378,9 @@
 				console.log(paymentResult);
 			},
 			// 주문 생성하기 INSERT (결제 성공 시)
-			insertOrder : function(paymentResult) {
+			createOrder : function(paymentResult) {
 				console.log('결제성공ㅇㅇㅇ 이제 res값으로 주문정보를 넣어야함');
 				console.log(paymentResult);
-				/*
 				$.ajax({
 					url : 'order',
 					method : 'POST',
@@ -387,13 +388,13 @@
 						paymentResult : paymentResult
 					},
 					success : result => {
-						
+						console.log('주문서 생성 성공');
+						console.log(result);
 					},
 					error => {
-						
+						console.log('주문서 생성 실패');
 					}
 				});
-				*/
 				// true false 리턴
 			},
 			// 주문 성공 알림 (주문 생성 성공 시)

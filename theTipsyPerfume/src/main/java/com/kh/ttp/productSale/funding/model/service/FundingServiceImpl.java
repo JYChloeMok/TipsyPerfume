@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kh.ttp.common.model.vo.PageInfo;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderDetailVO;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
-import com.kh.ttp.productSale.billing.pay.model.vo.PayVO;
+import com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO;
 import com.kh.ttp.productSale.cart.model.vo.CartSelectVO;
 import com.kh.ttp.productSale.cart.model.vo.CartVO;
 import com.kh.ttp.productSale.funding.model.dao.FundingDao;
@@ -137,6 +137,7 @@ public class FundingServiceImpl implements FundingService {
 	public int deleteDrinkFunding(int pdtNo) {
 		return fundingDao.deleteDrinkFunding(sqlSession,pdtNo);
 	}
+	/*
 	@Override @Transactional
 	public int confirmFundingDrink(OrderDetailVO orderDetail, OrderVO order, User user, ProductVO product, 
 			PayVO pay,FundingVO funding,ReceiverVO receiver) {
@@ -158,6 +159,7 @@ public class FundingServiceImpl implements FundingService {
 		};
 		return 0;
 	}
+	*/
 	@Override @Transactional
 	public int insertReceiver(ReceiverVO r) {
 		receiverDao.insertReceiver(sqlSession,r);

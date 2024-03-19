@@ -1,4 +1,4 @@
-package com.kh.ttp.productSale.billing.pay.controller;
+package com.kh.ttp.productSale.billing.payment.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.ttp.common.util.LoginUser;
-import com.kh.ttp.productSale.billing.pay.model.service.PaymentServiceImpl;
+import com.kh.ttp.productSale.billing.payment.model.service.PaymentServiceImpl;
 import com.kh.ttp.productSale.common.ProductSaleUtil;
 import com.kh.ttp.user.model.vo.User;
 
@@ -39,17 +39,27 @@ public class AjaxPaymentController {
 	 */
 	@GetMapping("prepare")
 	public ResponseEntity<Map<String, Object>> preparePaymentAjax(HttpSession session) {
-		// 주문자(로그인유저) 정보
-		User loginUser = LoginUser.getLoginUser(session);
-		User buyer = User.builder()
-						 .userEmail(loginUser.getUserEmail())
-						 .userName(loginUser.getUserName())
-						 .phone(loginUser.getPhone())
-						 .address(loginUser.getAddress())
-						 .addressDetail(loginUser.getAddressDetail())
-						 .postalCode(loginUser.getPostalCode())
-						 .build();
+
+		// 주문자 정보
+		User buyer = LoginUser.getLoginUser(session);
 		
+		// 주문번호
+		String merchantUid = createMerchantUid();
+		
+		// 반환할 맵 객체
+		HashMap<String, Object> result = new HashMap();
+		result.put("buyer", buyer);
+		result.put("merchantUid", merchantUid);
+		
+		// ResponseEntity 리턴
+		return ResponseEntity.ok() // <Map<<String, Object>>추론
+							 .headers(productUtil.makeApplicationJsonHeader())
+							 .body(result);
+	}
+
+	
+	// 주문번호 만들기
+	private String createMerchantUid() {
 		// 스트링 빌더, 캘린더, 포매팅 객체 (주문번호 만들기 준비)
 		StringBuilder sb = new StringBuilder();
 		Calendar calendar = Calendar.getInstance();
@@ -62,19 +72,8 @@ public class AjaxPaymentController {
 		}
 		
 		// 주문번호
-		String merchantUid = sb.toString();
-		
-		// 반환할 맵 객체
-		HashMap<String, Object> result = new HashMap();
-		result.put("buyer", buyer);
-		result.put("merchantUid", merchantUid);
-		
-		return new ResponseEntity<Map<String, Object>>(result,
-								  productUtil.makeHeader("application", "json", "UTF-8"),
-								  HttpStatus.OK);
+		return sb.toString();
 	}
-
-
 
 
 

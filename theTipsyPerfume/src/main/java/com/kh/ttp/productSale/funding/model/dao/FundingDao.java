@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.ttp.productSale.billing.order.model.vo.OrderDetailVO;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
-import com.kh.ttp.productSale.billing.pay.model.vo.PayVO;
+import com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO;
 import com.kh.ttp.productSale.cart.model.vo.CartSelectVO;
 import com.kh.ttp.productSale.cart.model.vo.CartVO;
 import com.kh.ttp.productSale.funding.model.vo.FundingSelectVO;
@@ -95,7 +95,7 @@ public class FundingDao {
 		return sqlSession.update("fundingMapper.deleteDrinkFunding",pdtNo);
 	}
 
-	public int confirmFundingDrinkPV(SqlSessionTemplate sqlSession, PayVO pv) {
+	public int confirmFundingDrinkPV(SqlSessionTemplate sqlSession, PaymentVO pv) {
 		return sqlSession.insert("fundingMapper.confirmFundingPV",pv);
 	}
 
