@@ -1,6 +1,7 @@
 package com.kh.ttp.productSale.billing.payment.model.vo;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class PaymentVO {
 
@@ -26,12 +28,6 @@ public class PaymentVO {
 	private String paidAt;
 	private String payStatus;
 	private String customData;
-	
-
-	
-	
-	
-	
 	
 	
 }

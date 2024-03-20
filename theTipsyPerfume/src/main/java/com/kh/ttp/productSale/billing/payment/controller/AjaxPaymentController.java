@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,7 +56,6 @@ public class AjaxPaymentController {
 							 .body(result);
 	}
 
-	
 	// 주문번호 만들기
 	private String createMerchantUid() {
 		// 스트링 빌더, 캘린더, 포매팅 객체 (주문번호 만들기 준비)
@@ -74,7 +72,6 @@ public class AjaxPaymentController {
 		// 주문번호
 		return sb.toString();
 	}
-
 
 
 

@@ -25,6 +25,14 @@ public class OrderController {
 	private final ProductSaleUtil productUtil;
 	private final OrderService orderService;
 	
+	/**
+	 * 주문하기 메인화면으로 이동
+	 * @param model
+	 * @param cart
+	 * @param session
+	 * @param cartReq
+	 * @return
+	 */
 	@GetMapping("orderMain.od")
 	public String orderMain(Model model,
 							CartVO cart,

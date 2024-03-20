@@ -1,19 +1,21 @@
 package com.kh.ttp.productSale.billing.order.model.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
 import com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO;
 import com.kh.ttp.productSale.cart.model.vo.CartVO;
+import com.kh.ttp.productSale.product.model.vo.ProductVO;
 
 public interface OrderService {
 	
 	// 주문서 페이지로 이동
 	Map orderMain(CartVO cart);
 	
-	
-	//
-	String createOrder(PaymentVO paymentResult);
+	// 주문서 생성
+	String createOrder(PaymentVO paymentResult, List<ProductVO> orderProductList, List<Integer> pdtNoArr);
 	
 	// 주문서 조회(SELECT)
 	
@@ -25,5 +27,6 @@ public interface OrderService {
 	
 	// 주문서 삭제(DELETE)
 	int deleteOrder(OrderVO order);
+
 	
 }

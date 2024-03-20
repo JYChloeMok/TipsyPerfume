@@ -3,9 +3,59 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="paymentMapper">
+
+	<resultMap id="paymentResultSet" type="payment">
+		<result column="PAYMENT_NO" property="paymentNo" />
+		<result column="PAID_AMOUNT" property="paidAmount" />
+		<result column="APPLY_NUM" property="applyNum" />
+		<result column="IMP_UID" property="impUid" />
+		<result column="MERCHANT_UID" property="merchantUid" />
+		<result column="PG_TID" property="pgTid" />
+		<result column="PG_PROVIDER" property="pgProvider" />
+		<result column="PAY_METHOD" property="payMethod" />
+		<result column="PAID_AT" property="paidAt" />
+		<result column="PAY_STATUS" property="payStatus" />
+		<result column="CUSTOM_DATA" property="customData" />
+	</resultMap>
 	
-
-
+	<insert id="insertPayment" parameterType="payment">
+		INSERT
+		  INTO
+		  	   TB_PAYMENT,
+		  	   PAYMENT_NO,
+		  	   PAID_AMOUNT,
+		  	   APPLY_NUM,
+		  	   IMP_UID,
+		  	   MERCHANT_UID,
+		  	   PG_TID,
+		  	   PG_PROVIDER,
+		  	   PAY_METHOD,
+		  	   PAID_AT,
+		  	   PAY_STATUS,
+		  	   CUSTOM_DATA
+		VALUES
+			   SEQ_PAYMENT.nextVal,
+			   #{paidAmount},
+			   #{applyNum},
+			   #{impUid},
+			   #{merchantUid},
+			   #{pgTid},
+			   #{pgProvider},
+			   #{payMethod},
+			   #{paidAt},
+			   #{payStatus},
+			   #{customData}
+	</insert>
+	
+	<update id="updatePaymentStatus" parameterType="payment">
+		UPDATE
+			   TB_PAYMENT
+		   SET
+		  	   PAY_STATUS = #{payStatus}
+		 WHERE
+		 	   PAYMENT_NO = #{paymentNo}
+	</update>
+	
 
 </mapper>
   

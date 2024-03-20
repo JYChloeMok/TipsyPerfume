@@ -2,15 +2,18 @@ package com.kh.ttp.productSale.billing.order.model.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 import com.kh.ttp.productSale.billing.order.model.dao.OrderDao;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
+import com.kh.ttp.productSale.billing.payment.model.dao.PaymentDao;
 import com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO;
 import com.kh.ttp.productSale.cart.model.vo.CartMainVO;
 import com.kh.ttp.productSale.cart.model.vo.CartVO;
+import com.kh.ttp.productSale.product.model.vo.ProductVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderServiceImpl implements OrderService {
 
 	private final OrderDao orderDao;
-	
+	private final PaymentDao paymentDao;
 	private final SqlSessionTemplate sqlSession;
 	
 	@Override
@@ -70,14 +73,18 @@ public class OrderServiceImpl implements OrderService {
 
 
 	@Override
-	public String createOrder(PaymentVO payment) {
+	public String createOrder(PaymentVO paymentResult, List<ProductVO> orderProductList, List<Integer> pdtNoArr) {
+		
 		// 결제 값 검증
 		// pdtNo Arr로 현재 DB amount 계산
 		
 		// 재고 체크
-		//selectStockWithOptionList();
-		
+		orderDao.checkZeroStock(pdtNoArr);
+
 		// 재고 감소
+		// 결제값 저장
+		paymentDao.insertPayment(paymentResult);
+		
 		
 		// 주문서 생성
 		//insertOrder(order);

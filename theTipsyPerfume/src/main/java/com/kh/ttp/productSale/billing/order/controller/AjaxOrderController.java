@@ -1,13 +1,19 @@
 package com.kh.ttp.productSale.billing.order.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kh.ttp.productSale.billing.order.model.service.OrderService;
 import com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO;
 import com.kh.ttp.productSale.common.ProductSaleUtil;
+import com.kh.ttp.productSale.product.model.vo.ProductVO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,12 +32,24 @@ public class AjaxOrderController {
 		
 	//}
 
+	
+	
 	// 주문 생성
 	@PostMapping
-	public String createOrder(PaymentVO paymentResult) {
+	public String insertOrder(PaymentVO paymentResult, List<ProductVO> orderProductList, List<Integer> pdtNoArr) {
 		
 		productUtil.log.info("paymentResult={}", paymentResult);
-		orderService.createOrder(paymentResult);
+		
+		orderProductList = new Gson().fromJson(paymentResult.getCustomData(),
+						   new TypeToken<ArrayList<ProductVO>>() {}.getType());
+		
+		for(ProductVO pValue : orderProductList) {
+			pdtNoArr.add(pValue.getPdtNo());
+		}
+		
+		productUtil.log.info("pdtNoArr={}", pdtNoArr);
+		
+		orderService.createOrder(paymentResult, pdtNoArr);
 		return "success";
 	}
 	
