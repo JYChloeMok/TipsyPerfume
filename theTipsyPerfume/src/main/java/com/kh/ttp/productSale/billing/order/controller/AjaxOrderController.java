@@ -36,13 +36,17 @@ public class AjaxOrderController {
 	
 	// 주문 생성
 	@PostMapping
-	public String insertOrder(PaymentVO paymentResult, List<ProductVO> orderProductList, List<Integer> pdtNoArr) {
+	public String insertOrder(PaymentVO paymentResult) {
 		
 		productUtil.log.info("paymentResult={}", paymentResult);
-		
+
+		// Json형식 문자열 객체로 변환 (결제하는 상품 정보 객체배열)
+		List<ProductVO> orderProductList = new ArrayList();
 		orderProductList = new Gson().fromJson(paymentResult.getCustomData(),
 						   new TypeToken<ArrayList<ProductVO>>() {}.getType());
 		
+		// 상품 번호만 Integer형 리스트로 추출해서 서비스 넘기기
+		List<Integer> pdtNoArr = new ArrayList();
 		for(ProductVO pValue : orderProductList) {
 			pdtNoArr.add(pValue.getPdtNo());
 		}

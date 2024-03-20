@@ -73,13 +73,13 @@ public class OrderServiceImpl implements OrderService {
 
 
 	@Override
-	public String createOrder(PaymentVO paymentResult, List<ProductVO> orderProductList, List<Integer> pdtNoArr) {
+	public String createOrder(PaymentVO paymentResult, List<Integer> pdtNoArr) {
 		
 		// 결제 값 검증
 		// pdtNo Arr로 현재 DB amount 계산
 		
-		// 재고 체크
-		orderDao.checkZeroStock(pdtNoArr);
+		// 재고 체크 (모든 상품들의 재고 유/무만 체크)
+		int stockResult = orderDao.checkStock(pdtNoArr);
 
 		// 재고 감소
 		// 결제값 저장
