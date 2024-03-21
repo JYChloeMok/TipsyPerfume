@@ -76,6 +76,10 @@ public class ProductDao {
 		return (ArrayList)sqlSession.selectList("productMapper.selectPdtOptionOne", pdtNo);
 	}
 	
+	// 재고 체크
+	public int countPdtSoldOut(SqlSessionTemplate sqlSession, List<Integer> pdtNoArr) {
+		return sqlSession.selectOne("productMapper.countPdtSoldOut", pdtNoArr);
+	}
 
 
 

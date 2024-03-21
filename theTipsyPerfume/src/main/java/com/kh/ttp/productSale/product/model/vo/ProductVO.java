@@ -27,8 +27,8 @@ public class ProductVO {
 	private String pdtStatus;
 	private String pdtGpStatus;
 	
-	private int orderPrice;
-	private int orderQuantity;
+	//private int orderPrice;
+	//private int orderQuantity;
 	
 	
 }

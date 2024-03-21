@@ -12,10 +12,13 @@ public class ProductOptionVO {
 	
 	private int pdtOptionNo;
 	private int pdtNo;
+	
 	private String pdtOptionFirst;
 	private String pdtOptionSecond;
 	
 	private int pdtOptionPrice;
 	private int pdtOptionStock;
+
+	private String pdtOptionStatus;
 
 }

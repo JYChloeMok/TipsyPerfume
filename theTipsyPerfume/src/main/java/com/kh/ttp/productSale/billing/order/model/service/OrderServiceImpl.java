@@ -7,12 +7,15 @@ import java.util.List;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kh.ttp.productSale.billing.order.model.dao.OrderDao;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
 import com.kh.ttp.productSale.billing.payment.model.dao.PaymentDao;
 import com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO;
 import com.kh.ttp.productSale.cart.model.vo.CartMainVO;
 import com.kh.ttp.productSale.cart.model.vo.CartVO;
+import com.kh.ttp.productSale.product.model.dao.ProductDao;
 import com.kh.ttp.productSale.product.model.vo.ProductVO;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class OrderServiceImpl implements OrderService {
 
 	private final OrderDao orderDao;
+	private final ProductDao productDao;
 	private final PaymentDao paymentDao;
 	private final SqlSessionTemplate sqlSession;
 	
@@ -73,17 +77,37 @@ public class OrderServiceImpl implements OrderService {
 
 
 	@Override
-	public String createOrder(PaymentVO paymentResult, List<Integer> pdtNoArr) {
+	public String createOrder(PaymentVO paymentResult) {
 		
+		// 주문 상품 리스트 상품옵션 번호만 Integer형 리스트로 추출해서 서비스 넘기기 (Json형식 문자열 객체로 변환)
+		List<ProductVO> orderProductList = new ArrayList();
+		//orderProductList = new Gson().fromJson(paymentResult.getCustomData(),
+		//		new TypeToken<ArrayList<ProductVO>>() {}.getType());
+		
+		// 
+		List<Integer> pdtNoArr = new ArrayList();
+		for(ProductVO pValue : orderProductList) {
+			pdtNoArr.add(pValue.getPdtNo());
+		}
+
 		// 결제 값 검증
 		// pdtNo Arr로 현재 DB amount 계산
 		
-		// 재고 체크 (모든 상품들의 재고 유/무만 체크)
-		int stockResult = orderDao.checkStock(pdtNoArr);
+		
+		// productUtil.log.info("pdtNoArr={}", pdtNoArr);
+		
+		// 재고 < 주문 개수(재고부족) 확인
+		if(productDao.countPdtSoldOut(sqlSession, pdtNoArr) < 1) {
+			// @@ 재고부족 상품이 있으면 결제 취소
+		} else {
+			// 재고 감소 (pdtNoArr, 구매 개수 받음)
+			//productDao.adjustStock(sqlSession, )
+			
+			
+			// 결제정보 DB 저장
+		}
 
-		// 재고 감소
-		// 결제값 저장
-		paymentDao.insertPayment(paymentResult);
+		//paymentDao.insertPayment(paymentResult);
 		
 		
 		// 주문서 생성

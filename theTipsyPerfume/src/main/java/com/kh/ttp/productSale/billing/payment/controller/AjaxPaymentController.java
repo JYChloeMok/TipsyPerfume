@@ -38,7 +38,7 @@ public class AjaxPaymentController {
 	 */
 	@GetMapping("prepare")
 	public ResponseEntity<Map<String, Object>> preparePaymentAjax(HttpSession session) {
-
+		
 		// 주문자 정보
 		User buyer = LoginUser.getLoginUser(session);
 		

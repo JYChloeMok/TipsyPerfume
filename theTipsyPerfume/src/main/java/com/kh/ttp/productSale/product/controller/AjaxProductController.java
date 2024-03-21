@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/product/")
+@RequestMapping("/product")
 @RequiredArgsConstructor
 public class AjaxProductController {
 
@@ -34,7 +34,7 @@ public class AjaxProductController {
 	 * @param pdtNo : 상품 번호
 	 * @return : 특정 상품의 옵션들이 담긴 ArrayList
 	 */
-	@GetMapping("option/{pdtNo}")
+	@GetMapping("/option/{pdtNo}")
 	public ResponseEntity ajaxProductOption(@PathVariable(name="pdtNo") int pdtNo) {
 		return (pdtNo <= 0) ? productUtil.makeAjaxErrorResult()
 							: new ResponseEntity<List<ProductOptionVO>>(productService.ajaxProductOption(pdtNo),

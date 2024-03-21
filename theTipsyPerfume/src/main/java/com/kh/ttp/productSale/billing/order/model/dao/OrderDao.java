@@ -12,7 +12,7 @@ import com.kh.ttp.productSale.cart.model.vo.CartVO;
 public class OrderDao {
 
 	public ArrayList<CartMainVO> orderMain(SqlSessionTemplate sqlSession, CartVO cart) {
-		return (ArrayList)sqlSession.selectList("orderMain", cart);
+		return (ArrayList)sqlSession.selectList("productMapper.orderMain", cart);
 	}
 
 }

@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/cart/")
+@RequestMapping("/cart")
 @RequiredArgsConstructor
 public class AjaxCartController {
 
@@ -41,7 +41,7 @@ public class AjaxCartController {
 	 * @param pdtCteg : 상품 카테고리, "F"(향수) / "A"(주류)
 	 * @return : INSERT 혹은 UPDATE 성공 시 1, 실패 시 0, 재고가 없을 시 -1 반환
 	 */
-	@PostMapping("{pdtOptionNo}")
+	@PostMapping("/{pdtOptionNo}")
 	public ResponseEntity<String> insertCartAjax(CartVO cart,
 									  					@RequestParam String pdtCteg,
 									  					HttpSession session) {
@@ -57,7 +57,7 @@ public class AjaxCartController {
 	}
 	
 	// 카트 수량 업데이트 (TB_CART에서 변경 가능한건 수량밖에 없음)
-	@PutMapping("{cartNo}/quantity") // 식별자 URL, 데이터는 본문
+	@PutMapping("/{cartNo}/quantity") // 식별자 URL, 데이터는 본문
 	public ResponseEntity<String> updateCartAjax(@PathVariable int cartNo, @RequestBody CartVO cart, HttpSession session) {
 		cart.setCartNo(cartNo);
 		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
@@ -67,7 +67,7 @@ public class AjaxCartController {
 	}
 	
 	// 카트 아이템 삭제
-	@DeleteMapping("delete/{cartNoArr}")
+	@DeleteMapping("/delete/{cartNoArr}")
 	public ResponseEntity<String> deleteCartAjax(CartVO cart, HttpSession session) {
 		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
 		String result = (cartService.deleteCartAjax(cart) != 0) ? "success" : "fail";

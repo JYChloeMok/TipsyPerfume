@@ -46,27 +46,28 @@
 				</div>
 				
 				<c:forEach var="order" items="${orderMain.orderList}">
-					<div class="row order-content-block">
+					<div class="order-items row order-content-block">
 						<!-- 주문서 전송용 : 카트번호 -->
 						<input class="cartNo" type="hidden" value=${order.cart.cartNo }>
-						
+						<input class="pdtOptionNo" type="hidden" value="${order.productOption.pdtOptionNo }">
+					
 						<!-- 상품 이름, 옵션 정보 -->
 						<div class="col-4 ps-5">
 							<input class="pdtName" type="hidden" value="${order.pdtName}">
 							<span class="pdt-name">${order.pdtName}</span>
 							&nbsp;
-							<input id="pdtOptionFirst" type="hidden" value="${order.productOption.pdtOptionFirst}">
+							<input class="pdtOptionFirst" type="hidden" value="${order.productOption.pdtOptionFirst}">
 							<span>${order.productOption.pdtOptionFirst}</span>
 						</div>
 		
 						<!-- 상품 수량 -->
 						<div class="col-2">
-							<input value="${order.cart.cartQuantity }" type="number" min="1" class="form-control" readOnly>
+							<input class="orderQuantity form-control" value="${order.cart.cartQuantity }" type="number" min="1" readOnly>
 						</div>
 						
 						<!-- 상품 개당 가격 -->
 						<div class="col-2">
-							<input name="pdtOptionPrice" value="${order.productOption.pdtOptionPrice}" type="hidden" class="order-pdt-option-price">
+							<input class="orderPrice" name="pdtOptionPrice" value="${order.productOption.pdtOptionPrice}" type="hidden">
 							<fmt:formatNumber value="${order.productOption.pdtOptionPrice}" pattern="#,###" />원
 						</div>
 						
@@ -255,6 +256,8 @@
 		};
 	</script>
 	
+	
+
 	<script>
 		/*
 		** 결제요청
@@ -308,6 +311,28 @@
 			prepareParam : function(paymentParam) {
 				// 주문자(로그인유저)
 				let buyer = paymentParam.buyer;
+				
+				// 상품정보 객체배열 만들기
+				let customData = [];
+				$orderArea = $('.order-items');
+				let $cartNoArr = $orderArea.find('.cartNo');
+				let $pdtOptionNoArr = $orderArea.find('.pdtOptionNo');
+				let $orderQuantityArr = $orderArea.find('.orderQuantity');
+				// 배열들 길이가 같다면
+				if($cartNoArr.length == $pdtOptionNoArr.length
+				&& $pdtOptionNoArr.length == $orderQuantityArr.length ) {
+					// 객체배열화
+					$($cartNoArr).each(index => {
+		 				customData.push(
+							{
+								cartNo : $($cartNoArr[index]).val(),
+								pdtOptionNo : $($pdtOptionNoArr[index]).val(),
+								orderQuantity : $($orderQuantityArr[index]).val()
+							}
+						);
+					});
+				}
+				
 				return {
 					// 상점 아이디
 			 		storeId : 'imp77122200',
@@ -331,7 +356,8 @@
 					buyerAddr : buyer.address
 							    + ' '
 							    + buyer.addressDetail,
-					buyerPostCode : buyer.postalCode
+					buyerPostCode : buyer.postalCode,
+					customData : JSON.stringify(customData)
 				}
 			},
 			// 결제 요청
@@ -358,6 +384,7 @@
 					buyer_email : portOneParam.buyerEmail, // 서버에서
 					buyer_addr: portOneParam.buyerAddr, // 서버에서
 					buyer_postcode: portOneParam.buyerPostCode, // 서버에서
+					custom_data: portOneParam.customData
 				},
 				function(rsp) {
 					// rsp.success ? (self.createOrder(rsp) ? self.orderSuccess(rsp) : self.cancelPayment(rsp)) : self.paymentFail(rsp);
@@ -380,19 +407,36 @@
 			// 주문 생성하기 INSERT (결제 성공 시)
 			createOrder : function(paymentResult) {
 				console.log('결제성공ㅇㅇㅇ 이제 res값으로 주문정보를 넣어야함');
-				console.log(paymentResult);
+				console.log(paymentResult.paid_amount);
+				console.log(typeof paymentResult.paid_amount);
+				
+				let paymentData = {
+						paidAmount : paymentResult.paid_amount,
+						applyNum : paymentResult.apply_num,
+						impUid : paymentResult.imp_uid,
+						merchantUid : paymentResult.merchant_uid,
+						pgTid : paymentResult.pg_tid,
+						pgProvider : paymentResult.pg_provider,
+						payMethod : paymentResult.pay_method,
+						paidAt : paymentResult.paid_at,
+						payStatus : paymentResult.status,
+						customData : paymentResult.custom_data
+						// 퍼블릭 프로젝트 카드 정보 저장x 개인정보
+					};
+				console.log('paymentData');
+				console.log(paymentData);
+				paymentResult = 
 				$.ajax({
 					url : 'order',
 					method : 'POST',
-					data : {
-						paymentResult : paymentResult
-					},
+					data : JSON.stringify(paymentData),
+					contentType : 'application/json',
 					success : result => {
-						console.log('주문서 생성 성공');
+						console.log('주문서 생성 성공!!!!!!!!');
 						console.log(result);
 					},
 					error : () => {
-						console.log('주문서 생성 실패');
+						console.log('주문서 생성 실패bbbbb');
 					}
 				});
 				// true false 리턴
@@ -408,6 +452,41 @@
 		}
     </script>
 		
+	<script>
+		$(() => {
+			customData = [{cartNo:1,pdtOptionNo:57,orderQuantity:1},
+						  {cartNo:15,pdtOptionNo:79,orderQuantity:2}];
+			
+			let sending = {
+					paidAmount : 1,
+					applyNum : 12,
+					impUid : '19547352',
+					merchantUid : '20240321353317180685',
+					pgTid : 'StdpayCARDINIpayTest20240321015136665144',
+					pgProvider : 'html5_inicis',
+					payMethod : 'card',
+					paidAt : 1710953497,
+					payStatus : 'paid',
+					customData : JSON.stringify(customData)
+					// 퍼블릭 프로젝트 카드 정보 저장x 개인정보
+				};
+			
+			$.ajax({
+				url : 'order',
+				method : 'POST',
+				data : JSON.stringify(sending),
+				contentType : 'application/json',
+				success : result => {
+					console.log('주문서 생성 성공!!!!!!!!');
+					console.log(result);
+				},
+				error : () => {
+					console.log('주문서 생성 실패bbbbb');
+				}
+			});
+		})
+	</script>
+
 	<br/><br/><br/>
 	<br/><br/><br/>	
 	<br/><br/><br/>
@@ -445,6 +524,6 @@
 		// (공통사용/나중에 확장 될 수도 있다고 생각하면 class 아이디는 의미가??? => 이렇게 쓰는게 X?? 공통:클래스/이벤트:아이디)
 		// 태그가 유일해야할 일 많지 X => id 너무 남발한듯
 	 -->
-
+	
 </body>
 </html>

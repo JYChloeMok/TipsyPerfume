@@ -15,7 +15,7 @@ public interface OrderService {
 	Map orderMain(CartVO cart);
 	
 	// 주문서 생성
-	String createOrder(PaymentVO paymentResult, List<Integer> pdtNoArr);
+	String createOrder(PaymentVO paymentResult);
 	
 	// 주문서 조회(SELECT)
 	

@@ -470,6 +470,27 @@
 		   	   </foreach>
 	</select>
 	 
+	 
+	<select id="countPdtSoldOut" parameterType="java.util.List" resultType="_int">
+		SELECT
+			   COUNT(PDT_OPTION_NO) COUNT_PDT_SOLD_OUT
+		  FROM
+			   TB_PRODUCT PDT
+		  JOIN
+		  	   TB_PRODUCT_OPTION OPT
+			ON
+			   (PDT.PDT_NO = OPT.PDT_NO)
+		 WHERE
+		 	   PDT_OPTION_NO
+		 	IN
+ 	   		   <foreach collection="list" item="pdtOptionNo" open="(" separator="," close=")">
+			   		#{pdtOptionNo}
+			   </foreach>
+		   AND
+		  	   PDT_OPTION_STOCK &lt; 1
+		   AND
+		   	   PDT_OPTION_STATUS = 'Y'
+	</select>
 	
 	
 	
