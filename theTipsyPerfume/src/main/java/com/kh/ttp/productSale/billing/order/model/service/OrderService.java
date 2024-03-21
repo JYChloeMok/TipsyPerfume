@@ -1,13 +1,10 @@
 package com.kh.ttp.productSale.billing.order.model.service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
 import com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO;
 import com.kh.ttp.productSale.cart.model.vo.CartVO;
-import com.kh.ttp.productSale.product.model.vo.ProductVO;
 
 public interface OrderService {
 	
