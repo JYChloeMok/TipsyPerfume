@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
+	
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <!-- 부트스트랩 -->
@@ -27,6 +27,7 @@
 </head>
 <body>
 <header>
+	
 	<c:if test="${not empty alertMsg }">
 		<script>
 			$(() => {
@@ -149,7 +150,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div id="header_2" class="full_width_divs">
 
             <div class="dropdown">
@@ -198,7 +199,7 @@
     </div>
 </header>
 
-<style>
+<!-- <style>
 #header-bar-wrap{
 	width: 100%;
 	background-color: rgb(223, 190, 106);
@@ -241,8 +242,8 @@
 	justify-content: space-around;
 	align-items: center;
 }
-</style>
-<div id="header-bar-wrap" style="display:none;">
+</style> -->
+<%-- <div id="header-bar-wrap" style="display:none;">
 <div id="header-bar">
 	<div>
 		<a class="logo-wrap" href="./"><img id="header-bar-logo" src="resources/image/common/logo.png"></a>
@@ -314,7 +315,7 @@
         </c:choose>
         </div>
 </div>
-</div>
+</div> --%>
 <script>
 $(()=>{
 	$(window).scroll(()=>{

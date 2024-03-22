@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/payment/")
+@RequestMapping("/payment")
 @RequiredArgsConstructor
 public class AjaxPaymentController {
 	
@@ -36,7 +36,7 @@ public class AjaxPaymentController {
 	 * 키 buyer : 주문자(로그인 유저) 정보<br />
 	 * 키 merchantUid : 주문 번호<br />
 	 */
-	@GetMapping("prepare")
+	@GetMapping("/prepare")
 	public ResponseEntity<Map<String, Object>> preparePaymentAjax(HttpSession session) {
 		
 		// 주문자 정보
@@ -56,22 +56,7 @@ public class AjaxPaymentController {
 							 .body(result);
 	}
 
-	// 주문번호 만들기
-	private String createMerchantUid() {
-		// 스트링 빌더, 캘린더, 포매팅 객체 (주문번호 만들기 준비)
-		StringBuilder sb = new StringBuilder();
-		Calendar calendar = Calendar.getInstance();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-		
-		// 주문번호 만들기 날짜8자리 + 난수 12자리 / (or randomUUID)
-		sb.append(formatter.format(calendar.getTime()));
-		for(int i = 0; i < 12; i++) {
-			sb.append((int)(Math.random() * 10));
-		}
-		
-		// 주문번호
-		return sb.toString();
-	}
+
 
 
 

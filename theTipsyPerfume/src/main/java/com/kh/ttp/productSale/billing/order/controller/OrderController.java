@@ -37,6 +37,7 @@ public class OrderController {
 							CartDTO cart,
 							HttpSession session,
 							@RequestParam(value="cartReq", defaultValue="") String cartReq) {
+		
 		// cart객체 cartNoArr세팅
 		cart.setCartNoArr(productUtil.transIntoIntegerArr(cartReq));
 		
@@ -51,12 +52,12 @@ public class OrderController {
 		// orderMain용 정보 조회
 		HashMap<String, Object> orderMain = orderService.orderMain(cart);
 		
-		// model객체 세팅
-		model.addAttribute("orderMain", orderMain);
-		
 		// 세션에 주문 금액 저장
 		session.setAttribute("orderAmount", orderMain.get("orderAmount"));
 		productUtil.log.info("orderAmount={}", session.getAttribute("orderAmount"));
+
+		// model객체 세팅
+		model.addAttribute("orderMain", orderMain);
 		
 		return "productSale/orderMain";
 	}

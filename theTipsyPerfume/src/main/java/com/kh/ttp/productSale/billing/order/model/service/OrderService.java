@@ -27,6 +27,6 @@ public interface OrderService {
 	int deleteOrder(OrderDTO order);
 	
 	// 주문상품 목록 저장(INSERT)
-	int insertOrderProduct(List<OrderInfoDTO> orderInfoList);
+	//int insertOrderProduct(List<OrderInfoDTO> orderInfoList);
 	
 }

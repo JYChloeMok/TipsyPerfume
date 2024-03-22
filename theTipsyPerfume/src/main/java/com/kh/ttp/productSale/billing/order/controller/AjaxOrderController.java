@@ -65,6 +65,20 @@ public class AjaxOrderController {
 		ArrayList<OrderInfoDTO> customDataList = new Gson().fromJson(order.getPayment().getCustomData(),
 												 new TypeToken<List<OrderInfoDTO>>() {}.getType());
 		
+		// DB의 주문 금액 값
+		int orderAmount = 0;
+		try {
+			orderAmount = Integer.parseInt((String)session.getAttribute("orderAmount"));
+		} catch(NullPointerException | NumberFormatException e) {
+			productUtil.log.info("session의 orderAmount를 int형으로 변환 중 exception발생");
+		} finally {
+			productUtil.log.info("orderMain에서 session에 담은 orderAmount={}", orderAmount);
+		}
+		// 결제된 값 != DB에 있던 값 비교
+		if(payment.getPaidAmount() != orderAmount) {
+			result = "wrongAmount";
+		}
+		
 		// 파라미터 값 검증
 		if(isOrderInfoValidated(customDataList)) {
 			// 올바른 값 일 때
@@ -92,6 +106,9 @@ public class AjaxOrderController {
 			// ResponseEntity세팅
 			response = ("invalidParam".equals(result)) ? ResponseEntity.badRequest() : ResponseEntity.internalServerError();
 		}
+		
+		// session의 주문 금액 삭제
+		session.removeAttribute("orderAmount");
 		
 		// 반환할 값
 		HashMap<String, String> orderResultMap = new HashMap();

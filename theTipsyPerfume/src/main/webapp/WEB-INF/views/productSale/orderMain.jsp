@@ -31,8 +31,8 @@
 	<h1>오더리스트</h1><br>
 	
 	
-	
 	<div id="orderMainWrap" class="container">
+	
 		<!-- 상품 출력부 -->
 		<c:choose>
 			<c:when test="${not empty orderMain}">
@@ -222,14 +222,32 @@
 			});
 		});
 
+		// 주문메인 페이지 로딩과 동시에 결제 준비, 포트원 검증 사전 등록
+		// 컨트롤러에서
+		$(() => {
+			$.ajax({
+				url : 'payment/prepare',
+				type : 'GET',
+				success : result => { // result는 UID번호, 로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
+ 					console.log(result);
+ 					merchant_uid = result;
+				},
+				error : () => {
+					console.log('payment/prepare 실패!');
+				}
+				}
+		});
+			
+		var merchant_uid;
 		
 		
+		var paymentParam 
 		// 결제, 주문서 작성 로직
-	 	function requestPayment() {
+	 	function requestPayment(prePaymentParam) {
 			// 결제준비 ajax통신 / Promise 객체 생성
 			var paymentPromise = new Promise((resolve, reject) => {
 				$.ajax({
-					url : 'payment/prepare',
+					url : 'payment/paymentParam',
 					type : 'GET',
 					success : paymentParam => { // result는 UID번호, 로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
 	 					resolve(paymentParam);

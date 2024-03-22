@@ -18,10 +18,8 @@ import com.kh.ttp.productSale.billing.order.controller.AjaxOrderController;
 
 @Component
 public final class ProductSaleUtil {
-
 	
 	public Logger log = LoggerFactory.getLogger(AjaxOrderController.class);
-
 
 	/**
 	 * 매개변수로 들어온 pdtCteg(상품 카테고리)에 대한 값 체크

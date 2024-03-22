@@ -159,7 +159,7 @@
 
 
 
-	<insert id="insertSecret" parameterType="com.kh.ttp.user.model.vo.AuthVO">
+	<insert id="insertSecret" parameterType="com.kh.ttp.user.model.vo.AuthDTO">
 		INSERT
 		INTO
 			TB_AUTH
@@ -181,8 +181,8 @@
 
 	<select
 		id="validate"
-		parameterType="com.kh.ttp.user.model.vo.AuthVO"
-		resultType="com.kh.ttp.user.model.vo.AuthVO">
+		parameterType="com.kh.ttp.user.model.vo.AuthDTO"
+		resultType="com.kh.ttp.user.model.vo.AuthDTO">
 	SELECT
 		AUTH_EMAIL,
 		AUTH_CODE,
@@ -198,7 +198,7 @@
 	</select>
 
 
-	<delete id="deleteAuth" parameterType="com.kh.ttp.user.model.vo.AuthVO">
+	<delete id="deleteAuth" parameterType="com.kh.ttp.user.model.vo.AuthDTO">
 	delete 
 		TB_AUTH 
 	where 

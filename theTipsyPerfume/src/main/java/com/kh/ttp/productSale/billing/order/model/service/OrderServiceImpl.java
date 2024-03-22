@@ -2,20 +2,15 @@ package com.kh.ttp.productSale.billing.order.model.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.kh.ttp.productSale.billing.order.model.dao.OrderDao;
-import com.kh.ttp.productSale.billing.order.model.vo.OrderCustomDataDTO;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderDTO;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderInfoDTO;
 import com.kh.ttp.productSale.billing.payment.model.dao.PaymentDao;
 import com.kh.ttp.productSale.billing.payment.model.service.PaymentService;
-import com.kh.ttp.productSale.billing.payment.model.vo.PaymentDTO;
 import com.kh.ttp.productSale.cart.model.dao.CartDao;
 import com.kh.ttp.productSale.cart.model.vo.CartDTO;
 import com.kh.ttp.productSale.cart.model.vo.CartMainDTO;
@@ -128,14 +123,8 @@ public class OrderServiceImpl implements OrderService {
 		if(0 < productDao.countLowStockItem(sqlSession, customDataList)) {
 			return "itemShortage";
 		}
-		ArrayList<Integer> pdtOption = ""
-		// 결제한 값 != DB조회값 비교
-		for(OrderInfoDTO odValue : customDataList) {
-			odValue
-		}
-		if(payment.getPaidAmount() != orderDao.selectOrderAmount(sqlSession, customDataList)) {
-			return "wrongAmount";
-		}
+		//ArrayList<Integer> pdtOption = "";
+
 
 		// 위는 SELECT구문 여기부터 트랜잭션 만들어짐
 			// 1. 재고 감소
@@ -177,10 +166,8 @@ public class OrderServiceImpl implements OrderService {
 
 		// 하나라도 실패 시 결제 취소
 		// fail리턴, 사유 : 재고 부족, 결제 금액 검증 실패
-
 		return "";
 	}
-	
 	
 	private ArrayList<OrderInfoDTO> reverseArithmeticSign(ArrayList<OrderInfoDTO> orderInfoList) {
 		// 음양 반전 깊은복사
@@ -192,8 +179,6 @@ public class OrderServiceImpl implements OrderService {
 		}
 		return copiedList;
 	}
-	
-	
 
 	@Override
 	public int insertOrder(OrderDTO order) {
@@ -213,9 +198,9 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public int insertOrderProduct(List<OrderCustomDataDTO> customDataList) {
+	public String createOrder(OrderDTO order) {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
 }

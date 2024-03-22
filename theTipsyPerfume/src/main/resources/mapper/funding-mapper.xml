@@ -508,6 +508,7 @@ VALUES(
 		FROM
 			DUAL
 	</select>
+	<!--
 	<insert id="confirmFundingDrinkOD" parameterType="orderDetail">
 		INSERT
 			INTO
@@ -518,6 +519,7 @@ VALUES(
 				#{payNo}
 			)
 	</insert>
+	-->
 	<update id="decreaseStock" parameterType="product">
 		UPDATE
 			TB_PRODUCT
