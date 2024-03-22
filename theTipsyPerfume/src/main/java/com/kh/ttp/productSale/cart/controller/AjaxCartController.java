@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.ttp.common.util.LoginUser;
 import com.kh.ttp.productSale.cart.model.service.CartService;
-import com.kh.ttp.productSale.cart.model.vo.CartVO;
+import com.kh.ttp.productSale.cart.model.vo.CartDTO;
 import com.kh.ttp.productSale.common.ProductSaleUtil;
-import com.kh.ttp.user.model.vo.User;
+import com.kh.ttp.user.model.vo.UserDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,10 +42,10 @@ public class AjaxCartController {
 	 * @return : INSERT 혹은 UPDATE 성공 시 1, 실패 시 0, 재고가 없을 시 -1 반환
 	 */
 	@PostMapping("/{pdtOptionNo}")
-	public ResponseEntity<String> insertCartAjax(CartVO cart,
+	public ResponseEntity<String> insertCartAjax(CartDTO cart,
 									  					@RequestParam String pdtCteg,
 									  					HttpSession session) {
-		User loginUser = LoginUser.getLoginUser(session);
+		UserDTO loginUser = LoginUser.getLoginUser(session);
 		// 카테고리 값이 검증되었고, 카테고리가 "A"(알콜)가 아니거나 유저가 성인일 때(인증상태 "Y")
 		if(productUtil.isPdtCtegValid(pdtCteg) && (!("A".equals(pdtCteg)) || "Y".equals(loginUser.getAdultStatus()))) {
 			cart.setUserNo(loginUser.getUserNo());
@@ -58,7 +58,7 @@ public class AjaxCartController {
 	
 	// 카트 수량 업데이트 (TB_CART에서 변경 가능한건 수량밖에 없음)
 	@PutMapping("/{cartNo}/quantity") // 식별자 URL, 데이터는 본문
-	public ResponseEntity<String> updateCartAjax(@PathVariable int cartNo, @RequestBody CartVO cart, HttpSession session) {
+	public ResponseEntity<String> updateCartAjax(@PathVariable int cartNo, @RequestBody CartDTO cart, HttpSession session) {
 		cart.setCartNo(cartNo);
 		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
 		String result = (cartService.updateCartAjax(cart) != 0) ? "success" : "fail";
@@ -68,7 +68,7 @@ public class AjaxCartController {
 	
 	// 카트 아이템 삭제
 	@DeleteMapping("/delete/{cartNoArr}")
-	public ResponseEntity<String> deleteCartAjax(CartVO cart, HttpSession session) {
+	public ResponseEntity<String> deleteCartAjax(CartDTO cart, HttpSession session) {
 		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
 		String result = (cartService.deleteCartAjax(cart) != 0) ? "success" : "fail";
 		HttpHeaders header = productUtil.makeHeader("text", "html", "UTF-8");

@@ -6,7 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 import com.kh.ttp.productSale.receiver.model.dao.ReceiverDao;
-import com.kh.ttp.productSale.receiver.model.vo.ReceiverVO;
+import com.kh.ttp.productSale.receiver.model.vo.ReceiverDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,12 +20,12 @@ public class ReceiverServiceImpl implements ReceiverService {
 	
 	
 	@Override
-	public List<ReceiverVO> selectReceiver(int userNo) {
+	public List<ReceiverDTO> selectReceiver(int userNo) {
 		return receiverDao.selectReceiver(sqlSession, userNo);
 	}
 	
 	@Override
-	public int ajaxInsertReceiver(ReceiverVO receiver) {
+	public int ajaxInsertReceiver(ReceiverDTO receiver) {
 		return receiverDao.ajaxInsertReceiver(sqlSession, receiver);
 	}
 

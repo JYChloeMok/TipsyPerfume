@@ -1,6 +1,6 @@
 package com.kh.ttp.productSale.wishlist.model.service;
 
-import com.kh.ttp.productSale.wishlist.model.vo.WishlistVO;
+import com.kh.ttp.productSale.wishlist.model.vo.WishlistDTO;
 
 public interface WishlistService {
 
@@ -8,19 +8,19 @@ public interface WishlistService {
 	/**
 	 * 특정 유저가 한 상품에 위시리스트 추가한 내역이 있는지 조회(위시리스트 카운트)
 	 */
-	int countWishOne(WishlistVO wishlist);
+	int countWishOne(WishlistDTO wishlist);
 	
 	
 	/**
 	 * 위시리스트 추가(INSERT)
 	 */
-	int insertWishOne(WishlistVO wishlist);
+	int insertWishOne(WishlistDTO wishlist);
 	
 	
 	/**
 	 * 위시리스트 삭제(DELETE / 완전삭제)
 	 */
-	int deleteWishOne(WishlistVO wishlist);
+	int deleteWishOne(WishlistDTO wishlist);
 	
 	
 	// 위시리스트 클릭 시 추가 혹은 삭제 ajaxChangeWishOne
@@ -32,7 +32,7 @@ public interface WishlistService {
 	 * 결과에 따라 위시리스트가 있는 상태로 표시해야하는지(true)<br>
 	 * 비워진 상태로 표시해야하는지(false) boolean타입 반환<br>
 	 */
-	boolean ajaxChangeWishOne(WishlistVO wishlist);
+	boolean ajaxChangeWishOne(WishlistDTO wishlist);
 	
 	
 }

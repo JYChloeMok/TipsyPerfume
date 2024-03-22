@@ -2,14 +2,13 @@ package com.kh.ttp.user.controller;
 
 import javax.servlet.http.HttpSession;
 
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.ttp.user.model.service.UserService1;
-import com.kh.ttp.user.model.vo.User;
+import com.kh.ttp.user.model.vo.UserDTO;
 
 @Controller
 public class AjaxUserController1 {
@@ -30,7 +29,7 @@ public class AjaxUserController1 {
 	@GetMapping(value="ajaxAdultValidation.ur", produces="html/text; charset=UTF-8")
 	public String ajaxAdultValidation(HttpSession session) {
 		if(session.getAttribute("loginUser") != null) {
-			int userNo = ((User)session.getAttribute("loginUser")).getUserNo();
+			int userNo = ((UserDTO)session.getAttribute("loginUser")).getUserNo();
 			return userService.isUserAdult(userNo) ? "YYYY" : "YYNN";
 		} else {
 			return "NNNN";

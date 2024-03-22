@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kh.ttp.common.util.LoginUser;
 import com.kh.ttp.productSale.billing.payment.model.service.PaymentServiceImpl;
 import com.kh.ttp.productSale.common.ProductSaleUtil;
-import com.kh.ttp.user.model.vo.User;
+import com.kh.ttp.user.model.vo.UserDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,7 +40,7 @@ public class AjaxPaymentController {
 	public ResponseEntity<Map<String, Object>> preparePaymentAjax(HttpSession session) {
 		
 		// 주문자 정보
-		User buyer = LoginUser.getLoginUser(session);
+		UserDTO buyer = LoginUser.getLoginUser(session);
 		
 		// 주문번호
 		String merchantUid = createMerchantUid();

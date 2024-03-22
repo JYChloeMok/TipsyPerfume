@@ -1,6 +1,5 @@
 package com.kh.ttp.productSale.product.controller;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -11,10 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kh.ttp.community.review.model.vo.ReviewVO;
 import com.kh.ttp.productSale.common.ProductSaleUtil;
 import com.kh.ttp.productSale.product.model.service.ProductService;
-import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionVO;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,7 +35,7 @@ public class AjaxProductController {
 	@GetMapping("/option/{pdtNo}")
 	public ResponseEntity ajaxProductOption(@PathVariable(name="pdtNo") int pdtNo) {
 		return (pdtNo <= 0) ? productUtil.makeAjaxErrorResult()
-							: new ResponseEntity<List<ProductOptionVO>>(productService.ajaxProductOption(pdtNo),
+							: new ResponseEntity<List<ProductOptionDTO>>(productService.ajaxProductOption(pdtNo),
 																		productUtil.makeHeader("application", "json", "UTF-8"),
 																		HttpStatus.OK);
 	}

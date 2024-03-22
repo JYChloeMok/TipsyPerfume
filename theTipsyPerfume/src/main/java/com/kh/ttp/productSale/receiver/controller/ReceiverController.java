@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.ttp.productSale.receiver.model.service.ReceiverService;
-import com.kh.ttp.productSale.receiver.model.vo.ReceiverVO;
+import com.kh.ttp.productSale.receiver.model.vo.ReceiverDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +17,7 @@ public class ReceiverController {
 	
 	@ResponseBody
 	@PostMapping(value="ajaxInsertReceiver.re", produces="text/html; charset=UTF-8")
-	public String insertReceiver(ReceiverVO receiver) {
+	public String insertReceiver(ReceiverDTO receiver) {
 		// 값 가공
 		receiver.setPhone(receiver.getPhone().replaceAll("-", ""));
 		receiver.setPrimaryStatus("Y".equals(receiver.getPrimaryStatus()) ? "Y" : "N");

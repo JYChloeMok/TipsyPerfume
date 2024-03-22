@@ -4,52 +4,48 @@ package com.kh.ttp.productSale.funding.model.service;
 import java.util.ArrayList;
 
 import com.kh.ttp.common.model.vo.PageInfo;
-import com.kh.ttp.productSale.billing.order.model.vo.OrderDetailVO;
-import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
-import com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO;
-import com.kh.ttp.productSale.cart.model.vo.CartSelectVO;
-import com.kh.ttp.productSale.cart.model.vo.CartVO;
-import com.kh.ttp.productSale.funding.model.vo.FundingSelectVO;
-import com.kh.ttp.productSale.funding.model.vo.FundingVO;
-import com.kh.ttp.productSale.product.model.vo.ProductVO;
-import com.kh.ttp.productSale.productInfo.model.vo.ProductCategoryVO;
-import com.kh.ttp.productSale.productInfo.model.vo.ProductFileVO;
-import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionVO;
-import com.kh.ttp.productSale.receiver.model.vo.ReceiverVO;
-import com.kh.ttp.user.model.vo.User;
+import com.kh.ttp.productSale.cart.model.vo.CartDTO;
+import com.kh.ttp.productSale.cart.model.vo.CartSelectDTO;
+import com.kh.ttp.productSale.funding.model.vo.FundingDTO;
+import com.kh.ttp.productSale.funding.model.vo.FundingSelectDTO;
+import com.kh.ttp.productSale.product.model.vo.ProductDTO;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductCategoryDTO;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductFileDTO;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionDTO;
+import com.kh.ttp.productSale.receiver.model.vo.ReceiverDTO;
 
 
 public interface FundingService {
 	
-	int drinkFundingInsert(ProductVO product, ProductFileVO productFile, ProductOptionVO productOption, FundingVO funding, ProductCategoryVO productCategory);
+	int drinkFundingInsert(ProductDTO product, ProductFileDTO productFile, ProductOptionDTO productOption, FundingDTO funding, ProductCategoryDTO productCategory);
 	
-	int updateDrinkFunding(ProductVO product, ProductFileVO productFile, ProductOptionVO productOption, FundingVO funding, ProductCategoryVO productCategory);
+	int updateDrinkFunding(ProductDTO product, ProductFileDTO productFile, ProductOptionDTO productOption, FundingDTO funding, ProductCategoryDTO productCategory);
 
-	public ArrayList<FundingSelectVO> selectNewFundingList();
+	public ArrayList<FundingSelectDTO> selectNewFundingList();
 
 	public int newDrinkFundingListCount();
 
-	public ArrayList<FundingSelectVO> newDrinkFundingList(PageInfo pi);
+	public ArrayList<FundingSelectDTO> newDrinkFundingList(PageInfo pi);
 
-	public FundingSelectVO newDrinkFundingDetail(int pdtNo);
+	public FundingSelectDTO newDrinkFundingDetail(int pdtNo);
 
 	public int increaseCount(int pdtNo);
 
-	public ArrayList<FundingSelectVO> selectHotFundingList();
+	public ArrayList<FundingSelectDTO> selectHotFundingList();
 
-	public ArrayList<FundingSelectVO> hotDrinkFundingList(PageInfo pi);
+	public ArrayList<FundingSelectDTO> hotDrinkFundingList(PageInfo pi);
 
-	public FundingSelectVO selectDrinkFundingList(int pdtNo);
+	public FundingSelectDTO selectDrinkFundingList(int pdtNo);
 
 	public int deleteDrinkFunding(int pdtNo);
 
-	//public int confirmFundingDrink(OrderDetailVO od, OrderVO o, User u, ProductVO p, PaymentVO pv,FundingVO f,ReceiverVO r);
+	//public int confirmFundingDrink(OrderDetailDTO od, OrderDTO o, User u, ProductDTO p, PaymentDTO pv,FundingDTO f,ReceiverDTO r);
 
-	public int insertReceiver(ReceiverVO r);
+	public int insertReceiver(ReceiverDTO r);
 
-	public int insertFundingBasket(CartVO cart);
+	public int insertFundingBasket(CartDTO cart);
 	
-	public ArrayList<CartSelectVO> selectFundingCart(int userNo);
+	public ArrayList<CartSelectDTO> selectFundingCart(int userNo);
 
 
 }

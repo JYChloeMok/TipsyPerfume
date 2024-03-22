@@ -1,5 +1,9 @@
 package com.kh.ttp.productSale.billing.payment.model.vo;
 
+import java.util.List;
+
+import com.kh.ttp.productSale.billing.order.model.vo.OrderInfoDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PaymentVO {
+public class PaymentDTO {
 
 	private int paymentNo;
 	private int paidAmount;
@@ -27,5 +31,7 @@ public class PaymentVO {
 	private String paidAt;
 	private String payStatus;
 	private String customData;
+	
+	private List<OrderInfoDTO> orderInfoList;
 	
 }

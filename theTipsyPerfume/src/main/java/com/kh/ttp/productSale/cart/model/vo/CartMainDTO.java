@@ -1,6 +1,6 @@
 package com.kh.ttp.productSale.cart.model.vo;
 
-import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionVO;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,13 +10,13 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @Builder
-public class CartMainVO {
+public class CartMainDTO {
 
 	private int totalPrice;
 	private String pdtName;
 	private String pdtShipping;
 	
-	private CartVO cart;
-	private ProductOptionVO productOption;
+	private CartDTO cart;
+	private ProductOptionDTO productOption;
 	
 }

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.kh.ttp.common.util.LoginUser;
 import com.kh.ttp.productSale.cart.model.service.CartService;
-import com.kh.ttp.user.model.vo.User;
 
 import lombok.RequiredArgsConstructor;
 

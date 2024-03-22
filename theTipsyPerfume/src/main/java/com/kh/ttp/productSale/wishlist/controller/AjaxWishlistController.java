@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.ttp.common.util.LoginUser;
 import com.kh.ttp.productSale.common.ProductSaleUtil;
 import com.kh.ttp.productSale.wishlist.model.service.WishlistService;
-import com.kh.ttp.productSale.wishlist.model.vo.WishlistVO;
-import com.kh.ttp.user.model.vo.User;
+import com.kh.ttp.productSale.wishlist.model.vo.WishlistDTO;
+import com.kh.ttp.user.model.vo.UserDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,9 +39,9 @@ public class AjaxWishlistController {
 	 */
 	@PostMapping(value="ajaxChangeWishOne.pa", produces="text/html; charset=UTF-8") // 로그인 인터셉터거침
 	public String ajaxChangeWishOne(@RequestParam(value="pdtNo", defaultValue="0") int pdtNo, HttpSession session) {
-		User user = (User)session.getAttribute("loginUser");
+		UserDTO user = LoginUser.getLoginUser(session);
 		if((user != null) && pdtNo > 0) {
-			WishlistVO wishlist = new WishlistVO();
+			WishlistDTO wishlist = new WishlistDTO();
 			wishlist.setPdtNo(pdtNo);
 			wishlist.setUserNo(user.getUserNo());
 			boolean isFilledHeart = wishlistService.ajaxChangeWishOne(wishlist); // 가독성 위해

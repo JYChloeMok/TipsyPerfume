@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
-import com.kh.ttp.user.model.vo.User;
+import com.kh.ttp.user.model.vo.UserDTO;
 
 @Controller
 public class AjaxUserController {
@@ -25,7 +25,7 @@ public class AjaxUserController {
 	@ResponseBody
 	@RequestMapping(value="ajax2.do", produces="application/json; charset=UTF-8")
 	public String ajaxMethod2(int num) {
-		User m = new User();
+		UserDTO m = new UserDTO();
 		return new Gson().toJson(m);
 	}
 	
@@ -34,11 +34,11 @@ public class AjaxUserController {
 	public String ajaxMethod3() {
 		
 		//ArrayList<User> list = UserService.selectUserList();
-		ArrayList<User> list = new ArrayList();
+		ArrayList<UserDTO> list = new ArrayList();
 		
-		list.add(new User());
-		list.add(new User());
-		list.add(new User());
+		list.add(new UserDTO());
+		list.add(new UserDTO());
+		list.add(new UserDTO());
 		
 		return new Gson().toJson(list);
 	}

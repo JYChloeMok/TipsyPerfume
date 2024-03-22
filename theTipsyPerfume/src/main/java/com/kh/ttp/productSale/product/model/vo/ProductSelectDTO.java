@@ -2,14 +2,13 @@ package com.kh.ttp.productSale.product.model.vo;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
-public class ProductSelectVO extends ProductVO {
+public class ProductSelectDTO extends ProductDTO {
 	
 	//private ProductVO productVo;
 	private float reviewAvg;

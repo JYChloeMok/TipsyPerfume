@@ -1,20 +1,19 @@
 package com.kh.ttp.user.model.service;
 
-import com.kh.ttp.productSale.receiver.model.vo.ReceiverVO;
-import com.kh.ttp.user.model.vo.AuthVO;
-import com.kh.ttp.user.model.vo.User;
+import com.kh.ttp.user.model.vo.AuthDTO;
+import com.kh.ttp.user.model.vo.UserDTO;
 
 public interface UserService {
 
 	//로그인(select)
-	User loginUser(User u);
+	UserDTO loginUser(UserDTO u);
 
 	//회원가입(insert)
-	int insertUser(User u);
+	int insertUser(UserDTO u);
 	
 	
 	//회원정보 수정(update)
-	int updateUser(User u);
+	int updateUser(UserDTO u);
 	
 	//회원 삭제(delete)
 	int deleteUser(String userEmail);
@@ -27,9 +26,9 @@ public interface UserService {
 	//-----------
 	
 	//메일 인증
-	int sendMail(AuthVO authVo);
+	int sendMail(AuthDTO authVo);
 	
-	boolean validate(AuthVO AuthVo);
+	boolean validate(AuthDTO AuthVo);
 
 	
 

@@ -1,29 +1,32 @@
 package com.kh.ttp.productSale.billing.order.model.service;
 
-import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
-import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
-import com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO;
-import com.kh.ttp.productSale.cart.model.vo.CartVO;
+import com.kh.ttp.productSale.billing.order.model.vo.OrderDTO;
+import com.kh.ttp.productSale.billing.order.model.vo.OrderInfoDTO;
+import com.kh.ttp.productSale.cart.model.vo.CartDTO;
 
 public interface OrderService {
 	
-	// 주문서 페이지로 이동
-	Map orderMain(CartVO cart);
+	// 주문 메인 페이지로 이동
+	HashMap orderMain(CartDTO cart);
 	
-	// 주문서 생성
-	String createOrder(PaymentVO paymentResult);
+	// 주문하기 전체 로직
+	String createOrder(OrderDTO order);
 	
 	// 주문서 조회(SELECT)
 	
 	// 주문서 생성(INSERT)
-	int insertOrder(OrderVO order);
+	int insertOrder(OrderDTO order);
 	
 	// 주문서 업데이트(UPDATE)
-	int updateOrder(OrderVO order);
+	int updateOrder(OrderDTO order);
 	
 	// 주문서 삭제(DELETE)
-	int deleteOrder(OrderVO order);
-
+	int deleteOrder(OrderDTO order);
+	
+	// 주문상품 목록 저장(INSERT)
+	int insertOrderProduct(List<OrderInfoDTO> orderInfoList);
 	
 }

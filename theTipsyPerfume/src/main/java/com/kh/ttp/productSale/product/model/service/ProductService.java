@@ -5,12 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.kh.ttp.common.model.vo.PageInfo;
-import com.kh.ttp.community.review.model.vo.ReviewVO;
-import com.kh.ttp.productSale.cart.model.vo.CartMainVO;
-import com.kh.ttp.productSale.cart.model.vo.CartVO;
-import com.kh.ttp.productSale.product.model.vo.ProductSelectVO;
-import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionVO;
-import com.kh.ttp.productSale.wishlist.model.vo.WishlistVO;
+import com.kh.ttp.productSale.product.model.vo.ProductSelectDTO;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionDTO;
 
 public interface ProductService {
 	
@@ -38,16 +34,16 @@ public interface ProductService {
 	HashMap<String, Object> productMain(String pdtCteg);
 	
 	// 향수 전체조회 perfumePdtList
-	ArrayList<ProductSelectVO> perfumeList(String sort, PageInfo pi);
+	ArrayList<ProductSelectDTO> perfumeList(String sort, PageInfo pi);
 	
 	// 향수 디테일조회 perfumePdtDetail
-	ProductSelectVO perfumeDetail(int pdtNo);
+	ProductSelectDTO perfumeDetail(int pdtNo);
 	
 	// 주류 전체조회 alcoholPdtList
-	ArrayList<ProductSelectVO> alcoholList(String sort, PageInfo pi);
+	ArrayList<ProductSelectDTO> alcoholList(String sort, PageInfo pi);
 	
 	// 주류 디테일조회 alcoholPdtDetail
-	ProductSelectVO alcoholDetail(int pdtNo);
+	ProductSelectDTO alcoholDetail(int pdtNo);
 	
 	
 	
@@ -59,7 +55,7 @@ public interface ProductService {
 	 * @return
 	 * PDT_NO, PDT_NAME, PDT_OPTION_NO, PDT_OPTION_FIRST, PDT_OPTION_SECOND, PDT_STOCK
 	 */
-	List<ProductOptionVO> ajaxProductOption(int pdtNo);
+	List<ProductOptionDTO> ajaxProductOption(int pdtNo);
 	
 
 }

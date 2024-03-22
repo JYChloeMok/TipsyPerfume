@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @Builder
-public class CartSelectVO {
+public class CartSelectDTO {
 	private int cartNo;
 	private int userNo;
 	private int pdtNo;

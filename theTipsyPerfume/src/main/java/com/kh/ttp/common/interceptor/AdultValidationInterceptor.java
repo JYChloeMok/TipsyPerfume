@@ -6,14 +6,15 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.kh.ttp.user.model.vo.User;
+import com.kh.ttp.common.util.LoginUser;
+import com.kh.ttp.user.model.vo.UserDTO;
 
 public class AdultValidationInterceptor extends HandlerInterceptorAdapter {
 	
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		
 		HttpSession session = request.getSession();
-		User user = (User)session.getAttribute("loginUser");
+		UserDTO user = LoginUser.getLoginUser(session);
 		if(user != null && "Y".equals(user.getAdultStatus())) {
 			return true;
 		} else {

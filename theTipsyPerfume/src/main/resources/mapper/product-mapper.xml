@@ -448,8 +448,39 @@
 		-> 전체조회 / 디테일 조회이므로
 		-> 그냥 두개로 쓰자
 	-->
+	 
+	<!-- 재고 부족 상품 몇개인지 카운트 -->
+	<select id="countLowStockItem" parameterType="java.util.List" resultType="_int">
+		SELECT
+			   COUNT(PDT_OPTION_NO) LOW_STOCK_COUNT
+		  FROM
+			   TB_PRODUCT_OPTION OPT
+		 WHERE
+ 	   		   <foreach collection="list" item="orderCustomData" open="(" separator="AND" close=")">
+			   	   PDT_OPTION_NO = #{orderCustomData.pdtOptionNo}
+			   AND
+			   	   (
+			  	   PDT_OPTION_STOCK <![CDATA[ < ]]> #{orderCustomData.orderQuantity}
+			  	   OR
+		       	   PDT_OPTION_STATUS = 'N'
+			   	   )		
+			   </foreach>
+	</select>
+	
+	<!-- 재고 개수 증감 -->
+	<update id="adjustStock" parameterType="list">
+		<foreach collection="list" item="productInfo">
+		UPDATE
+			   TB_PRODUCT_OPTION
+		   SET
+		   	   (PDT_OPTION_STOCK + #{productInfo.pdtOptionStock})
+		 WHERE
+		 	   PDT_OPTION_NO = #{productInfo.pdtOptionNo}
+		</foreach>
+	</update>
 	
 	<!-- 금액 -->
+	<!--
 	<select id="selectOrderAmount" parameterType="cart" resultType="map">
         SELECT
 			   MIN(PDT_SHIPPING) "SHIPPING_FEE",
@@ -461,7 +492,7 @@
           JOIN
 			   TB_PRODUCT_OPTION USING(PDT_OPTION_NO)
 		 WHERE
-			   USER_NO = 1
+			   USER_NO = #{userNo}
            AND
 		   	   CART_NO
 		   	IN
@@ -469,30 +500,32 @@
 				#{cartNo}
 		   	   </foreach>
 	</select>
-	 
-	 
-	<select id="countPdtSoldOut" parameterType="java.util.List" resultType="_int">
+	-->
+	
+	<!-- 주문한 물건 값 계산 -->
+	<!--
+	<select id="selectOrderAmount" parameterType="java.util.List" resultType="_int">
+		SELECT (SUM(ORDER_PDT_AMOUNT) + MIN(PDT_SHIPPING)) ORDER_AMOUNT
+		FROM (
+		<foreach collection="list" item="productInfo">
 		SELECT
-			   COUNT(PDT_OPTION_NO) COUNT_PDT_SOLD_OUT
+			   (PDT_OPTION_PRICE * #{productInfo.orderQuantity}) ORDER_PDT_AMOUNT, PDT_SHIPPING
 		  FROM
-			   TB_PRODUCT PDT
-		  JOIN
-		  	   TB_PRODUCT_OPTION OPT
-			ON
-			   (PDT.PDT_NO = OPT.PDT_NO)
-		 WHERE
-		 	   PDT_OPTION_NO
-		 	IN
- 	   		   <foreach collection="list" item="pdtOptionNo" open="(" separator="," close=")">
-			   		#{pdtOptionNo}
-			   </foreach>
-		   AND
-		  	   PDT_OPTION_STOCK &lt; 1
-		   AND
-		   	   PDT_OPTION_STATUS = 'Y'
+			   TB_PRODUCT_OPTION OPT
+ 		  JOIN
+ 		   	   TB_PRODUCT PDT
+   			ON
+   			   (OPT.PDT_NO = PDT.PDT_NO)
+ 		 WHERE
+			   ODPDT.PDT_OPTION_NO = #{productInfo.pdtOptionNo}
+		</foreach>
+		)
 	</select>
+	-->
 	
+	<!-- <insert id="insertOrder" parameterType="order">
 	
+	</insert> -->
 	
 	
 	

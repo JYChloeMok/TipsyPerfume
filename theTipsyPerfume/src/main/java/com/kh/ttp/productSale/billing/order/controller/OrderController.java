@@ -1,8 +1,7 @@
 package com.kh.ttp.productSale.billing.order.controller;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpSession;
 
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.kh.ttp.common.util.LoginUser;
 import com.kh.ttp.productSale.billing.order.model.service.OrderService;
-import com.kh.ttp.productSale.cart.model.vo.CartVO;
+import com.kh.ttp.productSale.cart.model.vo.CartDTO;
 import com.kh.ttp.productSale.common.ProductSaleUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -35,22 +34,30 @@ public class OrderController {
 	 */
 	@GetMapping("orderMain.od")
 	public String orderMain(Model model,
-							CartVO cart,
+							CartDTO cart,
 							HttpSession session,
 							@RequestParam(value="cartReq", defaultValue="") String cartReq) {
 		// cart객체 cartNoArr세팅
 		cart.setCartNoArr(productUtil.transIntoIntegerArr(cartReq));
 		
-		// null이면 에러 반환
-		if(cart.getCartNoArr() == null) {
+		// cartNoArr 비어있으면 에러 반환
+		if(cart.getCartNoArr().isEmpty()) { // transIntoIntegerArr null은 들어올 일 없음
 			return productUtil.makeErrorMsg(model, "올바른 요청 값이 아닙니다!");
 		}
 		
-		// 그 외 cart객체 마저 세팅
+		// 그 외 유저넘버 세팅
 		cart.setUserNo(LoginUser.getLoginUser(session).getUserNo());
 		
-		// orderMain용 정보 조회, model객체 반환
-		model.addAttribute("orderMain", orderService.orderMain(cart));
+		// orderMain용 정보 조회
+		HashMap<String, Object> orderMain = orderService.orderMain(cart);
+		
+		// model객체 세팅
+		model.addAttribute("orderMain", orderMain);
+		
+		// 세션에 주문 금액 저장
+		session.setAttribute("orderAmount", orderMain.get("orderAmount"));
+		productUtil.log.info("orderAmount={}", session.getAttribute("orderAmount"));
+		
 		return "productSale/orderMain";
 	}
 	

@@ -420,8 +420,6 @@
 						payMethod : paymentResult.pay_method,
 						paidAt : paymentResult.paid_at,
 						payStatus : paymentResult.status,
-						customData : paymentResult.custom_data
-						// 퍼블릭 프로젝트 카드 정보 저장x 개인정보
 					};
 				console.log('paymentData');
 				console.log(paymentData);
@@ -452,46 +450,7 @@
 		}
     </script>
 		
-	<script>
-		$(() => {
-			customData = [{cartNo:1,pdtOptionNo:57,orderQuantity:1},
-						  {cartNo:15,pdtOptionNo:79,orderQuantity:2}];
-			
-			
-			let orderMessage = {orderMessage : '배송 요청사항'};
-			let sending = {	
-				// 자바의 OrderVO객체 payment필드
-				payment : {
-					paidAmount : 1,
-					applyNum : 12,
-					impUid : '19547352',
-					merchantUid : '20240321353317180685',
-					pgTid : 'StdpayCARDINIpayTest20240321015136665144',
-					pgProvider : 'html5_inicis',
-					payMethod : 'card',
-					paidAt : 1710953497,
-					payStatus : 'paid',
-					customData : JSON.stringify(customData)
-					// 퍼블릭 프로젝트 카드 정보 저장x 개인정보
-				},
-				orderMessage : '메세지입니다^^'
-			}
-			
-			$.ajax({
-				url : 'order',
-				method : 'POST',
-				data : JSON.stringify(sending),
-				contentType : 'application/json',
-				success : result => {
-					console.log('주문서 생성 성공!!!!!!!!');
-					console.log(result);
-				},
-				error : () => {
-					console.log('주문서 생성 실패bbbbb');
-				}
-			});
-		})
-	</script>
+
 
 	<br/><br/><br/>
 	<br/><br/><br/>	

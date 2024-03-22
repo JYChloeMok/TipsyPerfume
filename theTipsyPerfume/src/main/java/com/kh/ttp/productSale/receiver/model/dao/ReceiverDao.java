@@ -5,7 +5,7 @@ import java.util.List;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.kh.ttp.productSale.receiver.model.vo.ReceiverVO;
+import com.kh.ttp.productSale.receiver.model.vo.ReceiverDTO;
 
 
 @Repository
@@ -16,23 +16,23 @@ public class ReceiverDao {
 	 * @param userNo : 유저 번호(PK)
 	 * @return : 주소록 정보가 담긴 리스트
 	 */
-	public List<ReceiverVO> selectReceiver(SqlSessionTemplate sqlSession, int userNo) {
+	public List<ReceiverDTO> selectReceiver(SqlSessionTemplate sqlSession, int userNo) {
 		return sqlSession.selectList("receiverMapper.selectReceiver", userNo);
 	}
 	
-	public int updateEmail(SqlSessionTemplate sqlSession, ReceiverVO receiver) {
+	public int updateEmail(SqlSessionTemplate sqlSession, ReceiverDTO receiver) {
 		return sqlSession.update("receiverMapper.updateEmail", receiver);
 	}
 	
-	public int ajaxInsertReceiver(SqlSessionTemplate sqlSession, ReceiverVO receiver) {
+	public int ajaxInsertReceiver(SqlSessionTemplate sqlSession, ReceiverDTO receiver) {
 		return sqlSession.insert("receiverMapper.insertReceiver", receiver);
 	}
 
-	public int insertReceiver(SqlSessionTemplate sqlSession, ReceiverVO r) {
+	public int insertReceiver(SqlSessionTemplate sqlSession, ReceiverDTO r) {
 		return sqlSession.insert("receiverMapper.insertReceiverf",r);
 	}
 
-	public int selectReceiverNo(SqlSessionTemplate sqlSession, ReceiverVO r) {
+	public int selectReceiverNo(SqlSessionTemplate sqlSession, ReceiverDTO r) {
 		return sqlSession.selectOne("receiverMapper.selectReceiverNo",r);
 		
 	}

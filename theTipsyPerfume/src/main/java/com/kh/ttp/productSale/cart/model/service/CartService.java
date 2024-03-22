@@ -2,8 +2,8 @@ package com.kh.ttp.productSale.cart.model.service;
 
 import java.util.ArrayList;
 
-import com.kh.ttp.productSale.cart.model.vo.CartMainVO;
-import com.kh.ttp.productSale.cart.model.vo.CartVO;
+import com.kh.ttp.productSale.cart.model.vo.CartDTO;
+import com.kh.ttp.productSale.cart.model.vo.CartMainDTO;
 
 public interface CartService {
 	
@@ -13,13 +13,13 @@ public interface CartService {
 	 * @param cart : userNo(유저번호PK), pdtNo(상품번호PK), pdtOptionNo(옵션번호PK)
 	 * @return : 성공여부 int 반환, 성공 시 1 / 실패 시 0
 	 */
-	int countCartOne(CartVO cart);
+	int countCartOne(CartDTO cart);
 
 	
 	/**
 	 * 1개 상품(특정옵션 / 판매중 상태 Y)의 재고 개수 조회
 	 */
-	int selectStockWithOption(CartVO cart);
+	int selectStockWithOption(CartDTO cart);
 	
 	
 	// 장바구니 전체조회
@@ -28,7 +28,7 @@ public interface CartService {
 	 * @param userNo(유저번호PK)
 	 * @return : 장바구니 정보가 담긴 ArrayList
 	 */
-	ArrayList<CartMainVO> cartMain(int userNo);
+	ArrayList<CartMainDTO> cartMain(int userNo);
 	
 	
 	/**
@@ -36,7 +36,7 @@ public interface CartService {
 	 * @param cart : userNo(유저번호PK), pdtNo(상품번호PK), cartAddingQuantity(추가하려는 수량)
 	 * @return : 성공여부 int 반환, 성공 시 1 / 실패 시 0
 	 */
-	int insertCartOne(CartVO cart);
+	int insertCartOne(CartDTO cart);
 	
 	
 	/**
@@ -44,7 +44,7 @@ public interface CartService {
 	 * @param cart : userNo(유저번호PK), pdtNo(상품번호PK), cartAddingQuantity(추가하려는 수량)
 	 * @return : 성공여부 int 반환, 성공 시 1 / 실패 시 0
 	 */
-	int updateCartAddUpOne(CartVO cart);
+	int updateCartAddUpOne(CartDTO cart);
 	
 	
 	/**
@@ -53,22 +53,22 @@ public interface CartService {
 	 * @param cart : pdtNo(상품PK), pdtOptionNo(상품옵션PK), cartQuantity(카트에 추가할 수량)
 	 * @return : INSERT 혹은 UPDATE 성공 시 1, 실패 시 0, 재고가 없을 시 -1 반환
 	 */
-	int insertCartAjax(CartVO cart);
+	int insertCartAjax(CartDTO cart);
 
 
 	/**
 	 * 장바구니 수량 업데이트 메소드
-	 * @param cart : cartNo(장바구니 번호PK), userNo(유저 번호PK / 검증용), cartQuantity(수량)이 담긴 CartVO타입 객체
+	 * @param cart : cartNo(장바구니 번호PK), userNo(유저 번호PK / 검증용), cartQuantity(수량)이 담긴 CartDTO타입 객체
 	 * @return : 성공 시 1, 실패 시 0 반환
 	 */
-	int updateCartAjax(CartVO cart);
+	int updateCartAjax(CartDTO cart);
 
 
 	/**
 	 * 장바구니 품목 삭제 메소드
-	 * @param cart : cartNo(장바구니 번호PK), userNo(유저 번호PK / 검증용)이 담긴 CartVO타입 객체
+	 * @param cart : cartNo(장바구니 번호PK), userNo(유저 번호PK / 검증용)이 담긴 CartDTO타입 객체
 	 * @return : 성공 시 1, 실패 시 0반환
 	 */
-	int deleteCartAjax(CartVO cart);
+	int deleteCartAjax(CartDTO cart);
 
 }

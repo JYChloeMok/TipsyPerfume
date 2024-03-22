@@ -1,17 +1,14 @@
 package com.kh.ttp.user.model.service;
 
-import java.util.List;
-
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.ttp.productSale.receiver.model.dao.ReceiverDao;
-import com.kh.ttp.productSale.receiver.model.vo.ReceiverVO;
 import com.kh.ttp.user.model.dao.UserDao;
-import com.kh.ttp.user.model.vo.AuthVO;
-import com.kh.ttp.user.model.vo.User;
+import com.kh.ttp.user.model.vo.AuthDTO;
+import com.kh.ttp.user.model.vo.UserDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,14 +22,14 @@ public class UserServiceImpl implements UserService {
 	private final SqlSessionTemplate sqlSession;
 	
 	@Override
-	public User loginUser(User u) {
+	public UserDTO loginUser(UserDTO u) {
 		return userDao.loginUser(sqlSession, u);
 	}
 
 
 	@Override
 	@Transactional("transactionManager")
-	public int insertUser(User u) {
+	public int insertUser(UserDTO u) {
 			   userDao.insertUser(sqlSession, u);
 		return userDao.insertUser1(sqlSession, u);
 	}
@@ -57,7 +54,7 @@ public class UserServiceImpl implements UserService {
 	
 	//마이페이지 수정하기
 	@Override
-	public int updateUser(User u) {
+	public int updateUser(UserDTO u) {
 		
 		return userDao.updateUser(sqlSession, u);
 	}
@@ -74,14 +71,14 @@ public class UserServiceImpl implements UserService {
 	//이메일인증----------------------------------------
 	
 	@Override
-	public int sendMail(AuthVO authVo) {
+	public int sendMail(AuthDTO authVo) {
 		return userDao.insertSecret(sqlSession, authVo);
 		
 	}
 	
 	
 	@Override
-	public boolean validate(AuthVO authVo) {
+	public boolean validate(AuthDTO authVo) {
 		boolean result = userDao.validate(sqlSession, authVo);
 		
 		if(result != false) {

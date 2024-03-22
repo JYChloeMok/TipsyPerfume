@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @Builder
-public class WishlistVO {
+public class WishlistDTO {
 
 	private int pdtNo;
 	private int userNo;

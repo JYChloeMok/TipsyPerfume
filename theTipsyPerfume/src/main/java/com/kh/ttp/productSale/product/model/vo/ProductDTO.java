@@ -10,7 +10,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @SuperBuilder
-public class ProductVO {
+public class ProductDTO {
 	
 	private int pdtNo;
 	private int pdtCategNo;

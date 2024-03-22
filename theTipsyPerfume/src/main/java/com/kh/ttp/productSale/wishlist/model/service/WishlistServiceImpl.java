@@ -4,7 +4,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 import com.kh.ttp.productSale.wishlist.model.dao.WishlistDao;
-import com.kh.ttp.productSale.wishlist.model.vo.WishlistVO;
+import com.kh.ttp.productSale.wishlist.model.vo.WishlistDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,17 +25,17 @@ public class WishlistServiceImpl implements WishlistService {
 	
 	
 	@Override
-	public int countWishOne(WishlistVO wishlist) {
+	public int countWishOne(WishlistDTO wishlist) {
 		return wishlistDao.countWishOne(sqlSession, wishlist);
 	}
 
 	@Override
-	public int insertWishOne(WishlistVO wishlist) {
+	public int insertWishOne(WishlistDTO wishlist) {
 		return wishlistDao.insertWishOne(sqlSession, wishlist);
 	}
 
 	@Override
-	public int deleteWishOne(WishlistVO wishlist) {
+	public int deleteWishOne(WishlistDTO wishlist) {
 		return wishlistDao.deleteWishOne(sqlSession, wishlist);
 	}
 
@@ -43,7 +43,7 @@ public class WishlistServiceImpl implements WishlistService {
 	
 	/***************** ajax 요청 *****************/
 	@Override
-	public boolean ajaxChangeWishOne(WishlistVO wishlist) {
+	public boolean ajaxChangeWishOne(WishlistDTO wishlist) {
 		// 카운트 후 INSERT or DELETE 수행 => (result > 0)로 성공1은 true, 실패0은 false반환
 		boolean isFilledHeart = false;
 		if(countWishOne(wishlist) == 0) { // count 0이었을 때? 위시리스트 없음 => insert 성공 시 : 하트채우기(true)

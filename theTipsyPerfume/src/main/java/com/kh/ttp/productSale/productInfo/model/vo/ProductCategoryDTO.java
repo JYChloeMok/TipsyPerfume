@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @Builder
-public class ProductCategoryVO {
+public class ProductCategoryDTO {
 	
 	private int pdtCategNo; 
 	private String pdtCteg; //주류 향수 구분 주류 : A 향수 : F

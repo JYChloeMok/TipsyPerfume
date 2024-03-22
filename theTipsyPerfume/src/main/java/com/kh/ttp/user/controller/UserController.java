@@ -15,8 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.ttp.productSale.receiver.model.service.ReceiverService;
 import com.kh.ttp.user.model.service.UserService;
-import com.kh.ttp.user.model.vo.AuthVO;
-import com.kh.ttp.user.model.vo.User;
+import com.kh.ttp.user.model.vo.AuthDTO;
+import com.kh.ttp.user.model.vo.UserDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,12 +44,12 @@ public class UserController {
 	
 	//로그인 + 중복이메일체크
 	@RequestMapping("login.me")
-	public ModelAndView loginUser(User u,
+	public ModelAndView loginUser(UserDTO u,
 								  HttpSession session,
 								  ModelAndView mv,
 								  @RequestParam(value="referer", defaultValue="/") String referer) {
 		
-		User loginUser = userService.loginUser(u);
+		UserDTO loginUser = userService.loginUser(u);
 		if(loginUser != null && bcrypt.matches(u.getUserPwd(), loginUser.getUserPwd())) {
 			session.setAttribute("loginUser", loginUser);
 			mv.setViewName("redirect:" + referer);
@@ -79,7 +79,7 @@ public class UserController {
 		//회원가입
 		
 		@RequestMapping("insert.me")
-		public String insertUser(User u, Model model, HttpSession session) {
+		public String insertUser(UserDTO u, Model model, HttpSession session) {
 			
 			String encPwd = bcrypt.encode(u.getUserPwd());
 			u.setUserPwd(encPwd);
@@ -104,7 +104,7 @@ public class UserController {
 		@RequestMapping("myPage.me")
 		public ModelAndView myPage(ModelAndView mv, HttpSession session) {
 			//System.out.println("1");
-			int userNo = ((User)session.getAttribute("loginUser")).getUserNo();
+			int userNo = ((UserDTO)session.getAttribute("loginUser")).getUserNo();
 			//서비스에서 넘버를 주고 거기서 리시버를 셀렉트 
 			//System.out.println(rc);
 			mv.addObject("rc", receiverService.selectReceiver(userNo)).setViewName("member/myPage");
@@ -116,7 +116,7 @@ public class UserController {
 	
 		//유저 정보 업데이트 기능
 		@RequestMapping("update.me")
-		public String updateMember(User u, Model model, HttpSession session) {
+		public String updateMember(UserDTO u, Model model, HttpSession session) {
 			
 			if(userService.updateUser(u) > 0) {
 				session.setAttribute("loginUser", userService.loginUser(u));
@@ -132,7 +132,7 @@ public class UserController {
 		@RequestMapping("delete.me")
 		public String deleteUser(String userPwd, HttpSession session) {
 			
-			User loginUser = ((User)session.getAttribute("loginUser"));
+			UserDTO loginUser = ((UserDTO)session.getAttribute("loginUser"));
 			String encPwd = loginUser.getUserPwd();
 			
 			if(bcrypt.matches(userPwd, encPwd)) {
@@ -202,7 +202,7 @@ public class UserController {
 			@PostMapping(value="check", produces="text/html; charset=UTF-8")
 			public String checkCode(String authCode, HttpServletRequest request) {
 		
-				AuthVO authVo = AuthVO.builder()
+				AuthDTO authVo = AuthDTO.builder()
 									.authEmail(request.getRemoteAddr())
 									.authCode(authCode)
 									.build();

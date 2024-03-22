@@ -9,12 +9,9 @@ import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.kh.ttp.community.review.model.vo.ReviewVO;
-import com.kh.ttp.productSale.cart.model.vo.CartMainVO;
-import com.kh.ttp.productSale.cart.model.vo.CartVO;
-import com.kh.ttp.productSale.product.model.vo.ProductSelectVO;
-import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionVO;
-import com.kh.ttp.productSale.wishlist.model.vo.WishlistVO;
+import com.kh.ttp.productSale.billing.order.model.vo.OrderInfoDTO;
+import com.kh.ttp.productSale.product.model.vo.ProductSelectDTO;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionDTO;
 
 @Repository
 public class ProductDao {
@@ -45,42 +42,45 @@ public class ProductDao {
 	 * String pdtIntro(상품 간략 설명), String pdtDescription(상품 상세 설명),<br>
 	 * String pdtImgSrc(제품 썸네일 이미지의 경로), float reviewAvg(제품 리뷰의 평균 별점)
 	 */
-	public ArrayList<ProductSelectVO> productMain(SqlSessionTemplate sqlSession,
+	public ArrayList<ProductSelectDTO> productMain(SqlSessionTemplate sqlSession,
 													  Map<String, Object> pMap) {
 		return (ArrayList)sqlSession.selectList("productMapper.productSelectList", pMap);
 	}
 	
 	//향수 전체조회
-	public ArrayList<ProductSelectVO> perfumePdtList(SqlSessionTemplate sqlSession, Map<String, Object> pMap, RowBounds rowBounds) {
+	public ArrayList<ProductSelectDTO> perfumePdtList(SqlSessionTemplate sqlSession, Map<String, Object> pMap, RowBounds rowBounds) {
 		return (ArrayList)sqlSession.selectList("productMapper.productSelectList", pMap, rowBounds);
 	}
 	
 	// 향수 디테일 조회
-	public ProductSelectVO perfumePdtDetail(SqlSessionTemplate sqlSession, HashMap<String, Object> pMap) {
+	public ProductSelectDTO perfumePdtDetail(SqlSessionTemplate sqlSession, HashMap<String, Object> pMap) {
 		return sqlSession.selectOne("productMapper.productDetail", pMap);
 	}
 	
 	//주류 전체조회
-	public ArrayList<ProductSelectVO> alcoholPdtList(SqlSessionTemplate sqlSession, Map<String, Object> pMap, RowBounds rowBounds) {
+	public ArrayList<ProductSelectDTO> alcoholPdtList(SqlSessionTemplate sqlSession, Map<String, Object> pMap, RowBounds rowBounds) {
 		return (ArrayList)sqlSession.selectList("productMapper.productSelectList", pMap, rowBounds);
 	}
 	
 	
 	// 주류 디테일조회
-	public ProductSelectVO alcoholPdtDetail(SqlSessionTemplate sqlSession, Map<String, Object> pMap) {
+	public ProductSelectDTO alcoholPdtDetail(SqlSessionTemplate sqlSession, Map<String, Object> pMap) {
 		return sqlSession.selectOne("productMapper.productDetail", pMap);
 	}
 
 	
-	public List<ProductOptionVO> selectPdtOptionOne(SqlSessionTemplate sqlSession, int pdtNo) {
+	public ArrayList<ProductOptionDTO> selectPdtOptionOne(SqlSessionTemplate sqlSession, int pdtNo) {
 		return (ArrayList)sqlSession.selectList("productMapper.selectPdtOptionOne", pdtNo);
 	}
 	
-	// 재고 체크
-	public int countPdtSoldOut(SqlSessionTemplate sqlSession, List<Integer> pdtNoArr) {
-		return sqlSession.selectOne("productMapper.countPdtSoldOut", pdtNoArr);
+	public int countLowStockItem(SqlSessionTemplate sqlSession, List<OrderInfoDTO> orderInfoList) {
+		return sqlSession.selectOne("productMapper.countLowStockItem", orderInfoList);
 	}
 
+
+	public int adjustStock(SqlSessionTemplate sqlSession, List<OrderInfoDTO> orderInfoList) {
+		return sqlSession.update("productMapper.adjustStock", orderInfoList);
+	}
 
 
 

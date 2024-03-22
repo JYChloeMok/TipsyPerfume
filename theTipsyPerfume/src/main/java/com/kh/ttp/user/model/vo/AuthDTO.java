@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data @AllArgsConstructor @Builder
-public class AuthVO {
+public class AuthDTO {
 
 	public String authEmail, authCode, authDate;
 }

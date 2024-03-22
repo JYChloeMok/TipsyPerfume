@@ -6,14 +6,16 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.kh.ttp.user.model.vo.User;
+import com.kh.ttp.common.util.LoginUser;
+import com.kh.ttp.user.model.vo.UserDTO;
 
 public class AdminInterceptor extends HandlerInterceptorAdapter{
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		HttpSession session = request.getSession();
-		User loginUser = (User)session.getAttribute("loginUser");
+		//UserDTO loginUser = (UserDTO)session.getAttribute("loginUser");
+		UserDTO loginUser = LoginUser.getLoginUser(session);
 		System.out.println(loginUser);
 		if(loginUser != null && loginUser.getMemberType().equals("A")) {
 			return true;

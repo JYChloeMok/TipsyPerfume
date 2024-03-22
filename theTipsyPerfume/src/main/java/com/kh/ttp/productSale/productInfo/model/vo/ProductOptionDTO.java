@@ -8,13 +8,17 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @Builder
-public class ProductFileVO {
+public class ProductOptionDTO {
 	
-	private int pdtFileNo;
+	private int pdtOptionNo;
 	private int pdtNo;
-	private int pdtFileIndex;
-	private String pdtFilePath;
-	private String pdtFileOrigin;
-	private String pdtFileUpload;
+	
+	private String pdtOptionFirst;
+	private String pdtOptionSecond;
+	
+	private int pdtOptionPrice;
+	private int pdtOptionStock;
+
+	private String pdtOptionStatus;
 
 }

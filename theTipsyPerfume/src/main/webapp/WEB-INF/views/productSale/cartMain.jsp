@@ -27,6 +27,77 @@
 
 	<jsp:include page="../common/header.jsp" />
 	
+	<script>
+		$(() => {
+			customData = [{cartNo:1,pdtOptionNo:57,orderQuantity:1},
+						  {cartNo:15,pdtOptionNo:79,orderQuantity:2}];
+			
+			
+			let orderMessage = {orderMessage : '배송 요청사항'};
+			let sending = {	
+				// 자바의 OrderVO객체 payment필드
+				payment : {
+					paidAmount : 1,
+					applyNum : 12,
+					impUid : '19547352',
+					merchantUid : '20240321353317180685',
+					pgTid : 'StdpayCARDINIpayTest20240321015136665144',
+					pgProvider : 'html5_inicis',
+					payMethod : 'card',
+					paidAt : 1710953497,
+					payStatus : 'paid',
+					customData : JSON.stringify(customData)
+					// 퍼블릭 프로젝트 카드 정보 저장x 개인정보
+				},
+				orderMessage : '메세지입니다^^'
+			}
+			
+			$.ajax({
+				url : 'order',
+				method : 'POST',
+				data : JSON.stringify(sending),
+				contentType : 'application/json',
+				success : result => {
+					console.log('주문서 생성 성공!!!!!!!!');
+					console.log(result);
+					let str = '';
+					
+					if(result.payStatus == 'errorRefund') {
+						alert('결제오류로 인해 취소가 필요하지만 문제가 발생했습니다. 관리자에게 문의해주세요.');
+					};
+					
+					if(result == 'success') {
+						str = '주문에 성공했습니다!';
+					} else if(result.result == 'itemShortage') {
+						// 재고 부족
+						str = '재고가 부족하거나 판매가 중단된 상품이 있습니다. 장바구니 메인 화면으로 이동해 수량을 조정해주세요.';
+						showRefundAlert(result.payStatus);
+					} else if(result.result == 'wrongAmount') {
+						// 금액 검증 실패
+						str = '금액 정보가 일치하지 않습니다. 문제 발생 시 관리자에게 문의해주세요.';
+						showRefundAlert(result.payStatus);
+					} else {
+						console.log('order 주문서 생성 로직 통신은 성공했으나 이상 발생');
+					}
+
+					/*
+					 * 결제 성공 시 "success"			: 결제가 완료되었다 + 불필요한 div 지움
+					 * 재고 부족 시 "itemShortage"		: 재고가 부족한 상품이 있다 카트메인으로 이동한다
+					 * (+ payStatus)
+					 * 금액 검증 실패 시 "wrongAmount"	: 금액 검증이 실패했다
+					 * (+ payStatus)
+					 * 
+					 * payStatus
+					 * 결제 취소 성공 시 "refunded"		: 결제 취소가 성공했다
+					 * 결제 취소 실패 시 "errorRefund"	: 결제 취소가 필요하지만 실패했다 관리자에게 문의해달라
+					*/
+				},
+				error : () => {
+					console.log('order 주문서 생성 로직 실패');
+				}
+			});
+		})
+	</script>
 	<div id="cartMainWrap" class="container">
 	
 		<div id="cartMainBar" class="row">

@@ -9,10 +9,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 import com.kh.ttp.common.model.vo.PageInfo;
-import com.kh.ttp.community.review.model.vo.ReviewVO;
 import com.kh.ttp.productSale.product.model.dao.ProductDao;
-import com.kh.ttp.productSale.product.model.vo.ProductSelectVO;
-import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionVO;
+import com.kh.ttp.productSale.product.model.vo.ProductSelectDTO;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -52,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
 	
 	
 	@Override
-	public ArrayList<ProductSelectVO> perfumeList(String sort, PageInfo pi) {
+	public ArrayList<ProductSelectDTO> perfumeList(String sort, PageInfo pi) {
 		
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
@@ -65,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
 
 	
 	@Override
-	public ProductSelectVO perfumeDetail(int pdtNo) {  // pdtNo, F
+	public ProductSelectDTO perfumeDetail(int pdtNo) {  // pdtNo, F
 		HashMap<String, Object> pMap = new HashMap();
 		pMap.put("pdtNo", pdtNo);
 		pMap.put("pdtCteg", "F");
@@ -74,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
 
 	
 	@Override
-	public ArrayList<ProductSelectVO> alcoholList(String sort, PageInfo pi) {
+	public ArrayList<ProductSelectDTO> alcoholList(String sort, PageInfo pi) {
 		
 		int offset = (pi.getCurrentPage() - 1) * pi.getBoardLimit();
 		RowBounds rowBounds = new RowBounds(offset, pi.getBoardLimit());
@@ -87,7 +86,7 @@ public class ProductServiceImpl implements ProductService {
 
 	
 	@Override
-	public ProductSelectVO alcoholDetail(int pdtNo) {  // pdtNo, A
+	public ProductSelectDTO alcoholDetail(int pdtNo) {  // pdtNo, A
 		HashMap<String, Object> pMap = new HashMap();
 		pMap.put("pdtNo", pdtNo);
 		pMap.put("pdtCteg", "A");
@@ -103,7 +102,7 @@ public class ProductServiceImpl implements ProductService {
 	
 	
 	@Override
-	public List<ProductOptionVO> ajaxProductOption(int pdtNo) {
+	public List<ProductOptionDTO> ajaxProductOption(int pdtNo) {
 		return productDao.selectPdtOptionOne(sqlSession, pdtNo);
 	}
 

@@ -2,7 +2,7 @@ package com.kh.ttp.productSale.cart.model.vo;
 
 import java.util.List;
 
-import com.kh.ttp.productSale.product.model.vo.ProductVO;
+import com.kh.ttp.productSale.product.model.vo.ProductDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @SuperBuilder
-public class CartVO extends ProductVO {
+public class CartDTO extends ProductDTO {
 	
 	/*
 	CART_NO	NUMBER

@@ -6,8 +6,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
 import com.kh.ttp.productSale.cart.model.dao.CartDao;
-import com.kh.ttp.productSale.cart.model.vo.CartMainVO;
-import com.kh.ttp.productSale.cart.model.vo.CartVO;
+import com.kh.ttp.productSale.cart.model.vo.CartDTO;
+import com.kh.ttp.productSale.cart.model.vo.CartMainDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,32 +26,32 @@ public class CartServiceImpl implements CartService {
 	private final SqlSessionTemplate sqlSession;
 	
 	@Override
-	public int countCartOne(CartVO cart) {
+	public int countCartOne(CartDTO cart) {
 		return cartDao.countCartOne(sqlSession, cart);
 	}
 
 	@Override
-	public int selectStockWithOption(CartVO cart) {
+	public int selectStockWithOption(CartDTO cart) {
 		return cartDao.selectStockWithOption(sqlSession, cart);
 	}
 
 	@Override
-	public ArrayList<CartMainVO> cartMain(int userNo) {
+	public ArrayList<CartMainDTO> cartMain(int userNo) {
 		return cartDao.cartMain(sqlSession, userNo);
 	}
 
 	@Override
-	public int insertCartOne(CartVO cart) {
+	public int insertCartOne(CartDTO cart) {
 		return cartDao.insertCartOne(sqlSession, cart);
 	}
 
 	@Override
-	public int updateCartAddUpOne(CartVO cart) {
+	public int updateCartAddUpOne(CartDTO cart) {
 		return cartDao.updateCartAddUpOne(sqlSession, cart);
 	}
 
 	@Override
-	public int insertCartAjax(CartVO cart) {
+	public int insertCartAjax(CartDTO cart) {
 		if(selectStockWithOption(cart) > 0) {
 			return (countCartOne(cart) == 0) ? insertCartOne(cart) : updateCartAddUpOne(cart);
 		}																						 // 재고가 없음
@@ -59,12 +59,12 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public int updateCartAjax(CartVO cart) {
+	public int updateCartAjax(CartDTO cart) {
 		return cartDao.updateCart(sqlSession, cart);
 	}
 
 	@Override
-	public int deleteCartAjax(CartVO cart) {
+	public int deleteCartAjax(CartDTO cart) {
 		return cartDao.deleteCart(sqlSession, cart);
 	}
 

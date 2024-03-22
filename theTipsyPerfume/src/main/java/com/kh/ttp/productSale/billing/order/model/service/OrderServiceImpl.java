@@ -2,16 +2,23 @@ package com.kh.ttp.productSale.billing.order.model.service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Service;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.kh.ttp.productSale.billing.order.model.dao.OrderDao;
-import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
+import com.kh.ttp.productSale.billing.order.model.vo.OrderCustomDataDTO;
+import com.kh.ttp.productSale.billing.order.model.vo.OrderDTO;
+import com.kh.ttp.productSale.billing.order.model.vo.OrderInfoDTO;
 import com.kh.ttp.productSale.billing.payment.model.dao.PaymentDao;
-import com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO;
-import com.kh.ttp.productSale.cart.model.vo.CartMainVO;
-import com.kh.ttp.productSale.cart.model.vo.CartVO;
+import com.kh.ttp.productSale.billing.payment.model.service.PaymentService;
+import com.kh.ttp.productSale.billing.payment.model.vo.PaymentDTO;
+import com.kh.ttp.productSale.cart.model.dao.CartDao;
+import com.kh.ttp.productSale.cart.model.vo.CartDTO;
+import com.kh.ttp.productSale.cart.model.vo.CartMainDTO;
 import com.kh.ttp.productSale.common.ProductSaleUtil;
 import com.kh.ttp.productSale.product.model.dao.ProductDao;
 
@@ -21,23 +28,29 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
+	private final PaymentService paymentService;
+	/* 문제 : OrderServiceImpl이 해야할 일이 되게 많다
+	 * 엉엉 
+	 */
+	
+	private final ProductSaleUtil productUtil;
+	private final SqlSessionTemplate sqlSession;
+
+	private final CartDao cartDao;
 	private final OrderDao orderDao;
 	private final ProductDao productDao;
 	private final PaymentDao paymentDao;
-	private final SqlSessionTemplate sqlSession;
-	
-	private final ProductSaleUtil productUtil;
 	
 	@Override
-	public HashMap orderMain(CartVO cart) {
+	public HashMap orderMain(CartDTO cart) {
 
 		// 조회결과
-		ArrayList<CartMainVO> orderList = orderDao.orderMain(sqlSession, cart);
+		ArrayList<CartMainDTO> orderList = orderDao.orderMain(sqlSession, cart);
 
 		// 조회해온 결과로 최종 주문금액, 배송비 계산하는 메소드
 		int cartAmount = calcCartAmount(orderList);
 		int orderShipping = calcMinShipping(orderList);
-
+		
 		HashMap<String, Object> orderMain = new HashMap();
 		orderMain.put("orderList", orderList);
 		orderMain.put("cartAmount", cartAmount);
@@ -49,7 +62,7 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * 카트 메인용 최소 배송비 계산 메소드
 	 */
-	private int calcMinShipping(ArrayList<CartMainVO> orderList) {
+	private int calcMinShipping(ArrayList<CartMainDTO> orderList) {
 		int currShipping;
 		// 0번 인덱스 배송비를 minShipping으로 설정
 		int minShipping = Integer.parseInt(orderList.get(0).getPdtShipping());
@@ -72,67 +85,88 @@ public class OrderServiceImpl implements OrderService {
 	/**
 	 * 카트 메인용 주문 총 합계 계산 메소드
 	 */
-	private int calcCartAmount(ArrayList<CartMainVO> orderList) {
+	private int calcCartAmount(ArrayList<CartMainDTO> orderList) {
 		int sum = 0;
-		for (CartMainVO item : orderList) {
+		for (CartMainDTO item : orderList) {
 			sum += item.getTotalPrice();
 		}
 		return sum;
 	}
-
-	/*	
+	
+	private HashMap<String, Object> makeOrderResult(String resultStr, ArrayList<CartMainDTO> resultData){
+		HashMap<String, Object> result = new HashMap();
+		result.put("resultStr", resultStr);
+		result.put("resultData", resultData);
+		return result;
+	}
+	private HashMap<String, Object> makeOrderResult(String resultStr){
+		HashMap<String, Object> result = new HashMap();
+		result.put("resultStr", resultStr);
+		return result;
+	}
+	
+	/**
+	 * 결제 성공 시 "success"			: 결제가 완료되었다 + 불필요한 div 지움
+	 * 재고 부족 시 "itemShortage"		: 재고가 부족한 상품이 있다 카트메인으로 이동한다 
+	 * 금액 검증 실패 시 "wrongAmount"	: 금액 검증이 실패했다 계속 에러 발생 시 관리자에게 문의해달라
+	 * 그 외 트랜잭션 중 에러 "error"		: 그 외 트랜잭션 중 에러
+	 * 
+	 * 여기서 보낼거 "success", "itemShortage", "wrongAmount", "error"
+	 */
 	@Override
-	public String createOrder(PaymentVO paymentResult) {
-		// 파라미터 payment의 customData(JSON문자열 형태)를 자바 객체배열화
-		//List<OrderCustomData> customDataList = new Gson().fromJson(paymentResult.getCustomData(), new TypeToken<List<OrderCustomData>>() {}.getType());
-		productUtil.log.info("customDataList={customDataList}", customDataList);
+	public String createOrder(OrderDTO order) {
+		
+		// 결제 정보 객체
+		PaymentDTO payment = order.getPayment();
+		
+		// customData 문자열을 자바 객체배열로 전환 (주문 상품 정보)
+		// OrderInfoDTO객체 : 주문 상품의 cartNo(카트번호), pdtOptionNo(상품옵션번호), orderQuantity(상품수량)
+		ArrayList<OrderInfoDTO> customDataList = new Gson().fromJson(order.getPayment().getCustomData(),
+																	 new TypeToken<List<OrderInfoDTO>>() {}.getType());
 
-		// 재고 < 구매 수량인 아이템이 있는지 확인(재고미달)
-		//if(0 < orderDao.selectStockShortage(customDataList)) {
-			// 재고 부족인 경우가 있을 시 해당 상품(상품번호pdtNo, 상품옵션pdtOptionFirst, 상품옵션번호pdtOptionNo, 상품이름pdtName List<CartMainVO>반환)
-		//} else {
-			// 재고 충분할 시
-			
+		// 재고부족 아이템 체크
+		if(0 < productDao.countLowStockItem(sqlSession, customDataList)) {
+			return "itemShortage";
+		}
+		ArrayList<Integer> pdtOption = ""
+		// 결제한 값 != DB조회값 비교
+		for(OrderInfoDTO odValue : customDataList) {
+			odValue
+		}
+		if(payment.getPaidAmount() != orderDao.selectOrderAmount(sqlSession, customDataList)) {
+			return "wrongAmount";
+		}
+
+		// 위는 SELECT구문 여기부터 트랜잭션 만들어짐
 			// 1. 재고 감소
-			//productDao.reduceStock(sqlSession, customDataList);
-			
+			productDao.adjustStock(sqlSession, reverseArithmeticSign(customDataList));
+
 			// 2. 결제정보 저장
-			paymentDao.insertPayment(sqlSession, paymentResult);
+			paymentDao.insertPayment(sqlSession, payment);
 			// ORDER_NO, USER_NO, RECEIVER_NO, PAYMENT_NO, ORDER_DATE
 			// ORDER_ARRIVAL_DATE, ORDER_MESSAGE
-			// 3. 주문서 생성
-			//orderDao.insertOrder(sqlSession, )
 			
-			// 4. 주문상품 저장
+			// 3. 주문서 생성
+			insertOrder(order);
+			
+			// 4. 주문상품 목록 저장 (orderNo(SEQ_ORDER.currVal), pdtOptionNo, orderQuantity)
+			//insertOrderProduct(customDataList);
 			
 			// 5. 장바구니 삭제
-		//}
-		
-		
-		
+			CartDTO cart = new CartDTO();
+			//art.setUserNo(LoginUser.getLoginUser(session));
+			//cart.setCartNoArr(cartNoArr);
+			//cartDao.deleteCart(sqlSession, cart);
+			return "error";
 		/*
-		List<Integer> pdtNoArr = new ArrayList();
-		for (ProductVO pValue : orderProductList) {
-			pdtNoArr.add(pValue.getPdtNo());
-		}
-		
-		
-		
-		// 결제 값 검증
-		// pdtNo Arr로 현재 DB amount 계산
-
-		// productUtil.log.info("pdtNoArr={}", pdtNoArr);
-
-		// 재고 < 주문 개수(재고부족) 확인
-		if (productDao.countPdtSoldOut(sqlSession, pdtNoArr) < 1) {
-			// @@ 재고부족 상품이 있으면 결제 취소
-		} else {
-			// 재고 감소 (pdtNoArr, 구매 개수 받음)
-			// productDao.adjustStock(sqlSession, )
-
-			// 결제정보 DB 저장
-		}
-
+		 WHERE
+	   	  USER_NO = #{userNo}
+	   	  <foreach collection="cartNoArr" item="cartNo" open="(" separator="," close=")">
+			#{cartNo}
+	   	  </foreach>
+	   	  cart의 List<Integer> cartNoArr;
+	   	*/
+			
 		// paymentDao.insertPayment(paymentResult);
 
 		// 주문서 생성
@@ -144,31 +178,44 @@ public class OrderServiceImpl implements OrderService {
 		// 하나라도 실패 시 결제 취소
 		// fail리턴, 사유 : 재고 부족, 결제 금액 검증 실패
 
-		return null;
-	}*/
+		return "";
+	}
+	
+	
+	private ArrayList<OrderInfoDTO> reverseArithmeticSign(ArrayList<OrderInfoDTO> orderInfoList) {
+		// 음양 반전 깊은복사
+		ArrayList<OrderInfoDTO> copiedList = new ArrayList();
+		for(OrderInfoDTO orderInfo : orderInfoList) {
+			copiedList.add(new OrderInfoDTO(orderInfo.getCartNo(),
+											orderInfo.getPdtOptionNo(),
+											(-orderInfo.getOrderQuantity())));
+		}
+		return copiedList;
+	}
+	
+	
 
 	@Override
-	public int insertOrder(OrderVO order) {
+	public int insertOrder(OrderDTO order) {
+		return orderDao.insertOrder(sqlSession, order);
+	}
+
+	@Override
+	public int updateOrder(OrderDTO order) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int updateOrder(OrderVO order) {
+	public int deleteOrder(OrderDTO order) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int deleteOrder(OrderVO order) {
+	public int insertOrderProduct(List<OrderCustomDataDTO> customDataList) {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-
-	@Override
-	public String createOrder(PaymentVO paymentResult) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

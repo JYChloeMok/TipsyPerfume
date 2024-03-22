@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @Builder
-public class ReceiverVO {
+public class ReceiverDTO {
 
 	private int receiverNo;
 	private int userNo;

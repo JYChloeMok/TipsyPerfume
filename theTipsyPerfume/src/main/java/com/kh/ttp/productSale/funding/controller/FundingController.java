@@ -19,20 +19,15 @@ import com.kh.ttp.common.model.vo.PageInfo;
 import com.kh.ttp.common.template.Pagination;
 import com.kh.ttp.community.review.model.service.ReviewService;
 import com.kh.ttp.community.review.model.vo.ReviewVO;
-import com.kh.ttp.productSale.billing.order.model.vo.OrderDetailVO;
-import com.kh.ttp.productSale.billing.order.model.vo.OrderVO;
-import com.kh.ttp.productSale.billing.payment.model.vo.PaymentVO;
-import com.kh.ttp.productSale.cart.model.vo.CartSelectVO;
-import com.kh.ttp.productSale.cart.model.vo.CartVO;
+import com.kh.ttp.productSale.cart.model.vo.CartDTO;
+import com.kh.ttp.productSale.cart.model.vo.CartSelectDTO;
 import com.kh.ttp.productSale.funding.model.service.FundingService;
-import com.kh.ttp.productSale.funding.model.vo.FundingSelectVO;
-import com.kh.ttp.productSale.funding.model.vo.FundingVO;
-import com.kh.ttp.productSale.product.model.vo.ProductVO;
-import com.kh.ttp.productSale.productInfo.model.vo.ProductCategoryVO;
-import com.kh.ttp.productSale.productInfo.model.vo.ProductFileVO;
-import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionVO;
-import com.kh.ttp.productSale.receiver.model.vo.ReceiverVO;
-import com.kh.ttp.user.model.vo.User;
+import com.kh.ttp.productSale.funding.model.vo.FundingDTO;
+import com.kh.ttp.productSale.funding.model.vo.FundingSelectDTO;
+import com.kh.ttp.productSale.product.model.vo.ProductDTO;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductCategoryDTO;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductFileDTO;
+import com.kh.ttp.productSale.productInfo.model.vo.ProductOptionDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,8 +41,8 @@ public class FundingController {
 	
 	@PostMapping("insertDrink.fun")
 	public String drinkFundinginsert(MultipartFile upfile, HttpSession session,
-									 ProductVO product, ProductCategoryVO productCategory,
-									 ProductFileVO productFile, ProductOptionVO productOption, FundingVO funding) {
+									 ProductDTO product, ProductCategoryDTO productCategory,
+									 ProductFileDTO productFile, ProductOptionDTO productOption, FundingDTO funding) {
 		if(!upfile.getOriginalFilename().equals("")) {
 			productFile.setPdtFileOrigin(upfile.getOriginalFilename());
 			productFile.setPdtFileUpload(saveFile(upfile,session));
@@ -63,8 +58,8 @@ public class FundingController {
 	
 	@RequestMapping("updateDrink.fun")
 	public String updateDrinkFunding(MultipartFile upfile, HttpSession session, Model model,
-									ProductVO product, ProductCategoryVO productCategory,
-									ProductFileVO productFile, ProductOptionVO productOption, FundingVO funding) {
+									ProductDTO product, ProductCategoryDTO productCategory,
+									ProductFileDTO productFile, ProductOptionDTO productOption, FundingDTO funding) {
 		
 		if(!upfile.getOriginalFilename().equals("")) {
 			productFile.setPdtFileOrigin(upfile.getOriginalFilename());
@@ -101,8 +96,8 @@ public class FundingController {
 	
 	@RequestMapping("funding.list")
 	private String selectFundingList(Model model) {
-		ArrayList<FundingSelectVO> nfs = fundingService.selectNewFundingList();
-		ArrayList<FundingSelectVO> hfs = fundingService.selectHotFundingList();
+		ArrayList<FundingSelectDTO> nfs = fundingService.selectNewFundingList();
+		ArrayList<FundingSelectDTO> hfs = fundingService.selectHotFundingList();
 		model.addAttribute("drinkFundingList", nfs);
 		model.addAttribute("drinkHotFundingList",hfs);
 		
@@ -133,7 +128,7 @@ public class FundingController {
 	public String newDrinkFundingDetail(@RequestParam(value="pno") int pdtNo,Model model) {
 		
 		if(fundingService.increaseCount(pdtNo) > 0) {
-			FundingSelectVO ps= fundingService.newDrinkFundingDetail(pdtNo);
+			FundingSelectDTO ps= fundingService.newDrinkFundingDetail(pdtNo);
 			int listCount = reviewService.countFundingReview(pdtNo);
 			PageInfo pi = Pagination.getPageInfo(listCount, 1, 4, 5);
 			ArrayList<ReviewVO> reviewList = reviewService.selectReviewFunding(pi,pdtNo);
@@ -187,8 +182,8 @@ public class FundingController {
 	
 	/*
 	@RequestMapping("funding.fd")
-	public String confirmFundingDrink(HttpSession session,OrderDetailVO orderDetail,OrderVO order,User user,ProductVO product,PaymentVO pay,ProductOptionVO productOption,
-			FundingVO funding,ReceiverVO receiver,int selectAddress) {
+	public String confirmFundingDrink(HttpSession session,OrderDetailDTO orderDetail,OrderDTO order,User user,ProductDTO product,PaymentDTO pay,ProductOptionDTO productOption,
+			FundingDTO funding,ReceiverDTO receiver,int selectAddress) {
 		
 		int orderPrice =  (productOption.getPdtOptionPrice()*product.getOrderQuantity())+funding.getFundingFee();//(상품가격 *상품개수)+후원비
 
@@ -208,7 +203,7 @@ public class FundingController {
 	*/
 	
 	@PostMapping("fundingBasket.insert")
-	public String insertFundingBasket(CartVO cart,Model model) {
+	public String insertFundingBasket(CartDTO cart,Model model) {
 		System.out.println(cart);
 		fundingService.insertFundingBasket(cart);
 		return "redirect:funding.list";
@@ -217,7 +212,7 @@ public class FundingController {
 	
 	@GetMapping("cartMain.f")
 	public String fundingCart(int userNo,Model model) {
-			ArrayList<CartSelectVO> cartSelect = fundingService.selectFundingCart(userNo);
+			ArrayList<CartSelectDTO> cartSelect = fundingService.selectFundingCart(userNo);
 			model.addAttribute("cartSelect", cartSelect);
 		return "funding/fundingBascket";
 	}
