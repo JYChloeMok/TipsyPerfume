@@ -221,27 +221,25 @@
 				}
 			});
 		});
-
-		// 주문메인 페이지 로딩과 동시에 결제 준비, 포트원 검증 사전 등록
-		// 컨트롤러에서
+		
+		// 주문메인 페이지 로딩과 동시에 merchant_uid session에 담음 (orderMain에서)
+		// 포트원 사전 검증 등록
 		$(() => {
 			$.ajax({
 				url : 'payment/prepare',
-				type : 'GET',
+				type : 'POST', // rest + 추후 데이터 보낼 수 있어서
 				success : result => { // result는 UID번호, 로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
- 					console.log(result);
- 					merchant_uid = result;
+ 					console.log('사전 검증 등록 성공!')
+					console.log(result);
 				},
 				error : () => {
-					console.log('payment/prepare 실패!');
+					console.log('사전 검증 등록  실패!');
 				}
-				}
+			}
 		});
 			
 		var merchant_uid;
 		
-		
-		var paymentParam 
 		// 결제, 주문서 작성 로직
 	 	function requestPayment(prePaymentParam) {
 			// 결제준비 ajax통신 / Promise 객체 생성
@@ -249,8 +247,8 @@
 				$.ajax({
 					url : 'payment/paymentParam',
 					type : 'GET',
-					success : paymentParam => { // result는 UID번호, 로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
-	 					resolve(paymentParam);
+					success : result => { // result는 UID번호, 로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
+	 					resolve(result);
 					},
 					error : () => {
 						reject('error');
@@ -260,12 +258,16 @@
 				      나머지는 then, catch에서 처리
 				      값이 falsy해도 통신 자체가 성공했다면 resolve()를 사용해야함 / reject()는 통신 성공 or 실패여부에 따라 사용 */
 			})
-	 		.then(paymentParam => {
+	 		.then(result => {
 	 			// 결제준비 ajax통신 결과 falsy값일 경우 장바구니 메인으로
+	 			if(!result) {
+	 				orderMain.sendCartMain();
+	 				return false;
+	 			}
 	 			// 그 외 결제진행
-			 	(!paymentParam) ? orderMain.sendCartMain() : orderMain.proceedPayment(paymentParam);
+ 				orderMain.proceedPayment(result);
 			 	/* return false 생략 안한 이유 : 코드 의도 이해할 수 있도록 & 명시적 프로그램 종료 보장
-			 	   => 가독성을 위해 삼항연산자로 변경함 */
+			 	   => 가독성을 위해 삼항연산자로 변경함 => 삼항연산자 목적과 좀 다른 것 같아 if-else로 다시 변경 */
 			})
 			.catch(result => {
 		    	console.log('캐치캐치 requestPayment캐치캐치');

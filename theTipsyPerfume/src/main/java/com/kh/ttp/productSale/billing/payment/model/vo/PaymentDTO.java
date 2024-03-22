@@ -5,6 +5,8 @@ import java.util.List;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderInfoDTO;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,10 +17,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class PaymentDTO {
-
+	
+	private int orderAmount; // 주문할 금액
+	
 	private int paymentNo;
-	private int paidAmount;
+	private int paidAmount; // 결제된 금액
 	
 	private String applyNum;
 	

@@ -4,6 +4,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -42,22 +44,24 @@ public final class ProductSaleUtil {
 				  .split(",");
 	}
 	
-	public List<Integer> transIntoIntegerArr(String str) {
+	public ArrayList<Integer> shapeIntoIntegerArr(String str) {
 		
 		// 문자열 형태 다듬기
 		String[] strArr = shapeIntoStrArr(str);
+		
 		// strArr가 유효하지 않으면 null리턴
 		if(strArr.length < 1) {
 			return null;
 		}
+		
 		// 숫자형태 배열로 변환
 		ArrayList<Integer> integerArr = new ArrayList<Integer>();
 		for(String strValue : strArr) {
 			try {
-				// 숫자형태 아닐 경우 exception
 				integerArr.add(Integer.parseInt(strValue));
 			} catch (NumberFormatException e) {
-				e.getStackTrace();
+				// 숫자형태 아닐 경우 exception발생, null 반환
+				log.info("예외 발생 exception message={}", e.getMessage());
 				return null;
 			}
 		}
@@ -65,6 +69,43 @@ public final class ProductSaleUtil {
 	}
 	
 	
+	/**
+	 * (String)session.getAttribute(keyStr) 시행<br>
+	 * (세션 객체 Attribute영역에 keyStr을 키값으로 하는 값이 있다면 String형으로 변환 후 반환)
+	 * @param session : 현재 세션
+	 * @param keyStr : 키 값(String형태)
+	 * @return
+	 * 성공 시 해당 String값, 실패 시 빈문자열 반환
+	 */
+	public String getSessionString(HttpSession session, String keyStr){
+		String result = "";
+		try {
+			result = (String)session.getAttribute(keyStr);
+			log.info("result={}", result); // 예외 발생 안했을 때 로그
+		} catch(NullPointerException | NumberFormatException | ClassCastException e) {
+			log.info("session의 " + keyStr + "변환 중 Exception 발생, message={}", e.getMessage());
+		}
+		return result;
+	}
+	
+	/**
+	 * (Integer)session.getAttribute(keyStr) 시행<br>
+	 * (세션 객체 Attribute영역에 keyStr을 키값으로 하는 값이 있다면 Integer형으로 변환 후 반환)
+	 * @param session : 현재 세션
+	 * @param keyStr : 키 값(String형태)
+	 * @return
+	 * 성공 시 해당 Integer값, 실패 시 null
+	 */
+	public Integer getSessionInteger(HttpSession session, String keyStr){
+		Integer result = null;
+		try {
+			result = (Integer)session.getAttribute(keyStr);
+			log.info("result={}", result); // 예외 발생 안했을 때 로그
+		} catch(NullPointerException | NumberFormatException | ClassCastException e) {
+			log.info("session의 " + keyStr + "변환 중 Exception 발생, message={}", e.getMessage());
+		}
+		return result;
+	}
 	
 	
 	

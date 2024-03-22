@@ -3,10 +3,14 @@ package com.kh.ttp.productSale.common;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Component;
 
 @Component
 public final class BillingUtil {
+	
+	ProductSaleUtil productUtil;
 	
 	// 주문번호 만들기
 	/**
@@ -27,4 +31,6 @@ public final class BillingUtil {
 		// 주문번호
 		return sb.toString();
 	}
+	
+
 }
