@@ -50,7 +50,7 @@
 		<result column="PDT_OPTION_STOCK" property="pdtOptionStock" />
 	</resultMap>
 	
-	<resultMap id="cartMain" type="cartMain">
+	<resultMap id="saleMain" type="saleMain">
 		<result column="PDT_NAME" property="pdtName" />
 		<result column="PDT_SHIPPING" property="pdtShipping" />
 		<result column="TOTAL_PRICE" property="totalPrice" />
@@ -316,7 +316,7 @@
 	
 	
 	<!-- 장바구니 전체조회(SELECT) -->
-	<select id="cartMain" parameterType="_int" resultMap="cartMain">
+	<select id="cartMain" parameterType="_int" resultMap="saleMain">
 		SELECT
 			   CART_NO,
 			   USER_NO,
@@ -326,7 +326,14 @@
 			   PDT_OPTION_FIRST,
 			   CART_QUANTITY,
 			   PDT_OPTION_PRICE,
-			   (PDT_OPTION_PRICE * CART_QUANTITY) "TOTAL_PRICE",
+			   CASE
+			   	    WHEN
+			   	    	 (1 <![CDATA[ < ]]> PDT_OPTION_STOCK)
+			   	    THEN
+			   	    	 (PDT_OPTION_PRICE * CART_QUANTITY)
+			   	    ELSE
+			   	    	 0
+			   END AS "TOTAL_PRICE",
 			   PDT_OPTION_STOCK,
 			   PDT_SHIPPING
 		  FROM
@@ -409,7 +416,7 @@
 	</delete>
 	
 	<!-- 주문페이지 정보 -->
-	<select id="orderMain" parameterType="cart" resultMap="cartMain">
+	<select id="orderMain" parameterType="cart" resultMap="saleMain">
 		SELECT
 			   CART_NO,
 			   USER_NO,
@@ -419,7 +426,15 @@
 			   PDT_OPTION_FIRST,
 			   CART_QUANTITY,
 			   PDT_OPTION_PRICE,
-			   (PDT_OPTION_PRICE * CART_QUANTITY) "TOTAL_PRICE",
+			   CASE
+			   	    WHEN
+			   	    	 (1 <![CDATA[ < ]]> PDT_OPTION_STOCK)
+			   	    THEN
+			   	    	 (PDT_OPTION_PRICE * CART_QUANTITY)
+			   	    ELSE
+			   	    	 0
+			   END AS "TOTAL_PRICE"
+			   ,
 			   PDT_OPTION_STOCK,
 			   PDT_SHIPPING
 		  FROM
@@ -449,7 +464,7 @@
 		-> 그냥 두개로 쓰자
 	-->
 	 
-	<!-- 재고 부족 상품 몇개인지 카운트 -->
+	<!-- 재고 부족 or 판매 중지 상품 몇개인지 카운트 -->
 	<select id="countLowStockItem" parameterType="java.util.List" resultType="_int">
 		SELECT
 			   COUNT(PDT_OPTION_NO) LOW_STOCK_COUNT
@@ -466,16 +481,19 @@
 			   	   )		
 			   </foreach>
 	</select>
+
 	
 	<!-- 재고 개수 증감 -->
-	<update id="adjustStock" parameterType="list">
+	<update id="adjustStock" parameterType="java.util.List">
 		<foreach collection="list" item="productInfo">
 		UPDATE
 			   TB_PRODUCT_OPTION
 		   SET
-		   	   (PDT_OPTION_STOCK + #{productInfo.pdtOptionStock})
+		   	   PDT_OPTION_STOCK = (PDT_OPTION_STOCK + #{productInfo.pdtOptionStock})
 		 WHERE
 		 	   PDT_OPTION_NO = #{productInfo.pdtOptionNo}
+		   AND
+		   	   #{productInfo.orderQuantity} <![CDATA[ < ]]> PDT_STOCK
 		</foreach>
 	</update>
 	

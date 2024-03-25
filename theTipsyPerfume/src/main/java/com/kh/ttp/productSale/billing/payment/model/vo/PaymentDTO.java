@@ -2,10 +2,12 @@ package com.kh.ttp.productSale.billing.payment.model.vo;
 
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderInfoDTO;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

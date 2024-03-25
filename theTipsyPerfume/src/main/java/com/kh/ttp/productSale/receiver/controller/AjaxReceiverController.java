@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.ttp.common.util.LoginUser;
-import com.kh.ttp.productSale.common.ProductSaleUtil;
+import com.kh.ttp.productSale.common.util.ProductSaleUtil;
 import com.kh.ttp.productSale.receiver.model.service.ReceiverService;
 import com.kh.ttp.productSale.receiver.model.vo.ReceiverDTO;
 

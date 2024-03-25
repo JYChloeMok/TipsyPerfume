@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString @Builder
-public class CartMainDTO {
+public class SaleMainDTO {
 
 	private int totalPrice;
 	private String pdtName;

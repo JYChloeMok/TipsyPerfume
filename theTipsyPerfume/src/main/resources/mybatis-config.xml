@@ -30,7 +30,7 @@
 		
 		<typeAlias type="com.kh.ttp.productSale.cart.model.vo.CartDTO" alias="cart" />
 		<typeAlias type="com.kh.ttp.productSale.cart.model.vo.CartSelectDTO" alias="cartSelect"/>
-		<typeAlias type="com.kh.ttp.productSale.cart.model.vo.CartMainDTO" alias="cartMain" />
+		<typeAlias type="com.kh.ttp.productSale.cart.model.vo.SaleMainDTO" alias="saleMain" />
 		
 		<typeAlias type="com.kh.ttp.productSale.billing.order.model.vo.OrderDTO" alias="order"/>
 		<typeAlias type="com.kh.ttp.productSale.billing.order.model.vo.OrderProductDTO" alias="orderProduct"/>

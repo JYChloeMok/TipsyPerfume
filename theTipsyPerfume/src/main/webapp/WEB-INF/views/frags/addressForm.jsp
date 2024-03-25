@@ -50,16 +50,16 @@
 							</div>
 							<c:forEach var="receiver" items="${receiverList }" varStatus="status">
 								<div class="form-check">
-									<input class="primaryStatus" type="hidden" value="${receiverList.primaryStatus }">
+									<input class="receiverStatus" type="hidden" value="${receiverList.receiverStatus }">
 									<c:choose>
-										<c:when test="${receiver.primaryStatus eq 'Y' }">
-											<input class="form-check-input" type="radio" id="flexRadioDefault${status.index }" checked>
+										<c:when test="${receiver.receiverStatus eq 'P' }">
+											<input value="${receiverList.receiverNo }" class="form-check-input" type="radio" id="receiver${status.index }" checked>
 										</c:when>
 										<c:otherwise>
-											<input class="form-check-input" type="radio" id="flexRadioDefault${status.index }">
+											<input value="${receiverList.receiverNo }" class="form-check-input" type="radio" id="receiver${status.index }">
 										</c:otherwise>
 									</c:choose>
-									<label class="form-check-label" for="flexRadioDefault${status.index }">
+									<label class="form-check-label" for="receiver${status.index }">
 										${receiver.placeAlias }
 								  	</label>
 									<div>
@@ -73,16 +73,14 @@
 								</div>
 								<br>
 							</c:forEach>
-							
-							<button  type="button" class="btn btn-primary" id="addAddressBtn">저장하기</button>
+							<input class="orderMessage">
+							<button type="button" class="btn btn-primary" id="addAddressBtn">저장하기</button>
 						</c:when>
 						<c:otherwise>
 							<div>배송지 정보를 불러올 수 없습니다. 새로운 배송지를 입력하거나 나중에 다시 시도해주세요.</div>
 							
 						</c:otherwise>
 					</c:choose>
-					
-					
 				</div>
 				<br><br>
 				
@@ -125,8 +123,8 @@
 						</div>
 						
 						<div class="custom-control custom-checkbox">
-						    <input type="checkbox" class="custom-control-input" value="Y" id="primaryStatus" name="primaryStatus">
-						    <label class="custom-control-label" for="primaryStatus">이 배송지를 기본 배송지로 저장하시겠습니까?</label>
+						    <input type="checkbox" class="custom-control-input" value="Y" id="receiverStatus" name="receiverStatus">
+						    <label class="custom-control-label" for="receiverStatus">이 배송지를 기본 배송지로 저장하시겠습니까?</label>
 					  	</div>
 						<br><br>
 						<div>

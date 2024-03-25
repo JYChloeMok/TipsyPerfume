@@ -1,7 +1,6 @@
 package com.kh.ttp.productSale.billing.order.model.dao;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
@@ -9,12 +8,12 @@ import org.springframework.stereotype.Repository;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderDTO;
 import com.kh.ttp.productSale.billing.order.model.vo.OrderInfoDTO;
 import com.kh.ttp.productSale.cart.model.vo.CartDTO;
-import com.kh.ttp.productSale.cart.model.vo.CartMainDTO;
+import com.kh.ttp.productSale.cart.model.vo.SaleMainDTO;
 
 @Repository
 public class OrderDao {
 
-	public ArrayList<CartMainDTO> orderMain(SqlSessionTemplate sqlSession, CartDTO cart) {
+	public ArrayList<SaleMainDTO> orderMain(SqlSessionTemplate sqlSession, CartDTO cart) {
 		return (ArrayList)sqlSession.selectList("productMapper.orderMain", cart);
 	}
 

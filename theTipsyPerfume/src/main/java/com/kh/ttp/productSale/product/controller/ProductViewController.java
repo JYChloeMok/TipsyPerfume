@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.ttp.common.model.vo.PageInfo;
 import com.kh.ttp.common.template.Pagination;
-import com.kh.ttp.productSale.common.ProductSaleUtil;
+import com.kh.ttp.productSale.common.util.ProductSaleUtil;
 import com.kh.ttp.productSale.product.model.service.ProductService;
 
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,7 @@
-package com.kh.ttp.productSale.common;
+package com.kh.ttp.productSale.common.util;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -34,38 +33,43 @@ public final class ProductSaleUtil {
 		}
 		return false;
 	}
-	
-	
-	private String[] shapeIntoStrArr(String str) {
-		// [1, 2, 3,]형태 문자열 String[] 배열화
-		return str.replace(" ", "")
-				  .replace("[", "")
-				  .replace("]", "")
-				  .split(",");
-	}
+
 	
 	public ArrayList<Integer> shapeIntoIntegerArr(String str) {
-		
 		// 문자열 형태 다듬기
 		String[] strArr = shapeIntoStrArr(str);
-		
-		// strArr가 유효하지 않으면 null리턴
+		// strArr가 유효하지 않으면 null리턴 (str이 빈 문자열, 공백, 기호나 영어 등이었을 경우)
 		if(strArr.length < 1) {
 			return null;
 		}
-		
 		// 숫자형태 배열로 변환
+		int num = 0;
 		ArrayList<Integer> integerArr = new ArrayList<Integer>();
 		for(String strValue : strArr) {
 			try {
-				integerArr.add(Integer.parseInt(strValue));
+				// 숫자형태 아닐 경우 exception발생 null반환
+				num = Integer.parseInt(strValue);
+				// 음수일 경우 null 반환
+				if(num < 1) {
+					return null;
+				}
+				// 양의 정수일 경우에만 cartNo에 add
+				integerArr.add(num);
 			} catch (NumberFormatException e) {
-				// 숫자형태 아닐 경우 exception발생, null 반환
 				log.info("예외 발생 exception message={}", e.getMessage());
 				return null;
 			}
 		}
 		return integerArr;
+	}
+	
+	
+	public String[] shapeIntoStrArr(String str) {
+		// [1, 2, 3,]형태 문자열 String[] 배열화
+		return str.replace(" ", "")
+				  .replace("[", "")
+				  .replace("]", "")
+				  .split(",");
 	}
 	
 	

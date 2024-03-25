@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.kh.ttp.productSale.common.util.ProductSaleUtil;
 import com.kh.ttp.productSale.receiver.model.service.ReceiverService;
 import com.kh.ttp.productSale.receiver.model.vo.ReceiverDTO;
 
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ReceiverController {
 
+	ProductSaleUtil productUtil;
 	private final ReceiverService receiverService;
 	
 	@ResponseBody
@@ -20,7 +22,9 @@ public class ReceiverController {
 	public String insertReceiver(ReceiverDTO receiver) {
 		// 값 가공
 		receiver.setPhone(receiver.getPhone().replaceAll("-", ""));
-		receiver.setPrimaryStatus("Y".equals(receiver.getPrimaryStatus()) ? "Y" : "N");
+		//receiver.setPrimaryStatus("Y".equals(receiver.getPrimaryStatus()) ? "Y" : "N");
+		productUtil.log.info(receiver.toString());
+		productUtil.log.info(receiver.getReceiverStatus());
 		// 등록성공 Y 실패 N
 		return (receiverService.ajaxInsertReceiver(receiver) > 0) ? "Y" : "N";
 	}

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.ttp.common.util.LoginUser;
-import com.kh.ttp.productSale.common.ProductSaleUtil;
+import com.kh.ttp.productSale.common.util.ProductSaleUtil;
 import com.kh.ttp.productSale.wishlist.model.service.WishlistService;
 import com.kh.ttp.productSale.wishlist.model.vo.WishlistDTO;
 import com.kh.ttp.user.model.vo.UserDTO;

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.ttp.productSale.cart.model.dao.CartDao;
 import com.kh.ttp.productSale.cart.model.vo.CartDTO;
-import com.kh.ttp.productSale.cart.model.vo.CartMainDTO;
+import com.kh.ttp.productSale.cart.model.vo.SaleMainDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,7 +36,7 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public ArrayList<CartMainDTO> cartMain(int userNo) {
+	public ArrayList<SaleMainDTO> cartMain(int userNo) {
 		return cartDao.cartMain(sqlSession, userNo);
 	}
 

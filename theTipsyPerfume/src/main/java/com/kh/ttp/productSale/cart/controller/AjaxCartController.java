@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kh.ttp.common.util.LoginUser;
 import com.kh.ttp.productSale.cart.model.service.CartService;
 import com.kh.ttp.productSale.cart.model.vo.CartDTO;
-import com.kh.ttp.productSale.common.ProductSaleUtil;
+import com.kh.ttp.productSale.common.util.ProductSaleUtil;
 import com.kh.ttp.user.model.vo.UserDTO;
 
 import lombok.RequiredArgsConstructor;

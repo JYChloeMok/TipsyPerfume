@@ -35,8 +35,7 @@
 	
 		<!-- 상품 출력부 -->
 		<c:choose>
-			<c:when test="${not empty orderMain}">
-			
+			<c:when test="${not empty orderMain">
 				<div id="orderContentBar" class="row">
 					<div class="col-4 ps-5">상품(옵션)</div>
 					<div class="col-2">수량</div>
@@ -91,7 +90,7 @@
 						</div>
 					</div>
 				</c:forEach>
-
+	
 				<br/>
 				<div class="row">
 					<p>주문자 정보</p>
@@ -150,7 +149,29 @@
 								<button type="button" class="btn-close" data-bs-dismiss="modal" area-label="Close"></button>
 							</div>
 							<div class="modal-body">
+								<!-- 외부 배송지 입력용 jsp페이지
+								테스트 중 temp배송지 사용
 								<jsp:include page="../frags/addressForm.jsp" />
+							 	-->
+								<!-- *** 여기부터 temp배송지 -->
+								<div class="form-check">
+									<input class="receiverStatus" type="hidden" value="Y">
+									<input value="1" class="form-check-input" type="radio" id="receiver1" checked>
+									<label class="form-check-label" for="receiver1">
+										힝잉잉배송지
+								  	</label>
+									<div>
+										수령인 : 관리자 | 전화번호 : 010-1111-2222
+									</div>
+									<div>
+										우편번호 : 11111
+										주소 : 서울특별시 중구
+										상세주소 : 1층
+									</div>
+								</div>
+								<br>
+								<input class="orderMessage">
+								<!-- *** 여기까지 temp배송지 -->
 							</div>
 							<div>
 								ㅇㅇ
@@ -191,7 +212,7 @@
 							
 						</div>
 					</div>
-
+	
 					<div class="col-3">
 						<button id="orderMainPayBtn" onclick="requestPayment()" type="button" class="btn btn-primary">
 							결제하기
@@ -200,15 +221,15 @@
 				</div>
 			</c:when>
 			<c:otherwise>
-				<div class="row">장바구니에 추가된 내역이 없습니다</div>
+				<div class="row">장바구니에 추가된 내역이 없습니다.</div>
 			</c:otherwise>
 		</c:choose>
 	</div>
 
-	
 	<script>
-		// 로딩 시 배송지 정보 불러옴
- 		$(() => {
+		// ****** 페이지 로딩 시점에 실행되는 메소드들 ******
+		$(() => {
+			// 배송지 정보 조회
 			$.ajax({
 				url : 'receiver',
 				method : 'GET',
@@ -220,57 +241,73 @@
 					console.log('배송지 정보 조회 에러발생');
 				}
 			});
-		});
-		
-		// 주문메인 페이지 로딩과 동시에 merchant_uid session에 담음 (orderMain에서)
-		// 포트원 사전 검증 등록
-		$(() => {
+			
+			// 결제금액 사전검증 등록
+			// [결제관련] 0. 페이지 로딩 시 포트원 결제금액 사전 등록
+			/* 현재 orderAmount(총 주문 금액)
+			   = 주문 페이지 로딩 당시 DB에서 계산 최신 금액
+			   = 사용자가 본인이 결제할 것이라 알고있는 금액
+			   = 결제되어야할 금액
+			*/
 			$.ajax({
 				url : 'payment/prepare',
-				type : 'POST', // rest + 추후 데이터 보낼 수 있어서
-				success : result => { // result는 UID번호, 로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
- 					console.log('사전 검증 등록 성공!')
+				method : 'post', // 외부 API는 POST니까 맞춰줌 + 추후 보낼 데이터 생길 수 있어서
+				success : result => {
+					console.log('사전금액 검증 ajax통신 통신 성공!');
 					console.log(result);
+					if(result.code == 0) {
+						console.log('사전 검증 등록 성공!');
+					}
+					else {
+						console.log('사전 검증 등록 실패!');
+						console.log(result.message);
+					}
 				},
 				error : () => {
-					console.log('사전 검증 등록  실패!');
+					console.log('사전금액 검증 ajax통신 실패!');
 				}
-			}
+			});
 		});
-			
-		var merchant_uid;
+	</script>
+	
+	
+	
+	<script>
+		// ****** 결제하기 버튼 클릭 시점에 실행되는 메소드들 ******
 		
-		// 결제, 주문서 작성 로직
-	 	function requestPayment(prePaymentParam) {
-			// 결제준비 ajax통신 / Promise 객체 생성
+		// [결제관련] 결제 & 주문 로직
+	 	function requestPayment() {
+			// [결제관련] 1. 결제 파라미터 조회 통신(Promise 객체 생성)
 			var paymentPromise = new Promise((resolve, reject) => {
 				$.ajax({
 					url : 'payment/paymentParam',
 					type : 'GET',
-					success : result => { // result는 UID번호, 로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
+					success : result => {
+						// result는 UID번호, 로그인유저 정보(이메일, 이름, 전화번호, 주소, PO코드)
 	 					resolve(result);
 					},
 					error : () => {
+						// 실패 시 error문자열 넘김
 						reject('error');
 					}
 				});
 				/* 코드 복잡해져서 여기서는 그냥 resolve호출하고 result넘기는 로직만 수행
 				      나머지는 then, catch에서 처리
-				      값이 falsy해도 통신 자체가 성공했다면 resolve()를 사용해야함 / reject()는 통신 성공 or 실패여부에 따라 사용 */
+				      값이 falsy해도 통신 자체가 성공했다면 resolve()를 사용해야함 / reject()는 통신 성공 or 실패여부에 따라 사용
+				 */
 			})
 	 		.then(result => {
-	 			// 결제준비 ajax통신 결과 falsy값일 경우 장바구니 메인으로
+				// [결제관련] 2. 결과 falsy값일 경우 장바구니 메인으로, 그 외 결제진행
 	 			if(!result) {
-	 				orderMain.sendCartMain();
+	 				orderMain.sendCartMain('결제 과정에서 이상이 발생했습니다.');
 	 				return false;
 	 			}
-	 			// 그 외 결제진행
- 				orderMain.proceedPayment(result);
-			 	/* return false 생략 안한 이유 : 코드 의도 이해할 수 있도록 & 명시적 프로그램 종료 보장
-			 	   => 가독성을 위해 삼항연산자로 변경함 => 삼항연산자 목적과 좀 다른 것 같아 if-else로 다시 변경 */
+	 			else {
+	 				orderMain.proceedPayment(result);
+	 			}
 			})
 			.catch(result => {
-		    	console.log('캐치캐치 requestPayment캐치캐치');
+		    	console.log('캐치캐치 paymentParam캐치캐치');
 		    	console.log(result);
 		    });
 		};
@@ -313,26 +350,72 @@
 				.order.cancelPayment
 		*/
 		
-		
 		let orderMain = {
-			// 카트 메인페이지로 보내기 (결제준비 ajax통신 실패 시)
-			sendCartMain : function() {
+			// [결제관련] 3_A. 카트 메인페이지로 보내기 (paymentParam ajax통신 실패)
+			sendCartMain : function(reasonMsg) {
 				console.log('sendCartMain수행');
 				let second = 5000;
-				let str = '결제 정보 불러오기 통신에 성공하였으나 결과값이 유효하지 않습니다!'
-						+ second
-						+ '초 후 장바구니 화면으로 이동합니다.';
+				let str = reasonMsg
+						+ '\n'
+						+ second/1000
+						+ '초 후 자동으로 장바구니 화면으로 이동됩니다.';
 				// n초 후 장바구니 메인으로
 				setTimeout("location.href='cartMain.ca'", second);
 				// 알림창 띄움
 				alert(str);
 			},
-			// 결제요청 파라미터 준비
+			// [결제관련] 3_B. 결제 요청 (paymentParam ajax통신 성공)
+			proceedPayment : function(paymentParam) {
+				let self = this;
+				// 3_a) 결제요청 파라미터 가공
+				let portOneParam = self.prepareParam(paymentParam);
+				console.log('proceedPayment수행, portOneParam은 : ');
+				console.log(portOneParam);
+				
+				// 결제 API용 객체 초기화
+				var IMP = window.IMP;
+				IMP.init(portOneParam.storeId);
+				
+				// 포트원API 결제 요청
+				IMP.request_pay({
+					pg : portOneParam.pg,
+					pay_method : portOneParam.payMethod,
+					name : portOneParam.name,
+					// 결제금액 사전등록 API로 등록된 금액과 다르면 결제 요청 안감
+					amount : portOneParam.amount, // 화면의 값으로 가공
+					merchant_uid : portOneParam.merchantUid, // 서버에서
+					buyer_name : portOneParam.buyerName, // 서버에서
+					buyer_tel : portOneParam.buyerTel, // 서버에서
+					buyer_email : portOneParam.buyerEmail, // 서버에서
+					buyer_addr: portOneParam.buyerAddr, // 서버에서
+					buyer_postcode: portOneParam.buyerPostCode, // 서버에서
+					custom_data: portOneParam.customData // 화면의 값으로 가공
+				},
+				function(rsp) {
+					// rsp.success ? (self.createOrder(rsp) ? self.orderSuccess(rsp) : self.cancelPayment(rsp)) : self.paymentFail(rsp);
+					// 포트원 결제 성공
+					if(rsp.success) {
+						// 3_b) 서버 주문/결제 로직 요청
+						if(self.createOrder(rsp) == 'success') {
+							// 3_c) 서버 로직 성공 시 주문 성공 알림
+							self.orderSuccess(rsp);
+						}
+						else {
+							// 3_d) 서버 로직 실패 시
+							// 식별값에 따라 수행
+						}
+					}
+					else {
+						// 3_e) 통신 실패 시 결제 실패 알림
+						self.paymentFail(rsp);
+					}
+				});
+			},
+			// 3_a) 포트원 결제요청 파라미터 가공
 			prepareParam : function(paymentParam) {
 				// 주문자(로그인유저)
 				let buyer = paymentParam.buyer;
-				
-				// 상품정보 객체배열 만들기
+				// 주문 페이지 상품정보 선택(배열)
 				let customData = [];
 				$orderArea = $('.order-items');
 				let $cartNoArr = $orderArea.find('.cartNo');
@@ -352,20 +435,19 @@
 						);
 					});
 				}
-				
-				return {
+				// 반환할 객체 준비
+				const portOneParam = {
 					// 상점 아이디
 			 		storeId : 'imp77122200',
-			 		/* PG사 (카카오 -> 이니시스 변경)
-					   pg :  'kakaopay.TC0ONETIME', */
 					pg : 'html5_inicis.INIpayTest',
+					// pg : 'kakaopay.TC0ONETIME', (카카오 <-> 이니시스 변경)
 					payMethod : 'card',
 					// 상품이름 (xx 외 n개 / 16바이트 잘리는 것 신경 안씀)
 					name : $('.pdtName').eq(0).val()
 						   + ' 외 '
 						   + $('.cartNo').length
 						   + '개',
-					// 최종 결제금액
+					// 최종 결제금액(주문 페이지에서 선택됨)
 					amount : (Number)($('#orderMainOrderAmount').val()),
 					// 주문번호
 					merchantUid : paymentParam.merchantUid,
@@ -377,60 +459,23 @@
 							    + ' '
 							    + buyer.addressDetail,
 					buyerPostCode : buyer.postalCode,
-					customData : JSON.stringify(customData)
-				}
+					customData : JSON.stringify(customData),
+				};
+				// 결제용 파라미터 반환
+				return portOneParam;
 			},
-			// 결제 요청
-			proceedPayment : function(paymentParam) {
-				let self = this;
-				// API 요청용 파라미터(객체화)
-				let portOneParam = self.prepareParam(paymentParam);
-				console.log('proceedPayment수행, portOneParam은 : ');
-				console.log(portOneParam);
-				
-				// 결제 API용 객체 초기화
-				var IMP = window.IMP;
-				IMP.init(portOneParam.storeId);
-				
-				// 결제 API 요청 보내기
-				IMP.request_pay({
-					pg : portOneParam.pg,
-					pay_method : portOneParam.payMethod,
-					name : portOneParam.name,
-					amount : portOneParam.amount, // @@@@@ 나중에 검증 API double check
-					merchant_uid : portOneParam.merchantUid, // 서버에서
-					buyer_name : portOneParam.buyerName, // 서버에서
-					buyer_tel : portOneParam.buyerTel, // 서버에서
-					buyer_email : portOneParam.buyerEmail, // 서버에서
-					buyer_addr: portOneParam.buyerAddr, // 서버에서
-					buyer_postcode: portOneParam.buyerPostCode, // 서버에서
-					custom_data: portOneParam.customData
-				},
-				function(rsp) {
-					// rsp.success ? (self.createOrder(rsp) ? self.orderSuccess(rsp) : self.cancelPayment(rsp)) : self.paymentFail(rsp);
-					if(rsp.success) {
-						// 결제 성공 시
-						// 주문서 생성 => 주문서 생성 성공 알림 or 주문서 생성 실패 시 결제 취소
-						self.createOrder(rsp) ? self.orderSuccess(rsp) : self.cancelPayment(rsp);
-					}
-					else {
-						// 결제 실패 시 결제 실패 알림
-						self.paymentFail(rsp);
-					}
-				});
-			},
-			// 결제 실패 알림 (결제 실패 시)
-			paymentFail : function(paymentResult) {
-				console.log('결제실패ㅐㅐㅐ');
-				console.log(paymentResult);
-			},
-			// 주문 생성하기 INSERT (결제 성공 시)
+			// 3_b) 서버 주문/결제 로직 (포트원 결제 성공 시)
 			createOrder : function(paymentResult) {
 				console.log('결제성공ㅇㅇㅇ 이제 res값으로 주문정보를 넣어야함');
 				console.log(paymentResult.paid_amount);
 				console.log(typeof paymentResult.paid_amount);
-				
-				let paymentData = {
+				// 서버에서 받을 수 있게 가공
+				let orderData = {
+					orderMessage : '메세지입니다^^', // $('#addressContainer .orderMessage')
+					receiver : {
+						receiverNo : 1, // $('#addressContainer input[id^=receiver]:checked')
+					},
+					payment : {
 						paidAmount : paymentResult.paid_amount,
 						applyNum : paymentResult.apply_num,
 						impUid : paymentResult.imp_uid,
@@ -440,33 +485,75 @@
 						payMethod : paymentResult.pay_method,
 						paidAt : paymentResult.paid_at,
 						payStatus : paymentResult.status,
-					};
+						customData : JSON.stringify(customData)
+						// 퍼블릭 프로젝트 카드 정보 저장x 개인정보
+					}
+				};
 				console.log('paymentData');
 				console.log(paymentData);
-				paymentResult = 
+				
 				$.ajax({
 					url : 'order',
 					method : 'POST',
-					data : JSON.stringify(paymentData),
+					data : JSON.stringify(orderData),
 					contentType : 'application/json',
 					success : result => {
 						console.log('주문서 생성 성공!!!!!!!!');
 						console.log(result);
+						
+						let str = '';
+						if(result.payStatus == 'errorRefund') {
+							str = '오류로 인해 결제를 취소하는 도중 문제가 발생했습니다.\n'
+								  + '주문번호 : ' + result.merchantUid + '\n'
+								  + '주문번호와 함께 최대한 빠른 시일 내에 관리자에게 문의해주세요.';
+						if(result == 'success') {
+							str = '주문에 성공했습니다!';
+						} else if(result.result == 'itemShortage') {
+							// 재고 부족
+							str = '재고가 부족하거나 판매가 중단된 상품이 있습니다.\n'
+								+ '장바구니 메인 화면으로 이동해 수량을 조정해주세요.';
+							console.log(result.payStatus);
+						} else if(result.result == 'wrongAmount') {
+							// 금액 검증 실패
+							str = '금액 정보가 일치하지 않습니다.\n'
+								+ '새로고침 후에도 문제가 발생한다면 관리자에게 문의해주세요.';
+							console.log(result.payStatus);
+						} else {
+							console.log('order 주문서 생성 로직 통신은 성공했으나 이상 발생');
+						}
+						// 주문 / 결제 결과 알림창 (orderResult.jsp보내기)
+						alert(str);
+						/*
+						 * 결제 성공 시 "success"			: 결제가 완료되었다 + 불필요한 div 지움
+						 * 재고 부족 시 "itemShortage"		: 재고가 부족한 상품이 있다 카트메인으로 이동한다
+						 * (+ payStatus)
+						 * 금액 검증 실패 시 "wrongAmount"	: 금액 검증이 실패했다
+						 * (+ payStatus)
+						 * 
+						 * payStatus
+						 * 결제 취소 성공 시 "refunded"		: 결제 취소가 성공했다
+						 * 결제 취소 실패 시 "errorRefund"	: 결제 취소가 필요하지만 실패했다 관리자에게 문의해달라
+						*/
+						return result.result;
 					},
 					error : () => {
 						console.log('주문서 생성 실패bbbbb');
 					}
 				});
-				// true false 리턴
 			},
-			// 주문 성공 알림 (주문 생성 성공 시)
+			// 3_c) 주문 성공 알림 (주문 생성 성공 시)
 			orderSuccess : function(paymentResult) {
 				console.log('주문성공알림');
 			},
-			// 결제 취소 UPDATE (주문 생성 실패 시 / 디버깅용 취소내역 저장위해 오류 사유 저장)
+			// 3_d) 결제 취소 요청 (서버 로직 실패 시 / 디버깅용 취소내역 저장위해 오류 사유 저장)
 			cancelPayment : function(paymentResult) {
 				console.log('결제취소알림');
 			}
+			// 3_e) 결제 실패 알림 (결제 실패 시)
+			paymentFail : function(paymentResult) {
+				console.log('결제실패ㅐㅐㅐ');
+				console.log(paymentResult);
+			},
 		}
     </script>
 		

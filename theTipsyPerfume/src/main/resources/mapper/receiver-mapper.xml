@@ -13,7 +13,7 @@
 		<result column="ADRESS_DETAIL" property="addressDetail" />
 		<result column="POSTAL_CODE" property="postalCode" />
 		<result column="PLACE_ALIAS" property="placeAlias" />
-		<result column="PRIMARY_STATUS" property="primaryStatus" />
+		<result column="RECEIVER_STATUS" property="receiverStatus" />
 	</resultMap>
 	
 <!--	
@@ -36,7 +36,7 @@
 			   ADDRESS_DETAIL,
 			   POSTAL_CODE,
 			   PLACE_ALIAS,
-			   PRIMARY_STATUS
+			   RECEIVER_STATUS
 		  FROM
 			   TB_RECEIVER
 		 WHERE
@@ -56,7 +56,7 @@
 		  	   ADDRESS_DETAIL,
 		  	   POSTAL_CODE,
 		  	   PLACE_ALIAS,
-		  	   PRIMARY_STATUS
+		  	   RECEIVER_STATUS
 		  	   )
 		VALUES
 		  	   (
@@ -68,7 +68,7 @@
 		  	   #{addressDetail},
 		  	   #{postalCode},
 		  	   #{placeAlias},
-		  	   #{primaryStatus}
+		  	   #{receiverStatus}
 		  	   )
 	</insert>
 	<insert id="insertReceiverf" parameterType="receiver">

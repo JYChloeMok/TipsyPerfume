@@ -3,7 +3,7 @@ package com.kh.ttp.productSale.cart.model.service;
 import java.util.ArrayList;
 
 import com.kh.ttp.productSale.cart.model.vo.CartDTO;
-import com.kh.ttp.productSale.cart.model.vo.CartMainDTO;
+import com.kh.ttp.productSale.cart.model.vo.SaleMainDTO;
 
 public interface CartService {
 	
@@ -28,7 +28,7 @@ public interface CartService {
 	 * @param userNo(유저번호PK)
 	 * @return : 장바구니 정보가 담긴 ArrayList
 	 */
-	ArrayList<CartMainDTO> cartMain(int userNo);
+	ArrayList<SaleMainDTO> cartMain(int userNo);
 	
 	
 	/**

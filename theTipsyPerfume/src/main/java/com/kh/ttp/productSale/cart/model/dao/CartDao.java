@@ -1,13 +1,12 @@
 package com.kh.ttp.productSale.cart.model.dao;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.kh.ttp.productSale.cart.model.vo.CartDTO;
-import com.kh.ttp.productSale.cart.model.vo.CartMainDTO;
+import com.kh.ttp.productSale.cart.model.vo.SaleMainDTO;
 
 @Repository
 public class CartDao {
@@ -34,7 +33,7 @@ public class CartDao {
 	/**
 	 * 장바구니 전체조회
 	 */
-	public ArrayList<CartMainDTO> cartMain(SqlSessionTemplate sqlSession, int userNo) {
+	public ArrayList<SaleMainDTO> cartMain(SqlSessionTemplate sqlSession, int userNo) {
 		return (ArrayList)sqlSession.selectList("productMapper.cartMain", userNo);
 	}
 	

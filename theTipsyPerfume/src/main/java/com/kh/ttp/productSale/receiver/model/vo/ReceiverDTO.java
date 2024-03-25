@@ -18,6 +18,6 @@ public class ReceiverDTO {
 	private String addressDetail;
 	private int postalCode;
 	private String placeAlias;
-	private String primaryStatus;
+	private String receiverStatus;
 	
 }
